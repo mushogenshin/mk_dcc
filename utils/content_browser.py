@@ -1,6 +1,11 @@
 import logging as logger
 
 
+MAYA_DEFAULT_CONTENT_PATH = ['C:/Program Files/Autodesk/Maya2018/Examples',
+                             'C:/Program Files/Autodesk/Bifrost/Maya2018/examples/Bifrost_Fluids',
+                             'C:/Program Files/Autodesk/Maya2018/plug-ins/MASH/MASH Examples',
+                             'C:/Program Files/Autodesk/Maya2018/plug-ins/MASH/Smart Presets']
+
 def open_content_browser(cmds, main_content_path="", landing_subfolder_name=""):
     """
     :param module cmds: maya.cmds
