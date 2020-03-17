@@ -8,7 +8,8 @@ import re
 import functools
 from collections import defaultdict
 
-import lucidity.error
+import error  # author's original: "import lucidity.error" results ImportError within Maya
+print(error)
 
 # Type of a RegexObject for isinstance check.
 _RegexType = type(re.compile(''))
