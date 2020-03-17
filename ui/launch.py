@@ -7,6 +7,9 @@ except ImportError:
     from PySide.QtGui import QMainWindow, QWidget
     from shiboken import wrapInstance
 
+import sys
+PYTHON2 = True if sys.version_info.major < 3 else False
+
 
 class MK_DCC(QMainWindow):
     '''
@@ -30,18 +33,71 @@ def maya():
     maya_qt_version = get_maya_qt_version(maya)
 
     if maya_qt_version > 4:
-        # PySide 2 and above
-        from mk_dcc.ui.design_pyside2 import Ui_MK_DCC
+        # PySide 2
+        from mk_dcc.ui import design_pyside2
+        if PYTHON2:
+            reload(design_pyside2)
+
+        Ui_MK_DCC = design_pyside2.Ui_MK_DCC
     else:
         # PySide
-        from mk_dcc.ui.design_pyside import Ui_MK_DCC
+        from mk_dcc.ui import design_pyside
+        if PYTHON2:
+            reload(design_pyside)
+
+        Ui_MK_DCC = design_pyside.Ui_MK_DCC
     
-    window = MK_DCC(Ui_MK_DCC)
+    mk_dcc_win = MK_DCC(Ui_MK_DCC)
+    mk_dcc_win.setParent(maya_main_window(maya, wrapInstance, QWidget), Qt.Window)
 
-    window.setParent(maya_main_window(
-        maya.OpenMayaUI, 
-        wrapInstance, 
-        QWidget
-    ), Qt.Window)
+    return mk_dcc_win
 
-    window.show()
+
+def houdini():
+    import hou
+
+    # PySide 2
+    from mk_dcc.ui import design_pyside2
+    if PYTHON2:
+        reload(design_pyside2)
+
+    mk_dcc_win = MK_DCC(design_pyside2.Ui_MK_DCC)
+    mk_dcc_win.setParent(hou.ui.mainQtWindow(), Qt.Window)
+
+    return mk_dcc_win
+
+
+# Invoke the mk_dcc_win:
+
+# Maya
+
+# import mk_dcc.ui.launch
+# reload(mk_dcc.ui.launch)
+
+# if __name__ == "__main__":
+#     try:
+#         mk_dcc_win.close()
+#         mk_dcc_win.deleteLater()
+#     except:
+#         pass
+        
+#     mk_dcc_win = mk_dcc.ui.launch.maya()
+#     mk_dcc_win.show()
+
+# Houdini
+
+# import sys
+# sys.path.append('F:/dev/git')
+
+# import mk_dcc.ui.launch
+# reload(mk_dcc.ui.launch)
+
+# if __name__ == "hou.session":
+#     try:
+#         mk_dcc_win.close()
+#         mk_dcc_win.deleteLater()
+#     except:
+#         pass
+        
+#     mk_dcc_win = mk_dcc.ui.launch.houdini()
+#     mk_dcc_win.show()
