@@ -1,1 +1,0 @@
-pyside2-uic ..\ui\design.ui -o ..\ui\design.py

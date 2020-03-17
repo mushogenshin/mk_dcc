@@ -8,32 +8,32 @@ MAYA_DEFAULT_CONTENT_PATH = ['C:/Program Files/Autodesk/Maya2018/Examples',
                              'C:/Program Files/Autodesk/Maya2018/plug-ins/MASH/Smart Presets']
 
 
-def maya_main_window(OpenMayaUI, wrapInstance, QWidget):
+def maya_main_window(maya, wrapInstance, QWidget):
     '''
-    :param module OpenMayaUI: maya.OpenMayaUI
+    :param module maya: Autodesk's maya scripting library
     :param function wrapInstance: of shiboken module
     :param module QWidget:
     '''
-    main_window_ptr = OpenMayaUI.MQtUtil.mainWindow()
+    main_window_ptr = maya.OpenMayaUI.MQtUtil.mainWindow()
     return wrapInstance(long(main_window_ptr), QWidget)
 
 
-def open_content_browser(cmds, main_content_path="", landing_subfolder_name=""):
+def open_content_browser(maya, main_content_path="", landing_subfolder_name=""):
     """
-    :param module cmds: maya.cmds
+    :param module maya: Autodesk's maya scripting library
     :param main_content_path: for example: repo_kitbash_path
     :param landing_subfolder_name: for example: repo_kitbash_folder_name
     :return:
     """
 
-    cmds.scriptedPanel('contentBrowserPanel1', edit=True, tearOff=True, label='Content Browser')
-    content_browser_panel_name = cmds.getPanel(scriptType='contentBrowserPanel')[0]
+    maya.cmds.scriptedPanel('contentBrowserPanel1', edit=True, tearOff=True, label='Content Browser')
+    content_browser_panel_name = maya.cmds.getPanel(scriptType='contentBrowserPanel')[0]
     content_browser_panel_complete_name = content_browser_panel_name + 'ContentBrowser'
 
     if main_content_path not in os.environ['MAYA_CONTENT_PATH'].split(";"):
-        cmds.contentBrowser(content_browser_panel_complete_name, edit=True, addContentPath=main_content_path)
+        maya.cmds.contentBrowser(content_browser_panel_complete_name, edit=True, addContentPath=main_content_path)
 
-    cmds.contentBrowser(content_browser_panel_complete_name, edit=True,
+    maya.cmds.contentBrowser(content_browser_panel_complete_name, edit=True,
                         location=landing_subfolder_name.replace("_", " "))
 
     def remove_unneeded_maya_content_path():
@@ -41,7 +41,7 @@ def open_content_browser(cmds, main_content_path="", landing_subfolder_name=""):
         for maya_content_path_to_remove in MAYA_DEFAULT_CONTENT_PATH:
             if maya_content_path_to_remove in os.environ['MAYA_CONTENT_PATH'].split(";"):
                 try:
-                    cmds.contentBrowser(content_browser_panel_complete_name, edit=True,
+                    maya.cmds.contentBrowser(content_browser_panel_complete_name, edit=True,
                                         removeContentPath=maya_content_path_to_remove)
                     logger.info("Removed {0} from Maya's default Content Path environment."
                              .format(maya_content_path_to_remove))

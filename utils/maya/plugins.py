@@ -10,13 +10,13 @@ MODELING_UNRELATED_PLUGINS = ('hairPhysicalShader', 'lookdevKit', 'shaderFXPlugi
                               'CloudImportExport')
 
 
-def remove_plugin_autoload(cmds, plugins):
+def remove_plugin_autoload(maya, plugins):
     '''
-    :param module cmds: maya.cmds
+    :param module maya: Autodesk's maya scripting library
     '''
     for plugin in plugins:
         try:
-            cmds.pluginInfo(plugin, e=True, autoload=False)
+            maya.cmds.pluginInfo(plugin, e=True, autoload=False)
         except Exception as e:
             logger.info('{}: Plugin {} is not registered.'.format(e, plugin))
         else:
