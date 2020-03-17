@@ -1,19 +1,19 @@
-+ MAYAVERSION:2016 miniTools2 any F:\dev\git\mk_maya
++ MAYAVERSION:2016 mk_dcc any F:\dev\git\mk_dcc
 scripts: source
-plug-ins: plug-ins/2016
+plug-ins: plugins/maya//2016
 
-+ MAYAVERSION:2016.5 miniTools2 any F:\dev\git\mk_maya
++ MAYAVERSION:2016.5 mk_dcc any F:\dev\git\mk_dcc
 scripts: source
-plug-ins: plug-ins/2016.5
+plug-ins: plugins/maya//2016.5
 
-+ MAYAVERSION:2017 miniTools2 any F:\dev\git\mk_maya
++ MAYAVERSION:2017 mk_dcc any F:\dev\git\mk_dcc
 scripts: source
-plug-ins: plug-ins/2017
+plug-ins: plugins/maya//2017
 
-+ MAYAVERSION:2018 miniTools2 any F:\dev\git\mk_maya
++ MAYAVERSION:2018 mk_dcc any F:\dev\git\mk_dcc
 scripts: source
-plug-ins: plug-ins/2018
+plug-ins: plugins/maya//2018
 
-+ MAYAVERSION:2019 miniTools2 any F:\dev\git\mk_maya
++ MAYAVERSION:2019 mk_dcc any F:\dev\git\mk_dcc
 scripts: source
-plug-ins: plug-ins/2019
+plug-ins: plugins/maya//2019
