@@ -1,13 +1,22 @@
 import logging as logger
 
 
-def remove_plugin_autoload(func, plugins):
+MODELING_UNRELATED_PLUGINS = ('hairPhysicalShader', 'lookdevKit', 'shaderFXPlugin', 'VectorRender',
+                              'ik2Bsolver', 'ikSpringSolver', 'matrixNodes', 'quatNodes',
+                              'invertShape', 'poseInterpolator',
+                              'mayaCharacterization', 'mayaHIK', 'MayaMuscle',
+                              'sceneAssembly', 'ATFPlugin',
+                              'BifrostMain', 'bifmeshio', 'bifrostshellnode', 'bifrostvisplugin', 'MASH',
+                              'CloudImportExport')
+
+
+def remove_plugin_autoload(cmds, plugins):
     '''
-    :param function object func: should be Maya cmds.pluginInfo
+    :param module cmds: maya.cmds
     '''
     for plugin in plugins:
         try:
-            func(plugin, e=True, autoload=False)
+            cmds.pluginInfo(plugin, e=True, autoload=False)
         except Exception as e:
             logger.info('{}: Plugin {} is not registered.'.format(e, plugin))
         else:
