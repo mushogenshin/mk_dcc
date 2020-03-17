@@ -1,3 +1,3 @@
-import mk_dcc.utils.maya.plugins
+from mk_dcc.ui.main import Ui_Dialog
 
-print(mk_dcc.utils.maya.plugins.remove_plugin_autoload)
+print(Ui_Dialog)
