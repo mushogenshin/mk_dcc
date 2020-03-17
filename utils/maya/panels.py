@@ -1,3 +1,4 @@
+import os
 import logging as logger
 
 
@@ -5,6 +6,7 @@ MAYA_DEFAULT_CONTENT_PATH = ['C:/Program Files/Autodesk/Maya2018/Examples',
                              'C:/Program Files/Autodesk/Bifrost/Maya2018/examples/Bifrost_Fluids',
                              'C:/Program Files/Autodesk/Maya2018/plug-ins/MASH/MASH Examples',
                              'C:/Program Files/Autodesk/Maya2018/plug-ins/MASH/Smart Presets']
+
 
 def open_content_browser(cmds, main_content_path="", landing_subfolder_name=""):
     """
@@ -26,7 +28,7 @@ def open_content_browser(cmds, main_content_path="", landing_subfolder_name=""):
 
     def remove_unneeded_maya_content_path():
 
-        for maya_content_path_to_remove in cfg.MAYA_DEFAULT_CONTENT_PATH:
+        for maya_content_path_to_remove in MAYA_DEFAULT_CONTENT_PATH:
             if maya_content_path_to_remove in os.environ['MAYA_CONTENT_PATH'].split(";"):
                 try:
                     cmds.contentBrowser(content_browser_panel_complete_name, edit=True,
