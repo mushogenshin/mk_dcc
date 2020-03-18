@@ -77,18 +77,13 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QComboBox" name="themes_comboBox">
+            <widget class="QComboBox" name="theme_comboBox">
              <property name="currentIndex">
               <number>0</number>
              </property>
              <item>
               <property name="text">
                <string>Default</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Dark</string>
               </property>
              </item>
              <item>

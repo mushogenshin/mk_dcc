@@ -1,27 +1,32 @@
+import sys
+from os.path import dirname
+
 try:
     from PySide2.QtCore import Qt
-    from PySide2.QtWidgets import QMainWindow, QWidget
+    from PySide2.QtWidgets import QApplication, QMainWindow, QWidget
     from shiboken2 import wrapInstance
 except ImportError:
     from PySide.QtCore import Qt
-    from PySide.QtGui import QMainWindow, QWidget
+    from PySide.QtGui import QApplication, QMainWindow, QWidget
     from shiboken import wrapInstance
 
-import sys
+MK_DCC_ROOT = dirname(dirname(dirname(__file__)))
+sys.path.append(MK_DCC_ROOT)
+from mk_dcc.gui.main import MK_DCC
+
 PYTHON2 = True if sys.version_info.major < 3 else False
 
 
-class MK_DCC(QMainWindow):
-    '''
-    Main UI
-    '''
-    def __init__(self, Ui_MK_DCC):
-        '''
-        :param module Ui_MK_DCC: generated uic module, depending on version of uic used
-        '''
-        super(MK_DCC, self).__init__()
-        self.ui = Ui_MK_DCC()
-        self.ui.setupUi(self)
+def standalone():
+    # PySide 2
+    from mk_dcc.gui import design_pyside2
+    Ui_MK_DCC = design_pyside2.Ui_MK_DCC
+
+    mk_dcc_app = QApplication(sys.argv)
+    mk_dcc_win = MK_DCC(Ui_MK_DCC)
+
+    mk_dcc_win.show()    
+    sys.exit(mk_dcc_app.exec_())
 
 
 def maya():
@@ -101,3 +106,6 @@ def houdini():
         
 #     mk_dcc_win = mk_dcc.gui.launch.houdini()
 #     mk_dcc_win.show()
+
+if __name__ == '__main__':
+    standalone()

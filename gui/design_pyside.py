@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '..\ui\design.ui'
+# Form implementation generated from reading ui file '..\gui\design.ui'
 #
-# Created: Wed Mar 18 10:42:00 2020
+# Created: Wed Mar 18 11:37:59 2020
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -16,6 +16,7 @@ class Ui_MK_DCC(object):
         self.centralwidget = QtGui.QWidget(MK_DCC)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.tabWidget = QtGui.QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName("tabWidget")
@@ -49,14 +50,13 @@ class Ui_MK_DCC(object):
         self.themes_grpBox.setObjectName("themes_grpBox")
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.themes_grpBox)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.themes_comboBox = QtGui.QComboBox(self.themes_grpBox)
-        self.themes_comboBox.setObjectName("themes_comboBox")
-        self.themes_comboBox.addItem("")
-        self.themes_comboBox.addItem("")
-        self.themes_comboBox.addItem("")
-        self.themes_comboBox.addItem("")
-        self.themes_comboBox.addItem("")
-        self.verticalLayout_2.addWidget(self.themes_comboBox)
+        self.theme_comboBox = QtGui.QComboBox(self.themes_grpBox)
+        self.theme_comboBox.setObjectName("theme_comboBox")
+        self.theme_comboBox.addItem("")
+        self.theme_comboBox.addItem("")
+        self.theme_comboBox.addItem("")
+        self.theme_comboBox.addItem("")
+        self.verticalLayout_2.addWidget(self.theme_comboBox)
         self.verticalLayout_4.addWidget(self.themes_grpBox)
         self.misc_grpBox = QtGui.QGroupBox(self.cfg_tab)
         self.misc_grpBox.setObjectName("misc_grpBox")
@@ -67,7 +67,7 @@ class Ui_MK_DCC(object):
 
         self.retranslateUi(MK_DCC)
         self.tabWidget.setCurrentIndex(2)
-        self.themes_comboBox.setCurrentIndex(0)
+        self.theme_comboBox.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MK_DCC)
 
     def retranslateUi(self, MK_DCC):
@@ -79,11 +79,10 @@ class Ui_MK_DCC(object):
         self.spinBox.setPrefix(QtGui.QApplication.translate("MK_DCC", "$ ", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.houdini_tab), QtGui.QApplication.translate("MK_DCC", "Houdini", None, QtGui.QApplication.UnicodeUTF8))
         self.themes_grpBox.setTitle(QtGui.QApplication.translate("MK_DCC", "THEMES", None, QtGui.QApplication.UnicodeUTF8))
-        self.themes_comboBox.setItemText(0, QtGui.QApplication.translate("MK_DCC", "Default", None, QtGui.QApplication.UnicodeUTF8))
-        self.themes_comboBox.setItemText(1, QtGui.QApplication.translate("MK_DCC", "Dark", None, QtGui.QApplication.UnicodeUTF8))
-        self.themes_comboBox.setItemText(2, QtGui.QApplication.translate("MK_DCC", "Aqua", None, QtGui.QApplication.UnicodeUTF8))
-        self.themes_comboBox.setItemText(3, QtGui.QApplication.translate("MK_DCC", "Console", None, QtGui.QApplication.UnicodeUTF8))
-        self.themes_comboBox.setItemText(4, QtGui.QApplication.translate("MK_DCC", "Ubuntu", None, QtGui.QApplication.UnicodeUTF8))
+        self.theme_comboBox.setItemText(0, QtGui.QApplication.translate("MK_DCC", "Default", None, QtGui.QApplication.UnicodeUTF8))
+        self.theme_comboBox.setItemText(1, QtGui.QApplication.translate("MK_DCC", "Aqua", None, QtGui.QApplication.UnicodeUTF8))
+        self.theme_comboBox.setItemText(2, QtGui.QApplication.translate("MK_DCC", "Console", None, QtGui.QApplication.UnicodeUTF8))
+        self.theme_comboBox.setItemText(3, QtGui.QApplication.translate("MK_DCC", "Ubuntu", None, QtGui.QApplication.UnicodeUTF8))
         self.misc_grpBox.setTitle(QtGui.QApplication.translate("MK_DCC", "MISC.", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.cfg_tab), QtGui.QApplication.translate("MK_DCC", "Cfg", None, QtGui.QApplication.UnicodeUTF8))
 

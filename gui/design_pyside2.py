@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '..\ui\design.ui',
-# licensing of '..\ui\design.ui' applies.
+# Form implementation generated from reading ui file '..\gui\design.ui',
+# licensing of '..\gui\design.ui' applies.
 #
-# Created: Wed Mar 18 10:41:59 2020
+# Created: Wed Mar 18 11:37:58 2020
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,6 +17,7 @@ class Ui_MK_DCC(object):
         self.centralwidget = QtWidgets.QWidget(MK_DCC)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName("tabWidget")
@@ -50,14 +51,13 @@ class Ui_MK_DCC(object):
         self.themes_grpBox.setObjectName("themes_grpBox")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.themes_grpBox)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.themes_comboBox = QtWidgets.QComboBox(self.themes_grpBox)
-        self.themes_comboBox.setObjectName("themes_comboBox")
-        self.themes_comboBox.addItem("")
-        self.themes_comboBox.addItem("")
-        self.themes_comboBox.addItem("")
-        self.themes_comboBox.addItem("")
-        self.themes_comboBox.addItem("")
-        self.verticalLayout_2.addWidget(self.themes_comboBox)
+        self.theme_comboBox = QtWidgets.QComboBox(self.themes_grpBox)
+        self.theme_comboBox.setObjectName("theme_comboBox")
+        self.theme_comboBox.addItem("")
+        self.theme_comboBox.addItem("")
+        self.theme_comboBox.addItem("")
+        self.theme_comboBox.addItem("")
+        self.verticalLayout_2.addWidget(self.theme_comboBox)
         self.verticalLayout_4.addWidget(self.themes_grpBox)
         self.misc_grpBox = QtWidgets.QGroupBox(self.cfg_tab)
         self.misc_grpBox.setObjectName("misc_grpBox")
@@ -68,7 +68,7 @@ class Ui_MK_DCC(object):
 
         self.retranslateUi(MK_DCC)
         self.tabWidget.setCurrentIndex(2)
-        self.themes_comboBox.setCurrentIndex(0)
+        self.theme_comboBox.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MK_DCC)
 
     def retranslateUi(self, MK_DCC):
@@ -80,11 +80,10 @@ class Ui_MK_DCC(object):
         self.spinBox.setPrefix(QtWidgets.QApplication.translate("MK_DCC", "$ ", None, -1))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.houdini_tab), QtWidgets.QApplication.translate("MK_DCC", "Houdini", None, -1))
         self.themes_grpBox.setTitle(QtWidgets.QApplication.translate("MK_DCC", "THEMES", None, -1))
-        self.themes_comboBox.setItemText(0, QtWidgets.QApplication.translate("MK_DCC", "Default", None, -1))
-        self.themes_comboBox.setItemText(1, QtWidgets.QApplication.translate("MK_DCC", "Dark", None, -1))
-        self.themes_comboBox.setItemText(2, QtWidgets.QApplication.translate("MK_DCC", "Aqua", None, -1))
-        self.themes_comboBox.setItemText(3, QtWidgets.QApplication.translate("MK_DCC", "Console", None, -1))
-        self.themes_comboBox.setItemText(4, QtWidgets.QApplication.translate("MK_DCC", "Ubuntu", None, -1))
+        self.theme_comboBox.setItemText(0, QtWidgets.QApplication.translate("MK_DCC", "Default", None, -1))
+        self.theme_comboBox.setItemText(1, QtWidgets.QApplication.translate("MK_DCC", "Aqua", None, -1))
+        self.theme_comboBox.setItemText(2, QtWidgets.QApplication.translate("MK_DCC", "Console", None, -1))
+        self.theme_comboBox.setItemText(3, QtWidgets.QApplication.translate("MK_DCC", "Ubuntu", None, -1))
         self.misc_grpBox.setTitle(QtWidgets.QApplication.translate("MK_DCC", "MISC.", None, -1))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.cfg_tab), QtWidgets.QApplication.translate("MK_DCC", "Cfg", None, -1))
 
