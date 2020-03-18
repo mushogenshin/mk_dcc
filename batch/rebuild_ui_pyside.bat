@@ -1,1 +1,1 @@
-pyside-uic ..\ui\design.ui -o ..\ui\design_pyside.py
+pyside-uic ..\gui\design.ui -o ..\gui\design_pyside.py

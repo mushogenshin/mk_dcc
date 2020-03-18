@@ -34,14 +34,14 @@ def maya():
 
     if maya_qt_version > 4:
         # PySide 2
-        from mk_dcc.ui import design_pyside2
+        from mk_dcc.gui import design_pyside2
         if PYTHON2:
             reload(design_pyside2)
 
         Ui_MK_DCC = design_pyside2.Ui_MK_DCC
     else:
         # PySide
-        from mk_dcc.ui import design_pyside
+        from mk_dcc.gui import design_pyside
         if PYTHON2:
             reload(design_pyside)
 
@@ -57,7 +57,7 @@ def houdini():
     import hou
 
     # PySide 2
-    from mk_dcc.ui import design_pyside2
+    from mk_dcc.gui import design_pyside2
     if PYTHON2:
         reload(design_pyside2)
 
@@ -71,8 +71,8 @@ def houdini():
 
 # Maya
 
-# import mk_dcc.ui.launch
-# reload(mk_dcc.ui.launch)
+# import mk_dcc.gui.launch
+# reload(mk_dcc.gui.launch)
 
 # if __name__ == "__main__":
 #     try:
@@ -81,7 +81,7 @@ def houdini():
 #     except:
 #         pass
         
-#     mk_dcc_win = mk_dcc.ui.launch.maya()
+#     mk_dcc_win = mk_dcc.gui.launch.maya()
 #     mk_dcc_win.show()
 
 # Houdini
@@ -89,8 +89,8 @@ def houdini():
 # import sys
 # sys.path.append('F:/dev/git')
 
-# import mk_dcc.ui.launch
-# reload(mk_dcc.ui.launch)
+# import mk_dcc.gui.launch
+# reload(mk_dcc.gui.launch)
 
 # if __name__ == "hou.session":
 #     try:
@@ -99,5 +99,5 @@ def houdini():
 #     except:
 #         pass
         
-#     mk_dcc_win = mk_dcc.ui.launch.houdini()
+#     mk_dcc_win = mk_dcc.gui.launch.houdini()
 #     mk_dcc_win.show()

@@ -1,0 +1,39 @@
+global proc shelf_mk_dcc () {
+    global string $gBuffStr;
+    global string $gBuffStr0;
+    global string $gBuffStr1;
+
+
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "mk_dcc" 
+        -enableBackground 0
+        -align "center" 
+        -label "mk_dcc" 
+        -labelOffset 0
+        -rotation 0
+        -flipX 0
+        -flipY 0
+        -useAlpha 1
+        -font "plainLabelFont" 
+        -imageOverlayLabel "mk_dcc" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.8 
+        -image "//vietsap002/projects/ILM/lib/scripts/miniTools2/icons/miniTools2_32.png" 
+        -image1 "//vietsap002/projects/ILM/lib/scripts/miniTools2/icons/miniTools2_32.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import mk_dcc.gui.launch\nreload(mk_dcc.gui.launch)\n\ntry:\n    mk_maya_win.close()\n    mk_maya_win.deleteLater()\nexcept:\n    pass\n    \nmk_maya_win = mk_dcc.gui.launch.maya()\nmk_maya_win.show()"
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+
+} 
