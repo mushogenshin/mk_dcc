@@ -21,25 +21,50 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="maya_tab">
        <attribute name="title">
         <string>Maya</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
-         <widget class="QRadioButton" name="radioButton">
-          <property name="text">
-           <string>RadioButton</string>
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="title">
+           <string>UDIM</string>
           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_9">
+           <item>
+            <widget class="QPushButton" name="pushButton_2">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton">
+             <property name="text">
+              <string>RadioButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
-          <property name="text">
-           <string>PushButton</string>
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="title">
+           <string>LEGACY</string>
           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <item>
+            <widget class="QPushButton" name="pushButton">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -50,17 +75,35 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="QLineEdit" name="lineEdit">
-          <property name="text">
-           <string>LineEdit</string>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>SOLARIS</string>
           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <widget class="QLineEdit" name="lineEdit">
+             <property name="text">
+              <string>LineEdit</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="spinBox">
-          <property name="prefix">
-           <string>$ </string>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>PDG</string>
           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QSpinBox" name="spinBox">
+             <property name="prefix">
+              <string>$ </string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>

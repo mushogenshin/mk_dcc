@@ -6,11 +6,9 @@ import logging as logger
 try:
     from PySide2 import QtCore
     from PySide2.QtWidgets import QMainWindow, QWidget
-    # from shiboken2 import wrapInstance
 except ImportError:
     from PySide import QtCore
     from PySide.QtGui import QMainWindow, QWidget
-    # from shiboken import wrapInstance
 
 
 PYTHON2 = True if sys.version_info.major < 3 else False

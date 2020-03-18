@@ -4,11 +4,9 @@ from os.path import dirname
 try:
     from PySide2.QtCore import Qt
     from PySide2.QtWidgets import QApplication, QMainWindow, QWidget
-    from shiboken2 import wrapInstance
 except ImportError:
     from PySide.QtCore import Qt
     from PySide.QtGui import QApplication, QMainWindow, QWidget
-    from shiboken import wrapInstance
 
 PYTHON2 = True if sys.version_info.major < 3 else False
 
@@ -20,9 +18,15 @@ if PYTHON2:
 
 
 def standalone():
-    # PySide 2
-    from mk_dcc.gui import design_qt5
-    Ui_MK_DCC = design_qt5.Ui_MK_DCC
+    if PYTHON2:
+        # PySide
+        from mk_dcc.gui import design_qt4
+        reload(design_qt4)
+        Ui_MK_DCC = design_qt4.Ui_MK_DCC
+    else:
+        # PySide 2
+        from mk_dcc.gui import design_qt5
+        Ui_MK_DCC = design_qt5.Ui_MK_DCC
 
     mk_dcc_app = QApplication(sys.argv)
     mk_dcc_win = mk_dcc.gui.main.MK_DCC(Ui_MK_DCC)
@@ -41,6 +45,7 @@ def maya():
 
     if maya_qt_version > 4:
         # PySide 2
+        from shiboken2 import wrapInstance
         from mk_dcc.gui import design_qt5
         if PYTHON2:
             reload(design_qt5)
@@ -48,6 +53,7 @@ def maya():
         Ui_MK_DCC = design_qt5.Ui_MK_DCC
     else:
         # PySide
+        from shiboken import wrapInstance
         from mk_dcc.gui import design_qt4
         if PYTHON2:
             reload(design_qt4)
