@@ -36,7 +36,24 @@ class MK_DCC(QMainWindow):
         self.ui = Ui_MK_DCC()
         self.ui.setupUi(self)
 
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+
+        # Load the QSettings
+        self.read_settings()
+
         self.create_connections(self.ui)
+
+    def write_settings(self):
+        settings = QtCore.QSettings('MK_DCC', 'Virtuos_SPARX')
+
+        # Window geometry
+        settings.setValue('window_pos', self.pos())
+
+    def read_settings(self):
+        settings = QtCore.QSettings('MK_DCC', 'Virtuos_SPARX')
+
+        # Window geometry
+        self.move(settings.value('window_pos', QtCore.QPoint(400, 300)))
 
     def create_connections(self, ui):
 
@@ -74,3 +91,9 @@ class MK_DCC(QMainWindow):
             self.setStyleSheet('')
             self.setStyleSheet(qss_stream.readAll())
             qss_file.close()
+
+    def closeEvent(self, event):
+        super(MK_DCC, self).closeEvent(event)
+
+        logger.debug('Saving QSettings of the widget')
+        self.write_settings()

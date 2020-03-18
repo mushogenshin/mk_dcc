@@ -1,0 +1,1 @@
+pyside-uic ..\gui\design.ui -o ..\gui\design_qt4.py

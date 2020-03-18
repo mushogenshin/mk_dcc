@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file '..\gui\design.ui',
 # licensing of '..\gui\design.ui' applies.
 #
-# Created: Wed Mar 18 11:37:58 2020
+# Created: Wed Mar 18 14:08:11 2020
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
