@@ -34,6 +34,7 @@ class MK_DCC(QMainWindow):
         self.ui = Ui_MK_DCC()
         self.ui.setupUi(self)
 
+        self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
         # Load the QSettings
@@ -42,13 +43,13 @@ class MK_DCC(QMainWindow):
         self.create_connections(self.ui)
 
     def write_settings(self):
-        settings = QtCore.QSettings('MK_DCC', 'Virtuos_SPARX')
+        settings = QtCore.QSettings('Virtuos_SPARX', 'MK_DCC')
 
         # Window geometry
         settings.setValue('window_pos', self.pos())
 
     def read_settings(self):
-        settings = QtCore.QSettings('MK_DCC', 'Virtuos_SPARX')
+        settings = QtCore.QSettings('Virtuos_SPARX', 'MK_DCC')
 
         # Window geometry
         self.move(settings.value('window_pos', QtCore.QPoint(400, 300)))
