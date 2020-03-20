@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file '..\gui\design.ui',
 # licensing of '..\gui\design.ui' applies.
 #
-# Created: Wed Mar 18 16:01:15 2020
+# Created: Fri Mar 20 15:46:49 2020
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -101,17 +101,17 @@ class Ui_MK_DCC(object):
         self.radioButton.setText(QtWidgets.QApplication.translate("MK_DCC", "RadioButton", None, -1))
         self.groupBox_3.setTitle(QtWidgets.QApplication.translate("MK_DCC", "LEGACY", None, -1))
         self.pushButton.setText(QtWidgets.QApplication.translate("MK_DCC", "PushButton", None, -1))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.maya_tab), QtWidgets.QApplication.translate("MK_DCC", "Maya", None, -1))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.maya_tab), QtWidgets.QApplication.translate("MK_DCC", "maya", None, -1))
         self.groupBox.setTitle(QtWidgets.QApplication.translate("MK_DCC", "SOLARIS", None, -1))
         self.lineEdit.setText(QtWidgets.QApplication.translate("MK_DCC", "LineEdit", None, -1))
         self.groupBox_2.setTitle(QtWidgets.QApplication.translate("MK_DCC", "PDG", None, -1))
         self.spinBox.setPrefix(QtWidgets.QApplication.translate("MK_DCC", "$ ", None, -1))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.houdini_tab), QtWidgets.QApplication.translate("MK_DCC", "Houdini", None, -1))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.houdini_tab), QtWidgets.QApplication.translate("MK_DCC", "houdini", None, -1))
         self.themes_grpBox.setTitle(QtWidgets.QApplication.translate("MK_DCC", "THEMES", None, -1))
         self.theme_comboBox.setItemText(0, QtWidgets.QApplication.translate("MK_DCC", "Default", None, -1))
         self.theme_comboBox.setItemText(1, QtWidgets.QApplication.translate("MK_DCC", "Aqua", None, -1))
         self.theme_comboBox.setItemText(2, QtWidgets.QApplication.translate("MK_DCC", "Console", None, -1))
         self.theme_comboBox.setItemText(3, QtWidgets.QApplication.translate("MK_DCC", "Ubuntu", None, -1))
         self.misc_grpBox.setTitle(QtWidgets.QApplication.translate("MK_DCC", "MISC.", None, -1))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.cfg_tab), QtWidgets.QApplication.translate("MK_DCC", "Cfg", None, -1))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.cfg_tab), QtWidgets.QApplication.translate("MK_DCC", "cfg", None, -1))
 
