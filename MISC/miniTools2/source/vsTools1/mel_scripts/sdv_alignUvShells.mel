@@ -1,0 +1,260 @@
+/*
+	sdv_alignUvShells.mel
+	====================
+
+	Description:
+	With this tool you can align your selected UV shells.
+	
+	Usage:
+	1) Open the align window by entering the following in the script editor: sdv_alignUvShells(0)
+	   If you want to install the shelf button, enter the following: sdv_alignUvShells(-1)
+	2) Select UVs from your shells and click one of the align buttons.
+	
+	Tip:
+	There is no need to select all UVs from the shells. The script will actually run faster if
+	you select less uvs per shell. Ideally you only need to select one uv per shell. With high
+	uv counts you will notice the difference.
+	
+	Commands:
+	sdv_alignUvShells(0)	This opens the align window.
+	sdv_alignUvShells(-1)	This installs the program's icon on your current shelf.
+	sdv_alignUvShells(-2)	This installs the six alignment icons on your shelf.
+	
+	This script requires the following script:
+	* sdv_shelfButton.mel
+
+	Created:	22 June 2008
+	Author: 	Stefan David
+	Website:	stefandavid.com
+*/
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Perform UV alignment
+// mode 0=left, 1=right, 2=bottom, 3=top, 4=uCenter, 5=vCenter
+
+proc sdv_performAlignUvShells(int $mode) {
+	global string $gSelect;
+	float $shellBox[], $offset, $allBox[], $center, $startTime;
+	string $shell[], $sel[], $uvs[];
+	int $uvCount, $uvsRemaining, $index;
+
+	undoInfo -swf 0;
+	setToolTo $gSelect;	
+	$startTime = `timerX`;
+	$index = 0;
+	$sel = `ls -sl`;
+	$uvs = `filterExpand -sm 35`;
+	if (!`size($uvs)`) error("No UVs selected");
+	select -r $uvs;
+
+	polySelectConstraint -shell 1 -border 0 -mode 2 -type 0x0010;
+	polySelectConstraint -shell 0 -border 0 -mode 0;
+	$allBox = `polyEvaluate -bc2`;
+	$uvCount = `size($uvs)`;
+	$uvsRemaining = $uvCount;
+	
+	progressWindow
+		-title "Align UV Shells"
+ 		-isInterruptable true
+ 		-progress 0
+ 		-maxValue $uvCount;
+ 	
+ 	if ($mode==0)	   print("Align UV Shells: Left\n");
+	else if ($mode==1) print("Align UV Shells: Right\n");
+	else if ($mode==2) print("Align UV Shells: Bottom\n");
+	else if ($mode==3) print("Align UV Shells: Top\n");
+	else if ($mode==4) print("Align UV Shells: Horizontal Center\n");
+	else {	
+		print("Align UV Shells: Vertical Center\n");
+		$index=2;
+	}
+	
+	$center = 0.5 * ($allBox[$index] + $allBox[($index+1)]);
+	
+	while ($uvsRemaining) {
+		if (`progressWindow -q -ic`) {
+			warning("Align UV Shells Cancelled\n");
+			break;
+		}
+		
+		progressWindow -edit
+			-progress ($uvCount-$uvsRemaining)
+			-status	("Aligning Shells: " + $uvsRemaining + " UVs left");
+	
+		select -r $uvs[0];
+		polySelectConstraint -shell 1 -border 0 -mode 2 -type 0x0010;
+		polySelectConstraint -shell 0 -border 0 -mode 0;
+		$shellBox = `polyEvaluate -bc2`;
+		
+		// Switch between border or center alignment
+		if ($mode<4) $offset = $allBox[$mode] - $shellBox[$mode];
+		else		 $offset = $center - (0.5 * ($shellBox[$index] + $shellBox[($index+1)]));
+			
+		undoInfo -swf 1;
+	 	if ($mode==0 || $mode==1 || $mode==4)
+	 		 polyEditUV -r 1 -u $offset;
+	 	else
+	 		polyEditUV -r 1 -v $offset;
+	 	undoInfo -swf 0;
+		
+		$shell = `ls -sl -fl`;
+		select -r $uvs;
+		select -deselect $shell;
+		$uvs = `ls -sl -fl`;
+		$uvsRemaining = `size($uvs)`;
+	}
+
+	select -r $sel;
+	progressWindow -endProgress;
+	print ("Align UV Shells: " + `timerX -startTime $startTime` + " sec\n");
+	undoInfo -swf 1;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Stack UV Shells
+
+proc sdv_performStackUvShells() {
+	global string $gSelect;
+	float $shellBox[], $offsetU, $offsetV, $allBox[], $centerU, $centerV, $startTime;
+	string $shell[], $sel[], $uvs[];
+	int $uvCount, $uvsRemaining;
+
+	undoInfo -swf 0;
+	setToolTo $gSelect;	
+	$startTime = `timerX`;
+	$index = 0;
+	$sel = `ls -sl`;
+	$uvs = `filterExpand -sm 35`;
+	if (!`size($uvs)`) error("No UVs selected");
+	select -r $uvs;
+
+	polySelectConstraint -shell 1 -border 0 -mode 2 -type 0x0010;
+	polySelectConstraint -shell 0 -border 0 -mode 0;
+	$allBox = `polyEvaluate -bc2`;
+	$uvCount = `size($uvs)`;
+	$uvsRemaining = $uvCount;
+	
+	print("Align UV Shells: Stack UV Shells\n");
+	
+	progressWindow
+		-title "Stack UV Shells"
+ 		-isInterruptable true
+ 		-progress 0
+ 		-maxValue $uvCount;
+ 	
+	$centerU = 0.5 * ($allBox[0] + $allBox[1]);
+	$centerV = 0.5 * ($allBox[2] + $allBox[3]);
+	
+	while ($uvsRemaining) {
+		if (`progressWindow -q -ic`) {
+			warning("Align UV Shells Cancelled\n");
+			break;
+		}
+		
+		progressWindow -edit
+			-progress ($uvCount-$uvsRemaining)
+			-status	("Stacking Shells: " + $uvsRemaining + " UVs left");
+	
+		select -r $uvs[0];
+		polySelectConstraint -shell 1 -border 0 -mode 2 -type 0x0010;
+		polySelectConstraint -shell 0 -border 0 -mode 0;
+		
+		$shellBox = `polyEvaluate -bc2`;
+		$offsetU = $centerU - (0.5 * ($shellBox[0] + $shellBox[1]));
+		$offsetV = $centerV - (0.5 * ($shellBox[2] + $shellBox[3]));
+			
+		undoInfo -swf 1;
+		polyEditUV -r 1 -u $offsetU -v $offsetV;
+		undoInfo -swf 0;
+		
+		$shell = `ls -sl -fl`;
+		select -r $uvs;
+		select -deselect $shell;
+		$uvs = `ls -sl -fl`;
+		$uvsRemaining = `size($uvs)`;
+	}
+
+	select -r $sel;
+	progressWindow -endProgress;
+	print ("Align UV Shells: " + `timerX -startTime $startTime` + " sec\n");
+	undoInfo -swf 1;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Create the UI
+
+proc sdv_alignUvShellsUI() {
+	string $winName = "sdv_alignUvShellsWin";
+	if (`window -ex $winName`) deleteUI $winName;
+	if (`windowPref -ex $winName`) windowPref -e -wh 50 50 $winName;
+
+	window
+		-title " Align UV Shells 1.0"
+		-resizeToFitChildren 1
+		-sizeable 0
+		-width 50
+		-height 50
+		-toolbox 1
+		 $winName;
+
+	columnLayout -cat "both" 4 -rs 4 -adj 1;
+		//gridLayout -width 248 -numberOfColumns 7 -cellWidthHeight 36 32;
+		gridLayout -width 212 -numberOfColumns 6 -cellWidthHeight 36 32;
+			symbolButton -w 32 -h 32 -c "sdv_alignUvShells(1)" -i "sdv_aluvLeft.bmp";
+			symbolButton -w 32 -h 32 -c "sdv_alignUvShells(5)" -i "sdv_aluvCenterU.bmp";
+			symbolButton -w 32 -h 32 -c "sdv_alignUvShells(2)" -i "sdv_aluvRight.bmp";
+			symbolButton -w 32 -h 32 -c "sdv_alignUvShells(4)" -i "sdv_aluvTop.bmp";
+			symbolButton -w 32 -h 32 -c "sdv_alignUvShells(6)" -i "sdv_aluvCenterV.bmp";
+			symbolButton -w 32 -h 32 -c "sdv_alignUvShells(3)" -i "sdv_aluvBottom.bmp";
+			//symbolButton -w 32 -h 32 -c "sdv_alignUvShells(7)" -i "sdv_stackUvShells.bmp";
+		setParent ..;
+	setParent ..;
+
+	showWindow;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Main procedure
+
+global proc sdv_alignUvShells(int $mode) {
+	
+	if ($mode==-1) {
+		sdv_shelfButton("Align UV Shells", "sdv_alignUvShells(0)", "sdv_alignUvShells.bmp");
+	}
+	else if ($mode==-2) {
+		sdv_shelfButton("Align UV Shells - Left",			 	"sdv_alignUvShells(1)", "sdv_aluvLeft.bmp");
+		sdv_shelfButton("Align UV Shells - Horizontal Center",	"sdv_alignUvShells(5)", "sdv_aluvCenterU.bmp");
+		sdv_shelfButton("Align UV Shells - Right",			  	"sdv_alignUvShells(2)", "sdv_aluvRight.bmp");
+		sdv_shelfButton("Align UV Shells - Top",				"sdv_alignUvShells(4)", "sdv_aluvTop.bmp");
+		sdv_shelfButton("Align UV Shells - Vertical Center",	"sdv_alignUvShells(6)", "sdv_aluvCenterV.bmp");
+		sdv_shelfButton("Align UV Shells - Bottom",				"sdv_alignUvShells(3)", "sdv_aluvBottom.bmp");
+		sdv_shelfButton("Stack UV Shells",						"sdv_alignUvShells(7)", "sdv_stackUvShells.bmp");
+	}
+	else if ($mode==0) {
+		sdv_alignUvShellsUI;
+	}
+	else if ($mode==7) {
+		sdv_performStackUvShells;
+	}
+	else if ($mode>0 && $mode<7) {
+		sdv_performAlignUvShells(($mode-1));
+	}
+	else {
+		string $message = "Wrong call to sdv_alignUvShells. See script editor for valid options.\n";
+		$message += "sdv_alignUvShells(-2) -> Add alignUvShells icon to current shelf\n";
+		$message += "sdv_alignUvShells(-1) -> Add all six align icons to current shelf\n";
+		$message += "sdv_alignUvShells(0)  -> Open user interface\n";
+		$message += "sdv_alignUvShells(1)  -> Align to left\n";
+		$message += "sdv_alignUvShells(2)  -> Align to right\n";
+		$message += "sdv_alignUvShells(3)  -> Align to bottom\n";
+		$message += "sdv_alignUvShells(4)  -> Align to top\n";
+		$message += "sdv_alignUvShells(5)  -> Align to horizontal center\n";
+		$message += "sdv_alignUvShells(6)  -> Align to vertical center\n";
+		$message += "sdv_alignUvShells(7)  -> Stack UV shells";
+		error($message);
+	}
+}

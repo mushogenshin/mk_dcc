@@ -1,0 +1,9 @@
+cmds.ls(sl=1)
+
+for obj in cmds.ls(sl=1):
+    mnT2_ui.mnT2.util.joint_based_realign(obj, vertsA, vertsB)
+    
+    
+import maya.cmds as cmds
+
+cmds.polyUniteSkinned(ch=False)

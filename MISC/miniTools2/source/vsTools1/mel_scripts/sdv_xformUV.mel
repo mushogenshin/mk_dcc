@@ -1,0 +1,794 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+	sdv_xformUV.mel
+	===============
+	XformUV is an editor that can perform exact UV modifications.
+	
+	Usage:
+	To open the window enter the following command: sdv_xformUV
+	
+	Online documentation can be found here:
+	www.stefandavid.com/mel/sdv_xformUV
+	
+	Version History:
+	Created:	 07 Jan 2000
+	Last Update: 24 Oct 2012
+	
+	2.8 - Fixed GUI problems with Maya 2011-2013.
+	2.7 - Added Center, Flatten and Orient.
+	2.6 - Added Align UV Shells.
+	2.5 - Added Stack UV Shells. Created a more streamlined UI.
+	
+	Requirements:
+	This script requires the following scripts:
+	* sdv_alignUvShells.mel
+	* sdv_shelfButton.mel
+	* sdv_flattenUVs.mel
+	* sdv_orientUvShells.mel
+	* sdv_centerUvs.mel
+		
+	© Stefan David
+	www.stefandavid.com
+*/
+
+///////////// Sparx-added
+// Pack UDIM
+global proc packUdim(){
+	global int $u_dir, $v_dir, $u_lim, $v_lim, $u_start, $v_start;
+	global float $space;
+	string $args = $u_dir + "," + $v_dir + "," + $u_lim + "," + $v_lim + ",[" + $u_start + "," + $v_start + "]," + $space;
+	string $cm = "autoUdim.autoUdim(" + $args + ")";
+	python "import autoUdim";
+	python "reload(autoUdim)";	
+	python $cm;	
+}
+
+global proc selectUdimTiles(){
+	global int $u_min, $u_max, $v_min, $v_max;	
+	string $cm = "autoUdim.selectUdimFromUv()";
+	python "import autoUdim";
+	python "reload(autoUdim)";
+	python $cm;	
+}
+
+global proc uLimCtrlChange(){
+	global int $u_lim, $v_lim;
+	if (`intField -q -v u_lim_ctrl` > 0){		
+		$u_lim = `intField -q -v u_lim_ctrl`;
+		intField -e -v 0 v_lim_ctrl; 
+		$v_lim = 0;
+	}else{
+		intField -e -v $u_lim u_lim_ctrl;
+	}
+}
+
+global proc vLimCtrlChange(){
+	global int $u_lim, $v_lim;
+	if (`intField -q -v v_lim_ctrl` > 0){		
+		$v_lim = `intField -q -v v_lim_ctrl`;
+		intField -e -v 0 u_lim_ctrl; 
+		$u_lim = 0;
+	}else{
+		intField -e -v $v_lim v_lim_ctrl;
+	}
+}
+
+global proc uDirCtrlChange(){
+	global int $u_dir;
+	if (`intField -q -v u_dir_ctrl` > 0){
+		intField -e -v 1 u_dir_ctrl; 
+		$u_dir = 1;
+	}else if (`intField -q -v u_dir_ctrl` < 0){
+		intField -e -v -1 u_dir_ctrl; 
+		$u_dir = -1;
+	}else if (`intField -q -v u_dir_ctrl` == 0){
+		intField -e -v $u_dir u_dir_ctrl; 
+	}
+}
+
+global proc vDirCtrlChange(){
+	global int $v_dir;
+	if (`intField -q -v v_dir_ctrl` > 0){
+		intField -e -v 1 v_dir_ctrl; 
+		$v_dir = 1;
+	}else if (`intField -q -v v_dir_ctrl` < 0){
+		intField -e -v -1 v_dir_ctrl; 
+		$v_dir = -1;
+	}else if (`intField -q -v v_dir_ctrl` == 0){
+		intField -e -v $v_dir v_dir_ctrl; 
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Check for correct selection
+proc xuvCheckUvSelection() {
+	string $uvs[] = `filterExpand -sm 35`;
+	if (!`size($uvs)`) error("No UVs selected");
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Move UVs
+global proc xfuvMove(int $dirU, float $dirV) {
+	xuvCheckUvSelection();
+	global float $gXfuvMoveU, $gXfuvMoveV;
+	polyEditUV -u ($dirU * $gXfuvMoveU) -v ($dirV * $gXfuvMoveV);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Calculate distances between U and V values
+global proc xfuvDifference() {
+	xuvCheckUvSelection();
+	global float $gXfuvMoveU, $gXfuvMoveV;
+
+	float $uvbox[] = `polyEvaluate -bc2`;
+	float $uDiff = `abs($uvbox[1] - $uvbox[0])`;
+	float $vDiff = `abs($uvbox[3] - $uvbox[2])`;
+	$gXfuvMoveU = $uDiff;
+	$gXfuvMoveV = $vDiff;
+	floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl;
+	floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Rotate UVs
+global proc xfuvRotate(int $direction) {
+	xuvCheckUvSelection();
+	global float $gXuvRotatePivotU, $gXuvRotatePivotV, $gXfuvAngle;
+	int $setPivot = `checkBox -q -v xuvSetRotatePivot_ctrl`;
+
+	if ($setPivot)
+		polyEditUV -pivotU $gXuvRotatePivotU -pivotV $gXuvRotatePivotV -angle ($gXfuvAngle * $direction);
+	else
+		polyRotateUVs($gXfuvAngle * $direction);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Quick Rotate UVs
+global proc xfuvQuickRotate(float $angle) {
+	xuvCheckUvSelection();
+	global float $gXuvRotatePivotU, $gXuvRotatePivotV;
+	int $setPivot = `checkBox -q -v xuvSetRotatePivot_ctrl`;
+
+	if ($setPivot)
+		polyEditUV -pivotU $gXuvRotatePivotU -pivotV $gXuvRotatePivotV -angle $angle;
+	else
+		polyRotateUVs($angle);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Calculate angle between UVs
+global proc xfuvCalcAngle() {
+	xuvCheckUvSelection();
+	global float $gXfuvAngle;
+
+	float $uvbox[] = `polyEvaluate -bc2`;
+	float $uDiff = $uvbox[1] - $uvbox[0];
+	float $vDiff = $uvbox[3] - $uvbox[2];
+
+	if ($uDiff!=0) {
+		$gXfuvAngle = `atand($vDiff/$uDiff)`;
+		if ($gXfuvAngle > 45) $gXfuvAngle = 90 - $gXfuvAngle;
+	}
+	else $gXfuvAngle = 0;
+
+	floatField -e -v $gXfuvAngle xfuvAngle_ctrl;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Scale UVs
+global proc xfuvScale(int $doU, int $doV) {
+	xuvCheckUvSelection();
+	global float $gXuvScalePivotU, $gXuvScalePivotV, $gXfuvScaleU, $gXfuvScaleV;
+	int $setPivot = `checkBox -q -v xuvSetScalePivot_ctrl`;
+	float $scaleU = 1;
+	float $scaleV = 1;
+
+	// Multiply by zero does not work in Maya
+	if ($gXfuvScaleU==0) $gXfuvScaleU = 0.00000001;
+	if ($gXfuvScaleV==0) $gXfuvScaleV = 0.00000001;
+
+	if ($setPivot) {
+		if ($doU) $scaleU = $gXfuvScaleU;
+		if ($doV) $scaleV = $gXfuvScaleV;
+		polyEditUV -pu $gXuvScalePivotU -pv $gXuvScalePivotV -su $scaleU -sv $scaleV;
+	}
+	else {
+		float $uvbox[] = `polyEvaluate -bc2`;
+		float $pivotU = ($uvbox[0] + $uvbox[1]) * 0.5;
+		float $pivotV = ($uvbox[2] + $uvbox[3]) * 0.5;
+		if ($doU) $scaleU = $gXfuvScaleU;
+		if ($doV) $scaleV = $gXfuvScaleV;
+		polyEditUV -pu $pivotU -pv $pivotV -su $scaleU -sv $scaleV;
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Quick Scale UVs
+global proc xfuvQuickScale(float $u, float $v) {
+	xuvCheckUvSelection();
+	global float $gXuvScalePivotU, $gXuvScalePivotV;
+	int $setPivot = `checkBox -q -v xuvSetScalePivot_ctrl`;
+
+	if ($setPivot)
+		polyEditUV -pu $gXuvScalePivotU -pv $gXuvScalePivotV -scaleU $u -scaleV $v;
+	else {
+		float $uvbox[] = `polyEvaluate -bc2`;
+		float $pivotU = ($uvbox[0] + $uvbox[1]) * 0.5;
+		float $pivotV = ($uvbox[2] + $uvbox[3]) * 0.5;
+		polyEditUV -pu $pivotU -pv $pivotV -scaleU $u -scaleV $v;
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Pivot GUI stuff
+proc xuvPivotEnable(int $mode, int $enable) {
+	if ($mode==0) {
+		checkBox   -e -v  $enable xuvSetRotatePivot_ctrl;
+		floatField -e -en $enable xfuvRotatePivotU_ctrl;
+		floatField -e -en $enable xfuvRotatePivotV_ctrl;
+	}
+	else {
+		checkBox   -e -v  $enable xuvSetScalePivot_ctrl;
+		floatField -e -en $enable xfuvScalePivotU_ctrl;
+		floatField -e -en $enable xfuvScalePivotV_ctrl;
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Pivot editing procedures
+global proc xuvPivot(int $mode, int $task, float $u, float $v) {
+	global float $gXuvRotatePivotU, $gXuvRotatePivotV, $gXuvScalePivotU, $gXuvScalePivotV;
+	string $chb, $ff1, $ff2;
+	string $pivotU, $pivotV;
+	
+	//Rotate
+	if ($mode==0) {
+		$chb = "xuvSetRotatePivot_ctrl";
+		$ff1 = "xfuvRotatePivotU_ctrl";
+		$ff2 = "xfuvRotatePivotV_ctrl";
+		$pivotU = "$gXuvRotatePivotU";
+		$pivotV = "$gXuvRotatePivotV";
+	}
+	//Scale
+	else {
+		$chb = "xuvSetScalePivot_ctrl";
+		$ff1 = "xfuvScalePivotU_ctrl";
+		$ff2 = "xfuvScalePivotV_ctrl";
+		$pivotU = "$gXuvScalePivotU";
+		$pivotV = "$gXuvScalePivotV";
+	}
+		
+	// Disable Set-Pivot
+	if ($task==0) {
+		xuvPivotEnable($mode, 0);
+	}
+	// Enable Set Pivot
+	else if ($task==1) {
+		xuvPivotEnable($mode, 1);
+	}
+	// Enable Set-Pivot and set UV values
+	// This is called from the popup menu
+	else if ($task==2) {
+		xuvPivotEnable($mode, 1);
+		eval($pivotU + " = " + $u);
+		eval($pivotV + " = " + $v);
+		floatField -e -v $u $ff1;
+		floatField -e -v $v $ff2;
+	}
+	// Read value from U floatField
+	else if ($task==3) {
+		eval($pivotU + " = " + `floatField -q -v $ff1`);
+	}
+	// Read value from V floatField
+	else if ($task==4) {
+		eval($pivotV + " = " + `floatField -q -v $ff2`);
+	}
+	// Calculate UV Center
+	else if ($task==5) {
+		xuvCheckUvSelection();
+		float $uvbox[] = `polyEvaluate -bc2`;
+		float $pU = ($uvbox[0] + $uvbox[1]) * 0.5;
+		float $pV = ($uvbox[2] + $uvbox[3]) * 0.5;
+		eval($pivotU + " = " + $pU);
+		eval($pivotV + " = " + $pV);
+		xuvPivotEnable($mode, 1);
+		floatField -e -v $pU $ff1;
+		floatField -e -v $pV $ff2;
+	}
+	// Calculate UV Corners
+	// Example:
+	// xuvPivot(0,6,0,1) = Top Left
+	// xuvPivot(0,6,1,1) = Top Right
+	// xuvPivot(0,6,1,0) = Bottom Right
+	// xuvPivot(0,6,0,0) = Bottom Left
+	else if ($task==6) {
+		xuvCheckUvSelection();
+		float $pU, $pV;
+		float $uvbox[] = `polyEvaluate -bc2`;
+		//0=umin 1=umax 2=vmin 3=vmax
+
+		if ($u) $pU = $uvbox[1];
+		else	$pU = $uvbox[0];
+		if ($v) $pV = $uvbox[3];
+		else	$pV = $uvbox[2];
+		
+		eval($pivotU + " = " + $pU);
+		eval($pivotV + " = " + $pV);
+		xuvPivotEnable($mode,1);
+		floatField -e -v $pU $ff1;
+		floatField -e -v $pV $ff2;
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Change precision for the float fields
+global proc xfuvPrecision(int $mode) {
+	int $oldPrecision, $newPrecision;
+
+	// Move Fields
+	if ($mode==0) {
+		$oldPrecision = `optionVar -q "xfuvMovePrecision"`;
+		$newPrecision = precisionPrompt("", $oldPrecision, 8);
+
+		if ($newPrecision) {
+			floatField -e -pre $newPrecision xfuvMoveU_ctrl;
+			floatField -e -pre $newPrecision xfuvMoveV_ctrl;
+			optionVar -iv "xfuvMovePrecision" $newPrecision;
+		}
+	}
+	// Rotate Fields
+	else if ($mode==1) {
+		$oldPrecision = `optionVar -q "xfuvRotatePrecision"`;
+		$newPrecision = precisionPrompt("", $oldPrecision, 8);
+
+		if ($newPrecision) {
+			floatField -e -pre $newPrecision xfuvAngle_ctrl;
+			optionVar -iv "xfuvRotatePrecision" $newPrecision;
+		}
+	}
+	// Scale Fields
+	else if ($mode==2) {
+		$oldPrecision = `optionVar -q "xfuvScalePrecision"`;
+		$newPrecision = precisionPrompt("", $oldPrecision, 8);
+
+		if ($newPrecision) {
+			floatField -e -pre $newPrecision xfuvScaleU_ctrl;
+			floatField -e -pre $newPrecision xfuvScaleV_ctrl;
+			optionVar -iv "xfuvScalePrecision" $newPrecision;
+		}
+	}
+	// Pivot Fields
+	else if ($mode==3) {
+		$oldPrecision = `optionVar -q "xfuvPivotPrecision"`;
+		$newPrecision = precisionPrompt("", $oldPrecision, 8);
+
+		if ($newPrecision) {
+			floatField -e -pre $newPrecision xfuvRotatePivotU_ctrl;
+			floatField -e -pre $newPrecision xfuvRotatePivotV_ctrl;
+			floatField -e -pre $newPrecision xfuvScalePivotU_ctrl;
+			floatField -e -pre $newPrecision xfuvScalePivotV_ctrl;
+
+			optionVar -iv "xfuvPivotPrecision" $newPrecision;
+		}
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Resize Window Per Tab
+global proc xuvResizeWindow(string $winName, string $tabLayout) {
+	global int $gXfuvWinHeight, $gXfuvWinWidth;
+	int $tabNr = `tabLayout -q -selectTabIndex $tabLayout`;
+	int $heightChange;
+	
+	if ($tabNr==1)		$heightChange = -101;
+	else if ($tabNr==2) $heightChange = -67;
+	else if ($tabNr==3) $heightChange = -43;
+	else if ($tabNr==4) $heightChange = 0;
+	
+	int $newHeight = $gXfuvWinHeight + $heightChange;
+	
+	window -e -resizeToFitChildren 0 -sizeable 1 -h ($newHeight) $winName;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// UI
+global proc sdv_xformUV() {
+	global float $gXuvRotatePivotU, $gXuvRotatePivotV, $gXuvScalePivotU, $gXuvScalePivotV, $gXfuvAngle, $gXfuvScaleU, $gXfuvScaleV, $gXfuvMoveU, $gXfuvMoveV;	
+	global int $gXfuvWinHeight, $gXfuvWinWidth;
+	
+	// Sparx-added
+	global int $u_dir, $v_dir, $u_lim, $v_lim, $u_start, $v_start, $u_min, $u_max, $v_min, $v_max;
+	global float $space;
+	// Sparx-added
+	
+	$gXfuvWinHeight = 100;
+	$gXfuvWinWidth = 100;
+	$gXfuvMoveU = 1.0;
+	$gXfuvMoveV = 1.0;
+	$gXfuvAngle = 45;
+	$gXfuvScaleU = 0.5;
+	$gXfuvScaleV = 0.5;
+	$gXuvRotatePivotU = 0.5;
+	$gXuvRotatePivotV = 0.5;
+	$gXuvScalePivotU = 0.5;
+	$gXuvScalePivotV = 0.5;	
+
+	if (!`optionVar -exists "xfuvMovePrecision"`)	optionVar -iv "xfuvMovePrecision" 4;
+	if (!`optionVar -exists "xfuvRotatePrecision"`) optionVar -iv "xfuvRotatePrecision" 2;
+	if (!`optionVar -exists "xfuvScalePrecision"`)	optionVar -iv "xfuvScalePrecision" 4;
+	if (!`optionVar -exists "xfuvPivotPrecision"`)	optionVar -iv "xfuvPivotPrecision" 4;
+
+	int $movePrecision	 = `optionVar -q "xfuvMovePrecision"`;
+	int $rotatePrecision = `optionVar -q "xfuvRotatePrecision"`;
+	int $scalePrecision  = `optionVar -q "xfuvScalePrecision"`;
+	int $pivotPrecision  = `optionVar -q "xfuvPivotPrecision"`;
+
+	///////////////////////////////////////////////////////////////////////////////
+	// Define UI templates
+	int $a2 = 24;									// left side buttons
+	int $a3 = $a2 * 1.5;							// 3x
+	int $a4 = $a2 * 2;								// 4x
+	int $a6 = $a2 * 3;								// 6x
+	int $b1 = 32;									// right side buttons
+	int $b2 = 64;									// floatFields
+	int $b3 = ($a6 + 4 + ($b1 * 4) + $a2) * 0.5;	// big buttons in extras
+
+	string $template = "xfuvTemplate";
+	if (!`uiTemplate -exists $template`) uiTemplate $template;
+
+	symbolButton -dt $template -w $b1 -h 22;
+	
+	button -dt $template -h 22;
+	
+	frameLayout
+		-dt $template
+		-collapsable 0
+		-labelVisible 0
+		//-labelAlign "top"
+		-labelIndent 5
+		-font "plainLabelFont"
+		-borderStyle "out";
+		
+	iconTextButton
+		-dt $template
+		-marginWidth 0
+		-marginHeight 0
+		-style "iconAndTextHorizontal"
+		-font "plainLabelFont";
+		
+	///////////////////////////////////////////////////////////////////////////////
+	//Create window
+	string $winName = "xfuvWin";
+
+	if (`window -ex $winName`)
+		deleteUI $winName;
+
+	// windowPref causes resizeToFitChildren to increase the window with each program start
+	if (`windowPref -ex $winName`)
+		windowPref -e -wh 80 80 $winName;
+		
+	window -title " XformUV 2.8"
+		-resizeToFitChildren 1
+		-sizeable 1
+		-toolbox 0
+		-width $gXfuvWinWidth
+		-height $gXfuvWinHeight
+		$winName;
+	
+	string $form = `formLayout`;
+	string $tabLayout = `tabLayout -scrollable 0 -innerMarginHeight 5 -innerMarginWidth 5`;
+	
+	// This formLayout is required as of Maya 2011.
+	// Otherwise the tabLayout will give you one extra empty first tab... for free.
+	// Thanks Autodesk.
+	formLayout -edit
+		-attachForm $tabLayout "top"    0
+		-attachForm $tabLayout "left"   0
+		-attachForm $tabLayout "bottom" 0
+		-attachForm $tabLayout "right"  0
+		$form;
+	     
+	string $tab1 = `columnLayout -adj true "Move"`;		setParent ..;
+	string $tab2 = `columnLayout -adj true "Rotate"`;	setParent ..;
+	string $tab3 = `columnLayout -adj true "Scale"`;	setParent ..;
+	string $tab4 = `columnLayout -adj true "Extras"`;	setParent ..;
+	string $tab5 = `columnLayout -adj true "UDIM"`;  setParent ..;
+
+	// Auto resize window on tab change.
+	// Note: Select the tab with the greatest height as Maya 2011 cannot resize smaller than the largest tab.
+	tabLayout -e -selectTabIndex 4 -cc ("xuvResizeWindow(\"" + $winName + "\",\"" + $tabLayout + "\")") $tabLayout;
+
+	///////////////////////////////////////////////////////////////////////////////
+	// Move Tab
+
+	setParent $tab1;
+		rowLayout -nc 4 -cw4 $a2 ($a4+4) $b2 $b2;
+			separator -style "none";
+			symbolButton -ut $template -w $a2 -h 22 -i "xuv_up.bmp" -c "xfuvMove(0, 1)";
+			text -l "U Value";
+			text -l "V Value";
+		setParent ..;
+		rowLayout -nc 6 -cw6 $a2 $a2 ($a2+5) $b2 $b2 $b1;
+			symbolButton -ut $template -w $a2 -h 22 -i "xuv_left.bmp" -c "xfuvMove(-1, 0)";
+			separator -style "none";
+			symbolButton -ut $template -w $a2 -h 22 -i "xuv_right.bmp" -c "xfuvMove(1, 0)";
+			floatField -pre $movePrecision -w $b2 -v $gXfuvMoveU -cc "$gXfuvMoveU = \`floatField -q -v xfuvMoveU_ctrl\`" xfuvMoveU_ctrl;
+			floatField -pre $movePrecision -w $b2 -v $gXfuvMoveV -cc "$gXfuvMoveV = \`floatField -q -v xfuvMoveV_ctrl\`" xfuvMoveV_ctrl;
+			symbolButton -ut $template -w $a2 -i "xuv_pull.bmp";
+				popupMenu -button 1;
+				menuItem -label "0.01, 0.01" -c "$gXfuvMoveU = $gXfuvMoveV = 0.01; floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl; floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl";
+				menuItem -label "0.10, 0.10" -c "$gXfuvMoveU = $gXfuvMoveV = 0.10; floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl; floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl";
+				menuItem -label "0.25, 0.25" -c "$gXfuvMoveU = $gXfuvMoveV = 0.25; floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl; floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl";
+				menuItem -label "0.50, 0.50" -c "$gXfuvMoveU = $gXfuvMoveV = 0.50; floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl; floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl";
+				menuItem -label "1.00, 1.00" -c "$gXfuvMoveU = $gXfuvMoveV = 1.00; floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl; floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl";
+				menuItem -divider 1;
+				menuItem -label "Calc: UV Difference" -c "xfuvDifference";
+				menuItem -label "Multiple by 10" -c "$gXfuvMoveU *= 10;  $gXfuvMoveV *= 10;  floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl; floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl";
+				menuItem -label "Divide by 10"	 -c "$gXfuvMoveU *= 0.1; $gXfuvMoveV *= 0.1; floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl; floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl";
+				menuItem -divider 1;
+				menuItem -label "4 Pixels / 64 Map"   -c "$gXfuvMoveU = $gXfuvMoveV = 0.0625;	   floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl; floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl";
+				menuItem -label "4 Pixels / 128 Map"  -c "$gXfuvMoveU = $gXfuvMoveV = 0.03125;	   floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl; floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl";
+				menuItem -label "4 Pixels / 256 Map"  -c "$gXfuvMoveU = $gXfuvMoveV = 0.015625;    floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl; floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl";
+				menuItem -label "4 Pixels / 512 Map"  -c "$gXfuvMoveU = $gXfuvMoveV = 0.0078125;   floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl; floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl";
+				menuItem -label "4 Pixels / 1024 Map" -c "$gXfuvMoveU = $gXfuvMoveV = 0.00390625;  floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl; floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl";
+				menuItem -label "4 Pixels / 2048 Map" -c "$gXfuvMoveU = $gXfuvMoveV = 0.001953125; floatField -e -v $gXfuvMoveU xfuvMoveU_ctrl; floatField -e -v $gXfuvMoveV xfuvMoveV_ctrl";
+				menuItem -divider 1;
+				menuItem -label "Change Precision..." -c "xfuvPrecision(0)";
+		setParent ..;
+		rowLayout -nc 2 -cw2 $a2 ($a2*2); separator -style "none";
+			symbolButton -ut $template -w $a2 -h 22 -i "xuv_down.bmp" -c "xfuvMove(0, -1)";
+
+	///////////////////////////////////////////////////////////////////////////////
+	// Rotate Tab
+
+	setParent $tab2;
+		columnLayout -adj 1;
+			rowLayout -nc 4 -cw4 $a3 ($a3+4) ($b2*2) $b1;
+				symbolButton -ut $template -w $a3 -i "xuv_ccw.bmp" -command "xfuvRotate(1)";
+				symbolButton -ut $template -w $a3 -i "xuv_cw.bmp" -command "xfuvRotate(-1)";
+				floatField -w ($b2*2) -v $gXfuvAngle -pre $rotatePrecision -cc "$gXfuvAngle = \`floatField -q -v xfuvAngle_ctrl\`" xfuvAngle_ctrl;
+				symbolButton -ut $template -w $a2 -i "xuv_pull.bmp";
+					popupMenu -button 1;
+					menuItem -label "Calc: UV angle" -c "xfuvCalcAngle";
+					menuItem -divider 1;
+					menuItem -label "90°" -c "$gXfuvAngle=90; floatField -e -v $gXfuvAngle xfuvAngle_ctrl";
+					menuItem -label "45°" -c "$gXfuvAngle=45; floatField -e -v $gXfuvAngle xfuvAngle_ctrl";
+					menuItem -label "30°    (1/12)"   -c "$gXfuvAngle = 30;   floatField -e -v $gXfuvAngle xfuvAngle_ctrl";
+					menuItem -label "22.5° (1/16)"	  -c "$gXfuvAngle = 22.5; floatField -e -v $gXfuvAngle xfuvAngle_ctrl";
+					menuItem -label "18°     (1/20)"  -c "$gXfuvAngle = 18;   floatField -e -v $gXfuvAngle xfuvAngle_ctrl";
+					menuItem -label "15°     (1/24)"  -c "$gXfuvAngle = 15;   floatField -e -v $gXfuvAngle xfuvAngle_ctrl";
+					menuItem -label "10°     (1/36)"  -c "$gXfuvAngle = 10;   floatField -e -v $gXfuvAngle xfuvAngle_ctrl";
+					menuItem -label "5°       (1/72)" -c "$gXfuvAngle = 5;	  floatField -e -v $gXfuvAngle xfuvAngle_ctrl";
+					menuItem -divider 1;
+					menuItem -label "Change Precision..." -c "xfuvPrecision(1)";
+			setParent ..;
+			separator -h 4 -style "none";
+			rowLayout -numberOfColumns 5 -cw5 ($a6+4) $b1 $b1 $b1 $b1;
+				text -al "left" -h 18 -l "Quick Presets";
+				button -ut $template -width $b1 -label "   5°" -command "xfuvQuickRotate(5)";
+				button -ut $template -width $b1 -label "  15°" -command "xfuvQuickRotate(15)";
+				button -ut $template -width $b1 -label "  45°" -command "xfuvQuickRotate(45)";
+				button -ut $template -width $b1 -label "  90°" -command "xfuvQuickRotate(90)";
+			setParent ..;
+			rowLayout
+				-numberOfColumns 5
+				-cw5 ($a6+4) $b1 $b1 $b1 $b1;
+				separator -style "none";
+				button -ut $template -width $b1 -label "  -5°" -command "xfuvQuickRotate(-5)";
+				button -ut $template -width $b1 -label " -15°" -command "xfuvQuickRotate(-15)";
+				button -ut $template -width $b1 -label " -45°" -command "xfuvQuickRotate(-45)";
+				button -ut $template -width $b1 -label " -90°" -command "xfuvQuickRotate(-90)";
+			setParent ..;
+			separator -h 8;
+			rowLayout -nc 4 -cw4 ($a6+4) $b2 $b2 $b1;
+				checkBox -v 0 -w ($a6+4) -l "Set Pivot" -onCommand	"xuvPivot(0,1,0,0)" -offCommand "xuvPivot(0,0,0,0)" xuvSetRotatePivot_ctrl;
+				floatField -w $b2 -pre $pivotPrecision -enable 0 -v $gXuvRotatePivotU -cc "xuvPivot(0,3,0,0)" xfuvRotatePivotU_ctrl;
+				floatField -w $b2 -pre $pivotPrecision -enable 0 -v $gXuvRotatePivotV -cc "xuvPivot(0,4,0,0)" xfuvRotatePivotV_ctrl;
+				symbolButton -ut $template -w $a2 -i "xuv_pull.bmp";
+					popupMenu -button 1;
+					menuItem -label "0.0, 0.0"			 -c "xuvPivot(0,2,0,0)";
+					menuItem -label "0.5, 0.5"			 -c "xuvPivot(0,2,0.5,0.5)";
+					menuItem -divider 1;
+					menuItem -label "Calc: Center"		 -c "xuvPivot(0,5,0,0)";
+					menuItem -label "Calc: Top Left"	 -c "xuvPivot(0,6,0,1)";
+					menuItem -label "Calc: Top Right"	 -c "xuvPivot(0,6,1,1)";
+					menuItem -label "Calc: Bottom Left"  -c "xuvPivot(0,6,0,0)";
+					menuItem -label "Calc: Bottom Right" -c "xuvPivot(0,6,1,0)";
+					menuItem -divider 1;
+					menuItem -label "Change Precision..." -c "xfuvPrecision(3)";
+
+	///////////////////////////////////////////////////////////////////////////////
+	// Scale Tab
+
+	setParent $tab3;
+		columnLayout -adj 1;
+			rowLayout -nc 4 -cw4 ($a6+4) $b2 $b2 $b1;
+				button -ut $template -width $a6 -label "  Scale UV" -command "xfuvScale(1, 1)";
+				floatField -w $b2 -v $gXfuvScaleU -pre $scalePrecision -cc "$gXfuvScaleU = \`floatField -q -v xfuvScaleU_ctrl\`" xfuvScaleU_ctrl;
+				floatField -w $b2 -v $gXfuvScaleV -pre $scalePrecision -cc "$gXfuvScaleV = \`floatField -q -v xfuvScaleV_ctrl\`" xfuvScaleV_ctrl;
+				symbolButton -ut $template -w $a2 -i "xuv_pull.bmp";
+					popupMenu -button 1;
+					menuItem -label "2.00, 2.00" -c "$gXfuvScaleU=2.00; $gXfuvScaleV=2.00; floatField -e -v $gXfuvScaleU xfuvScaleU_ctrl; floatField -e -v $gXfuvScaleV xfuvScaleV_ctrl";
+					menuItem -label "0.75, 0.75" -c "$gXfuvScaleU=0.75; $gXfuvScaleV=0.75; floatField -e -v $gXfuvScaleU xfuvScaleU_ctrl; floatField -e -v $gXfuvScaleV xfuvScaleV_ctrl";
+					menuItem -label "0.50, 0.50" -c "$gXfuvScaleU=0.50; $gXfuvScaleV=0.50; floatField -e -v $gXfuvScaleU xfuvScaleU_ctrl; floatField -e -v $gXfuvScaleV xfuvScaleV_ctrl";
+					menuItem -label "0.25, 0.25" -c "$gXfuvScaleU=0.25; $gXfuvScaleV=0.25; floatField -e -v $gXfuvScaleU xfuvScaleU_ctrl; floatField -e -v $gXfuvScaleV xfuvScaleV_ctrl";
+					menuItem -label "0.10, 0.10" -c "$gXfuvScaleU=0.10; $gXfuvScaleV=0.10; floatField -e -v $gXfuvScaleU xfuvScaleU_ctrl; floatField -e -v $gXfuvScaleV xfuvScaleV_ctrl";
+					menuItem -divider 1;
+					menuItem -label "Invert Values" -c "$gXfuvScaleU*=-1; $gXfuvScaleV*=-1; floatField -e -v $gXfuvScaleU xfuvScaleU_ctrl; floatField -e -v $gXfuvScaleV xfuvScaleV_ctrl";
+					menuItem -label "Divide Values (1 / Value)" -c "$gXfuvScaleU=1/$gXfuvScaleU; $gXfuvScaleV=1/$gXfuvScaleV; floatField -e -v $gXfuvScaleU xfuvScaleU_ctrl; floatField -e -v $gXfuvScaleV xfuvScaleV_ctrl";
+					menuItem -divider 1;
+					menuItem -label "Change Precision..." -c "xfuvPrecision(2)";
+				setParent ..;
+			setParent ..;
+			rowLayout -nc 4 -cw4 ($a6+4) $b2 $b2 $b1;
+				separator -style "none";
+				button -ut $template -width $b2 -label "   Scale U" -command "xfuvScale(1, 0)";
+				button -ut $template -width $b2 -label "   Scale V" -command "xfuvScale(0, 1)";
+				setParent ..;
+			separator -h 4 -style "none";
+			rowLayout -numberOfColumns 4 -cw4 ($a6+4) $b1 $b1 $b2;
+				text -al "left" -h 18 -l "Quick Presets";
+				button -ut $template -width $b1 -label "200%" -command "xfuvQuickScale(2,2)";
+				button -ut $template -width $b1 -label "101%" -command "xfuvQuickScale(1.01,1.01)";
+				button -ut $template -width $b2 -label "  Mirror U" -command "xfuvQuickScale(-1,1)";
+			setParent ..;
+			rowLayout -numberOfColumns 4 -cw4 ($a6+4) $b1 $b1 $b2;
+				separator -style "none";
+				button -ut $template -width $b1 -label "50%" -command "xfuvQuickScale(0.5,0.5)";
+				button -ut $template -width $b1 -label "99%" -command "xfuvQuickScale(0.990099,0.990099)";
+				button -ut $template -width $b2 -label "  Mirror V" -command "xfuvQuickScale(1,-1)";
+			setParent ..;
+			separator -h 8;
+			rowLayout -nc 4 -cw4 ($a6+4) $b2 $b2 $b1;
+				checkBox -v 0 -w ($a6+4) -onCommand  "xuvPivot(1,1,0,0)" -offCommand "xuvPivot(1,0,0,0)" -l "Set Pivot" xuvSetScalePivot_ctrl;
+				floatField -w $b2 -pre $pivotPrecision -enable 0 -v $gXuvScalePivotU -cc "xuvPivot(1,3,0,0)" xfuvScalePivotU_ctrl;
+				floatField -w $b2 -pre $pivotPrecision -enable 0 -v $gXuvScalePivotV -cc "xuvPivot(1,4,0,0)" xfuvScalePivotV_ctrl;
+				symbolButton -ut $template -w $a2 -i "xuv_pull.bmp";
+					popupMenu -button 1;
+					menuItem -label "0.0, 0.0"			 -c "xuvPivot(1,2,0,0)";
+					menuItem -label "0.5, 0.5"			 -c "xuvPivot(1,2,0.5,0.5)";
+					menuItem -divider 1;
+					menuItem -label "Calc: Center"		 -c "xuvPivot(1,5,0,0)";
+					menuItem -label "Calc: Top Left"	 -c "xuvPivot(1,6,0,1)";
+					menuItem -label "Calc: Top Right"	 -c "xuvPivot(1,6,1,1)";
+					menuItem -label "Calc: Bottom Left"  -c "xuvPivot(1,6,0,0)";
+					menuItem -label "Calc: Bottom Right" -c "xuvPivot(1,6,1,0)";
+					menuItem -divider 1;
+					menuItem -label "Change Precision..." -c "xfuvPrecision(3)";
+
+	///////////////////////////////////////////////////////////////////////////////
+	// Extras Tab
+
+	setParent $tab4;
+		columnLayout -rs 0 -adj 1;
+			gridLayout -nc 2 -cwh $b3 36;
+				frameLayout -ut $template -w $b3 -h 36;
+					iconTextButton -ut $template -image "sdv_orientUvShells.bmp" -label " Orient Shells" -c "sdv_orientUvShells";
+						popupMenu -button 3;
+						menuItem
+							-l "Copy Icon To Shelf"
+							-c "sdv_shelfButton(\"Orient UV Shells\", \"sdv_orientUvShells\", \"sdv_orientUvShells.bmp\");";
+				setParent ..;
+				frameLayout -ut $template -w $b3 -h 36;
+					iconTextButton -ut $template -image "sdv_orientSingleShell.bmp" -label " Orient Single" -c "source sdv_orientUvShells; sdv_orientSingleShell";
+						popupMenu -button 3;
+						menuItem
+							-l "Copy Icon To Shelf"
+							-c "sdv_shelfButton(\"Orient Single UV Shell\", \"source sdv_orientUvShells; sdv_orientSingleShell\", \"sdv_orientSingleShell.bmp\");";
+				setParent ..;
+				frameLayout -ut $template -w $b3 -h 36;
+					iconTextButton -ut $template -image "sdv_stackUvShells.bmp" -l " Stack Shells" -c "sdv_alignUvShells(7)";
+						popupMenu -button 3;
+						menuItem
+							-l "Copy Icon To Shelf"
+							-c "sdv_shelfButton(\"Stack UV Shells\", \"sdv_alignUvShells(7)\", \"sdv_stackUvShells.bmp\");";
+				setParent ..;
+				frameLayout -ut $template -w $b3 -h 36;
+					iconTextButton -ut $template -image "sdv_centerUvs.bmp" -l " Center UVs" -c "sdv_centerUvs";
+						popupMenu -button 3;
+						menuItem
+							-l "Copy Icon To Shelf"
+							-c "sdv_shelfButton(\"Center UVs\", \"sdv_centerUvs\", \"sdv_centerUvs.bmp\");";
+				setParent ..;
+			setParent ..;
+			separator -h 6 -style "none";
+			rowLayout -nc 2 -cw2 ($b3+2) ($b3-2);
+				frameLayout -ut $template -lv 1 -l "Align UV Shells" -mw 3 -mh 2 -bs "etchedOut";
+					gridLayout -nc 3 -cwh 34 34;
+					popupMenu -button 3;
+					menuItem -label "Copy Icons To Shelf" -c "sdv_alignUvShells(-2)";
+						symbolButton -w 32 -h 32 -i "sdv_aluvLeft.bmp"    -c "sdv_alignUvShells(1)";
+						symbolButton -w 32 -h 32 -i "sdv_aluvCenterU.bmp" -c "sdv_alignUvShells(5)";
+						symbolButton -w 32 -h 32 -i "sdv_aluvRight.bmp"   -c "sdv_alignUvShells(2)";
+						symbolButton -w 32 -h 32 -i "sdv_aluvTop.bmp"	  -c "sdv_alignUvShells(4)";
+						symbolButton -w 32 -h 32 -i "sdv_aluvCenterV.bmp" -c "sdv_alignUvShells(6)";
+						symbolButton -w 32 -h 32 -i "sdv_aluvBottom.bmp"  -c "sdv_alignUvShells(3)";
+					setParent ..;	
+				setParent ..;
+				frameLayout -ut $template -lv 1 -l "Flatten UVs" -mw 3 -mh 2 -bs "etchedOut";
+					gridLayout -nc 3 -cwh 34 34;
+
+					string $cmd;
+					$cmd =  "sdv_shelfButton(\"Flatten UVs - Left\",	\"sdv_flattenUVs(3)\", \"xuv_flatLeft.bmp\");\n";
+					$cmd += "sdv_shelfButton(\"Flatten UVs - Center U\",\"sdv_flattenUVs(0)\", \"xuv_flatHor.bmp\");\n";
+					$cmd +=	"sdv_shelfButton(\"Flatten UVs - Right\",	\"sdv_flattenUVs(4)\", \"xuv_flatRight.bmp\");\n";
+					$cmd +=	"sdv_shelfButton(\"Flatten UVs - Top\",		\"sdv_flattenUVs(5)\", \"xuv_flatTop.bmp\");\n";
+					$cmd +=	"sdv_shelfButton(\"Flatten UVs - Center V\",\"sdv_flattenUVs(1)\", \"xuv_flatVer.bmp\");\n";
+					$cmd +=	"sdv_shelfButton(\"Flatten UVs - Bottom\",	\"sdv_flattenUVs(6)\", \"xuv_flatBottom.bmp\");";
+					popupMenu -button 3;
+					menuItem -label "Copy Icons To Shelf" -c $cmd;
+						symbolButton -w 32 -h 32 -i "xuv_flatLeft.bmp"	 -c "sdv_flattenUVs(3)";
+						symbolButton -w 32 -h 32 -i "xuv_flatHor.bmp"	 -c "sdv_flattenUVs(0)";
+						symbolButton -w 32 -h 32 -i "xuv_flatRight.bmp"  -c "sdv_flattenUVs(4)";
+						symbolButton -w 32 -h 32 -i "xuv_flatTop.bmp"	 -c "sdv_flattenUVs(5)";
+						symbolButton -w 32 -h 32 -i "xuv_flatVer.bmp"	 -c "sdv_flattenUVs(1)";
+						symbolButton -w 32 -h 32 -i "xuv_flatBottom.bmp" -c "sdv_flattenUVs(6)";
+					setParent ..;	
+				setParent ..;	
+			setParent ..;
+			
+	///////////////////////////////////////////////////////////////////////////////
+	// UDIM Tab
+
+	setParent $tab5;
+		$u_dir = 1;	
+		$v_dir = 1;
+		$u_lim = 10;
+		$v_lim = 0;
+		$u_start = 0;
+		$v_start = 0;
+		$space = 0.2;
+		$u_min = 1;
+		$u_max = 1;
+		$v_min = 1;
+		$v_max = 1;
+		
+		$label_w = 50;
+		$field_w = 40;
+		$w_pad = 10;
+		
+		rowLayout -nc 7 -cw 1 $w_pad -cw6 $label_w $field_w $label_w $field_w $label_w $field_w;
+			separator -style "none";
+			text -l "U-Direct" -w $label_w;
+			intField -ed false -value $u_dir -w $field_w -cc "uDirCtrlChange()" u_dir_ctrl;
+			text -l "U-Limit" -w $label_w;
+			intField -min 0 -value $u_lim -w $field_w -cc "uLimCtrlChange()" u_lim_ctrl;
+			text -l "U-Start" -w $label_w;
+			intField -min 0 -value $u_start -w $field_w -cc "$u_start = \`intField -q -v u_start_ctrl\`" u_start_ctrl;
+		setParent ..;	
+		rowLayout -nc 7 -cw 1 $w_pad -cw6 $label_w $field_w $label_w $field_w $label_w $field_w;
+			separator -style "none";
+			text -l "V-Direct" -w $label_w;
+			intField -ed false -value $v_dir -w $field_w -cc "vDirCtrlChange()" v_dir_ctrl;
+			text -l "V-Limit" -w $label_w;
+			intField -min 0 -value $v_lim -w $field_w -cc "vLimCtrlChange()" v_lim_ctrl;
+			text -l "V-Start" -w $label_w;
+			intField -min 0 -value $v_start -w $field_w -cc "$v_start = \`intField -q -v v_start_ctrl\`" v_start_ctrl;
+		setParent ..;		
+		rowLayout -nc 7 -cw 1 $w_pad -cw6 $label_w $field_w $label_w $field_w $label_w $field_w;
+			separator -style "none";
+			text -l "Shell Spacing" -w ($label_w + 20);
+			floatField -min 0 -pre 2 -value $space -w $field_w -cc "$space = \`floatField -q -v space_ctrl\`" space_ctrl;
+			button -l "Pack" -w $label_w -h 30 -c "packUdim()";
+			separator -style "none";
+			separator -style "none";			
+			button -l "Select UDIM Tiles" -w ($label_w + 50) -h 30 -c "selectUdimTiles()";
+		setParent ..;
+		
+	showWindow;
+	evalDeferred("window -e -resizeToFitChildren 0 " + $winName);
+	evalDeferred("$gXfuvWinHeight = \`window -q -h " + $winName + "\`");
+	evalDeferred("$gXfuvWinWidth  = \`window -q -w " + $winName + "\`");
+	evalDeferred("tabLayout -e -selectTabIndex 1 " + $tabLayout);
+}

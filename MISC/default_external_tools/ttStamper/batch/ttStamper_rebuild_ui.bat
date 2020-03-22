@@ -1,0 +1,1 @@
+pyside2-uic C:\vsTools2\SPD\python\asset\tools\default_external_tools\ttStamper\ui\ttStamper.ui -o C:\vsTools2\SPD\python\asset\tools\default_external_tools\ttStamper\ui_ttStamper.py

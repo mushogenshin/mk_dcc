@@ -1,0 +1,5 @@
+
+
+fdms = cmds.listRelatives("follicle1", allDescendents=True, type="mesh")
+
+print(fdms)

@@ -1,0 +1,182 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+	sdv_orientUvShells.mel
+	======================
+	This script rotates the selected uv shells so that their bounding box is as small as possible.
+	With most shells this results in a straight orientation.
+	
+	Usage:
+	Select uvs and run this script: sdv_orientUvShells
+	
+	Tip:
+	The function that defines the shells works much faster if you select less uvs per shell.
+	Optimally you only need to select one uv per shell.
+	
+	Advanced Users:
+	The shell definition pass can be quite time consuming on high polygon objects. To skip this
+	part you can use the following command: sdv_orientSingleShell
+	Note that this only works on one shell per time.
+
+	History:
+	v1.1	29 Sep 2008		Rewrote the orient function.
+	v1.0	22 Jun 2008
+		
+	© Stefan David
+	www.stefandavid.com
+*/
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// This returns the selected uv shells as a string[]
+//
+proc string[] sdv_shellify() {
+	string $shellStr[], $shell[];
+	string $uvs[] = `filterExpand -sm 35`;
+	int $uvCount = `size($uvs)`;
+	int $uvsLeft = $uvCount;
+	float $startTime = `timerX`;
+		
+	if (!$uvCount) error("No UVs selected");
+	
+	progressWindow
+		-title "Orient UV Shells"
+ 		-status "Defining Shells"
+ 		-isInterruptable true
+ 		-maxValue $uvCount
+ 		-progress 0;
+ 		
+	while ($uvsLeft) {
+		if (`progressWindow -query -isCancelled`) {
+			warning("Operation Cancelled\n");
+			break;
+		}
+		
+		progressWindow
+			-edit
+			-status ("Defining Shells: " + $uvsLeft + " UVs left")
+ 			-progress ($uvCount - $uvsLeft);
+ 			
+		select -r $uvs[0];	
+		polySelectConstraint -type 0x0010 -shell 1 -border 0 -mode 2; 
+		polySelectConstraint -shell 0 -border 0 -mode 0;
+		$shell = `ls -sl -fl`;
+		
+		// $uvs = stringArrayRemove($shell, $uvs); -> 6x slower
+		select -r $uvs;
+		select -deselect $shell; 
+		$uvs = `ls -sl -fl`;
+				
+		$uvsLeft = `size($uvs)`;
+		$shellStr[`size($shellStr)`] = stringArrayToString($shell, " ");
+		clear($shell);
+	}
+
+	print ("Shell Definition: " + `timerX -startTime $startTime` + " sec\n");
+	return $shellStr;
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Performs the uv orientation
+//
+proc sdv_orientUvs() {
+	int $sweepSteps = 8;
+	int $iterations = 4;
+	float $sweepRange = 90;
+	float $sweepAngle = $sweepRange / $sweepSteps;
+	float $oldTotal, $newTotal, $bestAngle, $correctionAngle;
+	float $shellBox[] = `polyEvaluate -bc2`;
+	float $pU = 0.5 * ($shellBox[0] + $shellBox[1]);	
+	float $pV = 0.5 * ($shellBox[2] + $shellBox[3]);
+	
+	// Sweep Method
+	for ($i=1; $i<=$iterations; $i++) {
+		$shellBox = `polyEvaluate -bc2`;
+		$oldTotal = ($shellBox[1] - $shellBox[0]) + ($shellBox[3] - $shellBox[2]);
+		$bestAngle = 0;
+		
+		for ($n=1; $n<$sweepSteps; $n++) {
+			polyEditUV -pivotU $pU -pivotV $pV -angle $sweepAngle;
+			$shellBox = `polyEvaluate -bc2`;
+			$newTotal = ($shellBox[1] - $shellBox[0]) + ($shellBox[3] - $shellBox[2]);
+			
+			if ($newTotal < $oldTotal) {
+				$oldTotal = $newTotal;
+				$bestAngle = ($n * $sweepAngle);
+			}
+		}
+		
+		$correctionAngle = $bestAngle - ($sweepAngle * ($sweepSteps - 1));
+		
+		if ($i!=$iterations) {
+			$sweepRange = $sweepAngle;
+			$sweepAngle = $sweepRange / $sweepSteps;
+			$correctionAngle -= $sweepRange * 0.5;
+		}
+		
+		polyEditUV -pivotU $pU -pivotV $pV -angle $correctionAngle;
+	}
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// This version skips the shellify pass which can be time consuming with high uv counts.
+// It only works on one shell per time.
+//
+global proc sdv_orientSingleShell() {
+ 	global string $gSelect;
+	setToolTo $gSelect;
+	
+	string $sel[] = `ls -sl`;
+	string $uvs[] = `filterExpand -sm 35`;
+	if (!`size($uvs)`) error("No UVs selected");
+	
+	polySelectConstraint -type 0x0010 -shell 1 -border 0 -mode 2; 
+	polySelectConstraint -shell 0 -border 0 -mode 0;
+	sdv_orientUvs;
+	
+	select -r $sel;
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Main procedure
+//
+global proc sdv_orientUvShells() {
+ 	global string $gSelect;
+	setToolTo $gSelect;
+	
+	string $sel[]    = `ls -sl`;
+	string $shells[] = sdv_shellify();
+	int $shellCount  = `size($shells)`;
+	float $startTime = `timerX`;
+	
+	progressWindow
+		-edit
+ 		-maxValue $shellCount;
+ 		
+	for ($i=0; $i<$shellCount; $i++) {
+		if (`progressWindow -query -isCancelled`) {
+			warning("Operation Cancelled\n");
+			break;
+		}
+		
+		progressWindow
+			-edit
+			-progress ($i + 1)
+			-status ("Orienting Shell: " + ($i + 1) + "/" + $shellCount);
+		
+		eval("select -r " + $shells[$i]);
+		sdv_orientUvs;
+	}
+	
+	progressWindow -endProgress;
+	select -r $sel;
+	
+	float $totalTime = `timerX -startTime $startTime`;
+	print ("Orienting UVs: " + $totalTime + " sec\n");
+}

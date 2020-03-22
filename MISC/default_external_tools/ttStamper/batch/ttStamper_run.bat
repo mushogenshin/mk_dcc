@@ -1,0 +1,1 @@
+C:\python3.7.0\python.exe C:\vsTools2\SPD\python\asset\tools\default_external_tools\ttStamper\ttStamper.pyw

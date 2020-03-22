@@ -1,0 +1,1256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mnT2_ilm_tool_win</class>
+ <widget class="QMainWindow" name="mnT2_ilm_tool_win">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>320</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>320</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>320</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>mnT2 ILM Tools</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../icons/mnT2_ilm/ILMtools.bmp</normaloff>../icons/mnT2_ilm/ILMtools.bmp</iconset>
+  </property>
+  <widget class="QWidget" name="central_widget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTabWidget" name="tab_widget">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="obj_tab">
+       <attribute name="title">
+        <string>Model</string>
+       </attribute>
+       <widget class="QGroupBox" name="cre_sel_grp">
+        <property name="geometry">
+         <rect>
+          <x>3</x>
+          <y>3</y>
+          <width>291</width>
+          <height>85</height>
+         </rect>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="title">
+         <string>Crease Select Components</string>
+        </property>
+        <widget class="QLabel" name="label">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>61</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Working on :</string>
+         </property>
+        </widget>
+        <widget class="QRadioButton" name="vert_rb">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>20</y>
+           <width>82</width>
+           <height>17</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Vertices</string>
+         </property>
+        </widget>
+        <widget class="QRadioButton" name="edge_rb">
+         <property name="geometry">
+          <rect>
+           <x>210</x>
+           <y>20</y>
+           <width>71</width>
+           <height>17</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Edges</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_3">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>61</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Value :</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_4">
+         <property name="geometry">
+          <rect>
+           <x>50</x>
+           <y>50</y>
+           <width>41</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>From</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="cre_sel_min">
+         <property name="geometry">
+          <rect>
+           <x>80</x>
+           <y>50</y>
+           <width>41</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>1</string>
+         </property>
+         <property name="+changeCommand" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.creSelMinChange()&quot;</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="cre_sel_max">
+         <property name="geometry">
+          <rect>
+           <x>150</x>
+           <y>50</y>
+           <width>41</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>10</string>
+         </property>
+         <property name="+changeCommand" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.creSelMaxChange()&quot;</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_5">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>50</y>
+           <width>21</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>To</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="cre_sel_but">
+         <property name="geometry">
+          <rect>
+           <x>205</x>
+           <y>50</y>
+           <width>75</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Select</string>
+         </property>
+         <property name="+command" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.creSel()&quot;</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="he_grp">
+        <property name="geometry">
+         <rect>
+          <x>3</x>
+          <y>92</y>
+          <width>291</width>
+          <height>55</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Convert Hard Edge to Crease</string>
+        </property>
+        <widget class="QLineEdit" name="he_cre_val">
+         <property name="geometry">
+          <rect>
+           <x>80</x>
+           <y>20</y>
+           <width>51</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>3</string>
+         </property>
+         <property name="+changeCommand" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.heCreValChange()&quot;</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="he_convert_but">
+         <property name="geometry">
+          <rect>
+           <x>140</x>
+           <y>20</y>
+           <width>141</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Convert</string>
+         </property>
+         <property name="+command" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.heConvert()&quot;</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_6">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>22</y>
+           <width>81</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Crease value</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="abs_cre_grp">
+        <property name="geometry">
+         <rect>
+          <x>3</x>
+          <y>152</y>
+          <width>291</width>
+          <height>56</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Set Absolute Crease Value</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="spacing">
+          <number>1</number>
+         </property>
+         <property name="leftMargin">
+          <number>3</number>
+         </property>
+         <property name="topMargin">
+          <number>3</number>
+         </property>
+         <property name="rightMargin">
+          <number>3</number>
+         </property>
+         <property name="bottomMargin">
+          <number>5</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="abs_cre_0_but">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <italic>false</italic>
+             <bold>true</bold>
+             <strikeout>false</strikeout>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>0.0</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.absCre(0)&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="abs_cre_0_but_2">
+           <property name="text">
+            <string>1.0</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.absCre(1)&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="abs_cre_0_but_3">
+           <property name="text">
+            <string>2.0</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.absCre(2)&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="abs_cre_0_but_4">
+           <property name="text">
+            <string>3.0</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.absCre(3)&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="abs_cre_0_but_5">
+           <property name="text">
+            <string>4.0</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.absCre(4)&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="abs_cre_0_but_6">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>5.0</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.absCre(5)&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="abs_cre_0_but_7">
+           <property name="text">
+            <string>6.0</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.absCre(6)&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="abs_cre_0_but_8">
+           <property name="text">
+            <string>7.0</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.absCre(7)&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="abs_cre_0_but_9">
+           <property name="text">
+            <string>8.0</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.absCre(8)&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="abs_cre_0_but_10">
+           <property name="text">
+            <string>9.0</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.absCre(9)&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="abs_cre_0_but_11">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>10</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.absCre(10)&quot;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QGroupBox" name="other_grp">
+        <property name="geometry">
+         <rect>
+          <x>3</x>
+          <y>220</y>
+          <width>291</width>
+          <height>130</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <property name="leftMargin">
+          <number>3</number>
+         </property>
+         <property name="rightMargin">
+          <number>3</number>
+         </property>
+         <property name="horizontalSpacing">
+          <number>5</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QPushButton" name="sel_similar_but">
+           <property name="toolTip">
+            <string>Select objects shared the same form/shape</string>
+           </property>
+           <property name="text">
+            <string>Select Similar</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.selSimilar()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="lock_cre_but">
+           <property name="toolTip">
+            <string>Create crease set for all selected objects</string>
+           </property>
+           <property name="text">
+            <string>Lock Crease</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.lockCre()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QPushButton" name="sel_he_but">
+           <property name="text">
+            <string>Select Hard Edge</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.selHe()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="make_inst_but">
+           <property name="toolTip">
+            <string>Convert selected similar objects into instance</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: white; background: black;</string>
+           </property>
+           <property name="text">
+            <string>Make Instance</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.makeInst()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="back_cre_but">
+           <property name="toolTip">
+            <string>Restore crease from crease set</string>
+           </property>
+           <property name="text">
+            <string>Back Crease</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.backCre()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QPushButton" name="auto_fence_but">
+           <property name="text">
+            <string>Auto Fencing</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.autoFence()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QPushButton" name="sel_by_udim_but">
+           <property name="toolTip">
+            <string>Select objects in the same UDIM of selected object</string>
+           </property>
+           <property name="text">
+            <string>Select Obj UDIM</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.selObjUdim()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QPushButton" name="transfer_cre_but">
+           <property name="text">
+            <string>Transfer Crease</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.transferCre()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QPushButton" name="reset_xform_but">
+           <property name="text">
+            <string>Reset Transform</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.resetXform()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0" colspan="2">
+          <widget class="QPushButton" name="comb_by_udim_but">
+           <property name="text">
+            <string>Combine by UDIM</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.combByUdim()&quot;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="uv_tab">
+       <attribute name="title">
+        <string>UV</string>
+       </attribute>
+       <widget class="QGroupBox" name="uv_grp">
+        <property name="geometry">
+         <rect>
+          <x>3</x>
+          <y>3</y>
+          <width>291</width>
+          <height>91</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <widget class="QPushButton" name="straig_sh_but">
+           <property name="toolTip">
+            <string>Straighten loop/ring and unfold UV shell</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/NSUV/NS_strShell.bmp</normaloff>../icons/mnT2_ilm/NSUV/NS_strShell.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.straigSh()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="alig_uv_mid_u_but">
+           <property name="toolTip">
+            <string>Align UV to the average U</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/NSUV/NS_alignUmid.bmp</normaloff>../icons/mnT2_ilm/NSUV/NS_alignUmid.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.aligUvMidU()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QPushButton" name="unfold_uv_but">
+           <property name="toolTip">
+            <string>Unfold UV</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/NSUV/NS_unfold.bmp</normaloff>../icons/mnT2_ilm/NSUV/NS_unfold.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.unfoldUv()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QPushButton" name="orient_sh_but">
+           <property name="toolTip">
+            <string>Orient UV shells</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_orientUvShells.bmp</normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_orientUvShells.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.orientSh()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QPushButton" name="alig_sh_left_u_but">
+           <property name="toolTip">
+            <string>Align UV shells to the left U</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_aluvLeft.bmp</normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_aluvLeft.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.aligShLeftU()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="5">
+          <widget class="QPushButton" name="alig_sh_mid_u_but">
+           <property name="toolTip">
+            <string>Align UV shells to the mid U</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_aluvCenterU.bmp</normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_aluvCenterU.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.aligShMidU()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="6">
+          <widget class="QPushButton" name="alig_sh_right_u_but">
+           <property name="toolTip">
+            <string>Align UV shells to the right U</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_aluvRight.bmp</normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_aluvRight.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.aligShRightU()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="straig_uv_but">
+           <property name="toolTip">
+            <string>Straighten UV selection</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/NSUV/NS_strUVs.bmp</normaloff>../icons/mnT2_ilm/NSUV/NS_strUVs.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.straigUV()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="alig_uv_mid_v_but">
+           <property name="toolTip">
+            <string>Align UV to the average V</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/NSUV/NS_alignVmid.bmp</normaloff>../icons/mnT2_ilm/NSUV/NS_alignVmid.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.aligUvMidV()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QPushButton" name="center_uv_but">
+           <property name="toolTip">
+            <string>Center UV shells</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_centerUvs.bmp</normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_centerUvs.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.centerUv()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QPushButton" name="stack_sh_but">
+           <property name="toolTip">
+            <string>Stack UV shells</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_stackUvShells.bmp</normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_stackUvShells.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.stackSh()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="4">
+          <widget class="QPushButton" name="alig_sh_top_v_but">
+           <property name="toolTip">
+            <string>Align UV shells to the top V</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_aluvTop.bmp</normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_aluvTop.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.aligShTopV()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="5">
+          <widget class="QPushButton" name="alig_sh_mid_v_but">
+           <property name="toolTip">
+            <string>Align UV shells to the mid V</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_aluvCenterV.bmp</normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_aluvCenterV.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.aligShMidV()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="6">
+          <widget class="QPushButton" name="alig_sh_down_v_but">
+           <property name="toolTip">
+            <string>Align UV shells to the bottom V</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_aluvBottom.bmp</normaloff>../icons/mnT2_ilm/uvxform_icons/sdv_aluvBottom.bmp</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.aligShDownV()&quot;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QGroupBox" name="udim_grp">
+        <property name="geometry">
+         <rect>
+          <x>3</x>
+          <y>100</y>
+          <width>291</width>
+          <height>69</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0">
+          <widget class="QLabel" name="u_lim_label">
+           <property name="text">
+            <string>U-Limit</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="u_start_label">
+           <property name="text">
+            <string>U-Start</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLineEdit" name="u_start">
+           <property name="text">
+            <string>0</string>
+           </property>
+           <property name="+changeCommand" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.uStartChange()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QLabel" name="spacing_label">
+           <property name="text">
+            <string>Spacing</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="5">
+          <widget class="QLineEdit" name="spacing">
+           <property name="toolTip">
+            <string>Space between UV shells after packing</string>
+           </property>
+           <property name="text">
+            <string>0.2</string>
+           </property>
+           <property name="+changeCommand" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.spacingChange()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="v_lim_label">
+           <property name="text">
+            <string>V-Limit</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="v_lim">
+           <property name="text">
+            <string>0</string>
+           </property>
+           <property name="+changeCommand" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.vLimChange()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLabel" name="v_start_label">
+           <property name="text">
+            <string>V-Start</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLineEdit" name="v_start">
+           <property name="text">
+            <string>0</string>
+           </property>
+           <property name="+changeCommand" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.vStartChange()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="4" colspan="2">
+          <widget class="QPushButton" name="auto_udim_but">
+           <property name="toolTip">
+            <string>Auto pack UV into UDIM patches</string>
+           </property>
+           <property name="text">
+            <string>Auto UDIM</string>
+           </property>
+           <property name="+command" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.packUdim()&quot;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="u_lim">
+           <property name="text">
+            <string>10</string>
+           </property>
+           <property name="+changeCommand" stdset="0">
+            <string>&quot;mnT2_ui.vsTools1UI.uLimChange()&quot;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QGroupBox" name="checker_grp">
+        <property name="geometry">
+         <rect>
+          <x>3</x>
+          <y>175</y>
+          <width>291</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <widget class="QPushButton" name="pick_size_but">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>75</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string>Pick UV size from sample object</string>
+         </property>
+         <property name="text">
+          <string>Pick Size</string>
+         </property>
+         <property name="+command" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.pickSize()&quot;</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="set_but">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>10</y>
+           <width>75</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string>Scale UV using picked sample size</string>
+         </property>
+         <property name="text">
+          <string>Set Size</string>
+         </property>
+         <property name="+command" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.setSize()&quot;</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="picked_obj_label">
+         <property name="geometry">
+          <rect>
+           <x>55</x>
+           <y>40</y>
+           <width>211</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+        <widget class="QLabel" name="obj_label">
+         <property name="geometry">
+          <rect>
+           <x>12</x>
+           <y>40</y>
+           <width>41</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Object :</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="sel_grp">
+        <property name="geometry">
+         <rect>
+          <x>3</x>
+          <y>253</y>
+          <width>291</width>
+          <height>101</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <widget class="QPushButton" name="sel_udim_but">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>91</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string>Select UVs in the same UDIM of selected object</string>
+         </property>
+         <property name="text">
+          <string>Select Uv UDIM</string>
+         </property>
+         <property name="+command" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.selectUvUdim()&quot;</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="btUnpackUDIM">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>10</y>
+           <width>81</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string>from selected meshes, arrange UDIM by UDIM in U and V direction.</string>
+         </property>
+         <property name="text">
+          <string>Unpack UDIM</string>
+         </property>
+         <property name="+command" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.unpackUdim()&quot;</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="transfer_multi_but_2">
+         <property name="geometry">
+          <rect>
+           <x>200</x>
+           <y>10</y>
+           <width>81</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string>Transfer UV to multi objects</string>
+         </property>
+         <property name="text">
+          <string>Transfer Multi</string>
+         </property>
+         <property name="+command" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.transferMulti()&quot;</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="transfer_group">
+         <property name="geometry">
+          <rect>
+           <x>200</x>
+           <y>40</y>
+           <width>81</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string>Transfer UV to meshes between 2 groups.
+Select source first and then destination.</string>
+         </property>
+         <property name="text">
+          <string>Transfer GRP</string>
+         </property>
+         <property name="+command" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.transferGrp()&quot;</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="transfer_btw_flipped">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>181</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string/>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: white; background: black;</string>
+         </property>
+         <property name="text">
+          <string>Transfer Btw Flipped</string>
+         </property>
+         <property name="+command" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.transferBtwFlipped()&quot;</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="transfer_btw_flipped_2">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>70</y>
+           <width>91</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string/>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: white; background: dark grey;</string>
+         </property>
+         <property name="text">
+          <string>Flip All Reversed</string>
+         </property>
+         <property name="+command" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.flipAllReversed()&quot;</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="uv_border_hard_edges">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>70</y>
+           <width>171</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string/>
+         </property>
+         <property name="text">
+          <string>UV Border Hard Edges</string>
+         </property>
+         <property name="+command" stdset="0">
+          <string>&quot;mnT2_ui.vsTools1UI.UV_border_hard_edges()&quot;</string>
+         </property>
+        </widget>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
