@@ -15,6 +15,8 @@ sys.path.append(MK_DCC_ROOT)
 import mk_dcc.gui.main
 if PYTHON2:
     reload(mk_dcc.gui.main)
+else:
+    from importlib import reload
 
 
 def standalone():
@@ -26,6 +28,7 @@ def standalone():
     else:
         # PySide 2
         from mk_dcc.gui import design_qt5
+        reload(design_qt5)
         Ui_MK_DCC = design_qt5.Ui_MK_DCC
 
     mk_dcc_app = QApplication(sys.argv)
@@ -47,16 +50,14 @@ def maya():
         # PySide 2
         from shiboken2 import wrapInstance
         from mk_dcc.gui import design_qt5
-        if PYTHON2:
-            reload(design_qt5)
+        reload(design_qt5)
 
         Ui_MK_DCC = design_qt5.Ui_MK_DCC
     else:
         # PySide
         from shiboken import wrapInstance
         from mk_dcc.gui import design_qt4
-        if PYTHON2:
-            reload(design_qt4)
+        reload(design_qt4)
 
         Ui_MK_DCC = design_qt4.Ui_MK_DCC
     
@@ -71,8 +72,7 @@ def houdini():
 
     # PySide 2
     from mk_dcc.gui import design_qt5
-    if PYTHON2:
-        reload(design_qt5)
+    reload(design_qt5)
 
     mk_dcc_win = mk_dcc.gui.main.MK_DCC(design_qt5.Ui_MK_DCC)
     mk_dcc_win.setParent(hou.ui.mainQtWindow(), Qt.Window)
