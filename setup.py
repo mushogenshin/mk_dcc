@@ -34,8 +34,8 @@ setup(
     license='MIT',
     zip_safe=False,
     keywords='',
-    packages=find_packages(where='src', exclude=['tests', 'tests.*', '__pycache__', '*.pyc']),
-    package_dir={'': 'src',},
+    packages=find_packages(where='mk_dcc', exclude=['tests', 'tests.*', '__pycache__', '*.pyc']),
+    package_dir={'': 'mk_dcc',},
     package_data={'': ['**/*.yml']},
     classifiers=[
         'Development Status :: 1 - Planning',

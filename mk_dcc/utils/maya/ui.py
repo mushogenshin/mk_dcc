@@ -1,5 +1,6 @@
 import os
 import logging as logger
+import maya
 
 
 MAYA_DEFAULT_CONTENT_PATH = ['C:/Program Files/Autodesk/Maya2018/Examples',
@@ -8,9 +9,8 @@ MAYA_DEFAULT_CONTENT_PATH = ['C:/Program Files/Autodesk/Maya2018/Examples',
                              'C:/Program Files/Autodesk/Maya2018/plug-ins/MASH/Smart Presets']
 
 
-def maya_main_window(maya, wrapInstance, QWidget):
+def maya_main_window(wrapInstance, QWidget):
     '''
-    :param module maya: Autodesk's maya scripting library
     :param function wrapInstance: of shiboken module
     :param module QWidget:
     '''
@@ -18,9 +18,8 @@ def maya_main_window(maya, wrapInstance, QWidget):
     return wrapInstance(long(main_window_ptr), QWidget)
 
 
-def open_content_browser(maya, main_content_path="", landing_subfolder_name=""):
+def open_content_browser(main_content_path="", landing_subfolder_name=""):
     """
-    :param module maya: Autodesk's maya scripting library
     :param main_content_path: for example: repo_kitbash_path
     :param landing_subfolder_name: for example: repo_kitbash_folder_name
     :return:

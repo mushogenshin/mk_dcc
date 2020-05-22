@@ -1,5 +1,5 @@
 import sys
-import os
+from os.path import dirname
 from functools import partial
 import logging as logger
 
@@ -16,6 +16,7 @@ PYTHON2 = True if sys.version_info.major < 3 else False
 if not PYTHON2:
     from pathlib import Path
 else:
+    sys.path.append(dirname(dirname(dirname(__file__))) + '/venv27/Lib/site-packages')
     from pathlib2 import Path
 
 
@@ -94,3 +95,7 @@ class MK_DCC(QMainWindow):
 
         logger.debug('Saving QSettings of the widget')
         self.write_settings()
+
+
+if __name__ == '__main__':
+    pass

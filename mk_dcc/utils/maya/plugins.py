@@ -1,4 +1,5 @@
 import logging as logger
+import maya
 
 
 MODELING_UNRELATED_PLUGINS = ('hairPhysicalShader', 'lookdevKit', 'shaderFXPlugin', 'VectorRender',
@@ -10,7 +11,7 @@ MODELING_UNRELATED_PLUGINS = ('hairPhysicalShader', 'lookdevKit', 'shaderFXPlugi
                               'CloudImportExport')
 
 
-def remove_plugin_autoload(maya, plugins):
+def remove_plugin_autoload(plugins):
     '''
     :param module maya: Autodesk's maya scripting library
     '''
