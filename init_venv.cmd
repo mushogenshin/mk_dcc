@@ -1,11 +1,11 @@
-REM First, make sure Python2.7 and 3.6 install dir are correct
+REM First, make sure Python2.7 and 3.8 install dir are correct
 
-set PY27_DIR=C:\Python27
-set PY36_DIR=C:\Python36
+set PY27_DIR=D:\Program Files\Python\Python2.7.18
+set PY38_DIR=D:\Program Files\Python\Python3.8.3
 
 "%PY27_DIR%/python" -m pip install virtualenv
 "%PY27_DIR%/python" -m virtualenv venv27
 "venv27/Scripts/pip" install -e .[dev27]
 
-"%PY36_DIR%/python" -m venv venv36
-"venv36/Scripts/pip" install -e .[dev36]
+"%PY38_DIR%/python" -m venv venv38
+"venv38/Scripts/pip" install -e .[dev38]

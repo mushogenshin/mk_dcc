@@ -17,9 +17,9 @@
       "group": "build"
     },
     {
-      "label": "Run py36",
+      "label": "Run py38",
       "type": "shell",
-      "command": ".\\venv36\\Scripts\\python ${file}",
+      "command": ".\\venv38\\Scripts\\python ${file}",
       "options": {
 		"env": {
           "PYTHONPATH": "${PYTHONPATH};",

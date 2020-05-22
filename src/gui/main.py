@@ -16,8 +16,6 @@ PYTHON2 = True if sys.version_info.major < 3 else False
 if not PYTHON2:
     from pathlib import Path
 else:
-    LIB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'lib')
-    sys.path.append(LIB_PATH)
     from pathlib2 import Path
 
 
