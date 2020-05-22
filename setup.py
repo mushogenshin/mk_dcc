@@ -5,9 +5,9 @@ from setuptools import setup, find_packages
 deps = {
     'mk-DCC': [],
     'test': [],
-    'dev': ['pylint', 'autopep8', 'rope'],
-    'dev27': ['PySide',],
-    'dev36': ['black',],
+    'dev': ['pylint', 'autopep8', 'rope', 'PyYAML', 'Pillow'],
+    'dev27': ['pathlib2', 'PySide',],
+    'dev36': ['PySide2'],
 }
 deps['dev'] = deps['mk-DCC'] + deps['dev']
 deps['dev27'] = deps['dev'] + deps['dev27']
