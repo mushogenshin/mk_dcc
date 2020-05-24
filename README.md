@@ -1,2 +1,2 @@
-# mk_dcc
+# mk-dcc
 My Python script collection to be used in various 3D DCC softwares
