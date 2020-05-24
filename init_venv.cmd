@@ -1,7 +1,7 @@
 REM First, make sure Python2.7 and 3.8 install dir are correct
 
-set PY27_DIR=D:\Program Files\Python\Python2.7.18
-set PY38_DIR=D:\Program Files\Python\Python3.8.3
+set PY27_DIR=C:\Python\Python27
+set PY38_DIR=C:\Python\Python38
 
 "%PY27_DIR%/python" -m pip install virtualenv
 "%PY27_DIR%/python" -m virtualenv venv27
