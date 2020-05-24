@@ -7,14 +7,14 @@ MK_DCC_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
 import bpy
 
-###################################### Import QtWindowEventLoop ######################################
+################################## Import Blender QtWindowEventLoop ##################################
 
-blender_ui_utils = MK_DCC_ROOT / 'utils/blender/ui.py'
+blender_qt_utils = MK_DCC_ROOT / 'utils/blender/qt.py'
 
-if blender_ui_utils.exists():
-    blender_ui_utils = SourceFileLoader('', blender_ui_utils.as_posix()).load_module()
+if blender_qt_utils.exists():
+    blender_qt_utils = SourceFileLoader('', blender_qt_utils.as_posix()).load_module()
 
-logger.debug('QtWindowEventLoop: {}'.format(blender_ui_utils.QtWindowEventLoop))
+logger.debug('QtWindowEventLoop: {}'.format(blender_qt_utils.QtWindowEventLoop))
 
 
 ######################################### Import Custom UI #########################################
@@ -39,11 +39,11 @@ bl_info = {
 }
 
 def register():
-    bpy.utils.register_class(blender_ui_utils.QtWindowEventLoop)
+    bpy.utils.register_class(blender_qt_utils.QtWindowEventLoop)
     bpy.utils.register_class(blender_custom_ui.MK_DCC_WindowOperator)
     bpy.utils.register_class(blender_custom_ui.MK_DCC_QtPanel)
 
 def unregister():
-    bpy.utils.unregister_class(blender_ui_utils.QtWindowEventLoop)
+    bpy.utils.unregister_class(blender_qt_utils.QtWindowEventLoop)
     bpy.utils.unregister_class(blender_custom_ui.MK_DCC_WindowOperator)
     bpy.utils.unregister_class(blender_custom_ui.MK_DCC_QtPanel)

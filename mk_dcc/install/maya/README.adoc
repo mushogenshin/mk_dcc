@@ -1,0 +1,3 @@
+=== Install
+
+Modify the .mod file and then copy it to `C:\Users\%USERNAME\Documents\maya\modules`

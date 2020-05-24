@@ -17,25 +17,25 @@ MK_DCC_UI = SourceFileLoader('', MK_DCC_UI.as_posix()).load_module()
 class MK_DCC_Qt5(MK_DCC_Main.MK_DCC, QMainWindow):
     def __init__(self):
         super(MK_DCC_Qt5, self).__init__(MK_DCC_UI.Ui_MK_DCC)
-        self.show()
+        self.show()  # must-have
 
 ######################################################################################################
 
 import bpy
 
-###################################### Import QtWindowEventLoop ######################################
+################################## Import Blender QtWindowEventLoop ##################################
 
-blender_ui_utils = Path(__file__).parent.parent / 'utils/blender/ui.py'
+blender_qt_utils = MK_DCC_ROOT / 'utils/blender/qt.py'
 
-if blender_ui_utils.exists():
-    blender_ui_utils = SourceFileLoader('', blender_ui_utils.as_posix()).load_module()
+if blender_qt_utils.exists():
+    blender_qt_utils = SourceFileLoader('', blender_qt_utils.as_posix()).load_module()
 
 ######################################################################################################
 
 
-class MK_DCC_WindowOperator(blender_ui_utils.QtWindowEventLoop):
+class MK_DCC_WindowOperator(blender_qt_utils.QtWindowEventLoop):
 
-    bl_idname = 'screen.custom_window'
+    bl_idname = 'screen.mk_dcc'
     bl_label = 'MK DCC'
 
     def __init__(self):
@@ -52,12 +52,12 @@ class MK_DCC_QtPanel(bpy.types.Panel):
     # def __init__(self, context):
     #     scene = context.scene
     #     layout = self.layout
-    #     layout.operator('screen.custom_window')
+    #     layout.operator('screen.mk_dcc')
     
     def draw(self, context):
         scene = context.scene
         layout = self.layout
-        layout.operator('screen.custom_window')
+        layout.operator('screen.mk_dcc')
 
 
 if __name__ == '__main__':
@@ -67,4 +67,4 @@ if __name__ == '__main__':
     # sys.exit(mk_dcc_app.exec_())
 
     bpy.utils.register_class(MK_DCC_WindowOperator)
-    bpy.ops.screen.custom_window()
+    bpy.ops.screen.mk_dcc()

@@ -28,13 +28,13 @@ class QtWindowEventLoop(bpy.types.Operator):
 
     def modal(self, context, event):
         # bpy.context.window_manager
-        wm = context.window_manager
+        window_manager = context.window_manager
 
         try:  # using try since we got error where the widget is already deleted
             if not self.widget.isVisible():
                 # if widget is closed
                 logger.debug('Finishing modal operator')
-                wm.event_timer_remove(self._timer)
+                window_manager.event_timer_remove(self._timer)
                 return {'FINISHED'}
             else:
                 logger.debug('Processing the events for Qt window')
@@ -67,8 +67,8 @@ class QtWindowEventLoop(bpy.types.Operator):
         logger.debug(self.widget)
 
         # run modal
-        wm = context.window_manager
-        self._timer = wm.event_timer_add(1 / 120, window=context.window)
+        window_manager = context.window_manager
+        self._timer = window_manager.event_timer_add(1 / 120, window=context.window)
         context.window_manager.modal_handler_add(self)
 
         return {'RUNNING_MODAL'}
