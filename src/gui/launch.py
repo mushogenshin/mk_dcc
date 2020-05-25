@@ -2,19 +2,17 @@ import sys
 
 try:
     from PySide2.QtCore import Qt
-    from PySide2.QtWidgets import QApplication, QMainWindow, QWidget
+    from PySide2.QtWidgets import QApplication, QWidget
 except ImportError:
     from PySide.QtCore import Qt
-    from PySide.QtGui import QApplication, QMainWindow, QWidget
+    from PySide.QtGui import QApplication, QWidget
 
 PYTHON2 = True if sys.version_info.major < 3 else False
 
 import src.gui.main
-
-if PYTHON2:
-    reload(src.gui.main)
-else:
+if not PYTHON2:
     from importlib import reload
+reload(src.gui.main)
 
 
 def standalone():

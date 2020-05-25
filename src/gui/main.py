@@ -71,10 +71,9 @@ class MK_DCC(QMainWindow):
         self.move(settings.value('window_pos', QtCore.QPoint(400, 300)))
 
     def create_connections(self, ui):
-
         # logger.info('TODO: create UI connections via Qt signals and slots mechanism')
-
-        ui.theme_comboBox.currentIndexChanged.connect(partial(self.select_theme))
+        # ui.theme_comboBox.currentIndexChanged.connect(partial(self.select_theme))
+        pass
 
     def select_theme(self, index):
         _REPO_path = Path(__file__).parent
