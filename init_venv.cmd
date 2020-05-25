@@ -1,4 +1,4 @@
-REM First, make sure Python2.7 and 3.8 install dir are correct
+REM First, make sure Python install dirs are correct
 
 set PY27_DIR=C:\Python\Python2.7.18
 set PY38_DIR=C:\Python\Python3.8.3
