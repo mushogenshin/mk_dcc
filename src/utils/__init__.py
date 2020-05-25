@@ -11,6 +11,3 @@ def load_scandir_from_venv():
     import imp
     scandir = MK_DCC_ROOT + '/venv27/Lib/site-packages/scandir.py'
     return imp.load_source('scandir', scandir)
-
-# if __name__ == '__main__':
-#     pass

@@ -1,34 +1,25 @@
 import sys
 from pathlib import Path
 from importlib.machinery import SourceFileLoader
-from PySide2.QtWidgets import QApplication, QMainWindow
 
-MK_DCC_ROOT = Path(__file__).parent.parent
 
 ########################################## Import MainWindow ##########################################
 
-MK_DCC_Main = MK_DCC_ROOT / 'gui/main.py'
-MK_DCC_UI = MK_DCC_ROOT / 'gui/view_qt5.py'
-
-MK_DCC_Main = SourceFileLoader('', MK_DCC_Main.as_posix()).load_module()
-MK_DCC_UI = SourceFileLoader('', MK_DCC_UI.as_posix()).load_module()
+_MK_DCC_ROOT = Path(__file__).parent.parent.parent
+MK_DCC_Main = SourceFileLoader('', (_MK_DCC_ROOT / 'src/gui/main.py').as_posix()).load_module()
 
 
-class MK_DCC_Qt5(MK_DCC_Main.MK_DCC, QMainWindow):
+class MK_DCC_Qt5(MK_DCC_Main.MK_DCC):
     def __init__(self):
-        super(MK_DCC_Qt5, self).__init__(MK_DCC_UI.Ui_MK_DCC)
+        super(MK_DCC_Qt5, self).__init__()
         self.show()  # must-have
 
-######################################################################################################
-
-import bpy
 
 ################################## Import Blender QtWindowEventLoop ##################################
 
-blender_qt_utils = MK_DCC_ROOT / 'utils/blender/qt.py'
+import bpy
 
-if blender_qt_utils.exists():
-    blender_qt_utils = SourceFileLoader('', blender_qt_utils.as_posix()).load_module()
+blender_qt_utils = SourceFileLoader('', (_MK_DCC_ROOT / 'src/utils/blender/qt.py').as_posix()).load_module()
 
 ######################################################################################################
 
