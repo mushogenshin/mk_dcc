@@ -6,9 +6,11 @@ import logging as logger
 try:
     from PySide2 import QtCore
     from PySide2.QtWidgets import QMainWindow, QWidget
+    from view_qt5 import Ui_MK_DCC
 except ImportError:
     from PySide import QtCore
     from PySide.QtGui import QMainWindow, QWidget
+    from view_qt4 import Ui_MK_DCC
 
 
 PYTHON2 = True if sys.version_info.major < 3 else False
@@ -28,9 +30,9 @@ class MK_DCC(QMainWindow):
     '''
     Main UI
     '''
-    def __init__(self, Ui_MK_DCC):
+    def __init__(self):
         '''
-        :param module Ui_MK_DCC: generated uic module, dependent on version of uic used (PySide of PySide2)
+        :param class Ui_MK_DCC: generated uic module, dependent on version of uic used (PySide of PySide2)
         '''
         super(MK_DCC, self).__init__()
 

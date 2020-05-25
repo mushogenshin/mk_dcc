@@ -1,0 +1,27 @@
+=== Install
+
+Modify the `./mk_dcc.json` file and then copy it to `C:\Users\%USERNAME\Documents\houdini[version]\packages`
+
+Then from Houdini Python Source Editor, run
+
+[source,python]
+----
+import sys
+import os
+
+sys.path.append(os.environ['MK_DCC_ROOT'])
+
+import src.gui.launch
+reload(src.gui.launch)
+
+if __name__ == "hou.session":
+    try:
+        mk_dcc_win.close()
+        mk_dcc_win.deleteLater()
+    except:
+        pass
+        
+    mk_dcc_win = src.gui.launch.houdini()
+    mk_dcc_win.show()
+
+----

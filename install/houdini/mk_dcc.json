@@ -1,15 +1,5 @@
 {
-    "env": [
-        {
-            "MK_DCC_ROOT": "F:/dev/git/mk_dcc"
-        }, 
-        {
-            "PATH": {
-                "method": "prepend", 
-                "value": [
-                    "F:/dev/git/mk_dcc"
-                ]
-            }
-        }
+	"env": [ 
+        {"MK_DCC_ROOT": "F:/dev/git/mk_dcc"}
     ]
 }

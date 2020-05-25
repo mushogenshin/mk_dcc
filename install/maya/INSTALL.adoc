@@ -1,0 +1,22 @@
+=== Install
+
+Modify the `./mk_dcc.mod` file and then copy it to `C:\Users\%USERNAME\Documents\maya\modules`
+
+Then from Maya Script Editor run
+
+[source,python]
+----
+import src.gui.launch
+reload(src.gui.launch)
+
+if __name__ == "__main__":
+    try:
+        mk_dcc_win.close()
+        mk_dcc_win.deleteLater()
+    except:
+        pass
+        
+    mk_dcc_win = src.gui.launch.maya()
+    mk_dcc_win.show()
+
+----
