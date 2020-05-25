@@ -1,3 +1,0 @@
-=== Install
-
-Make a directory junction link to `./mk_dcc` at `C:\Program Files\Blender Foundation\Blender 2.82\2.82\scripts\addons`

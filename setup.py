@@ -6,7 +6,7 @@ deps = {
     'mk-DCC': [],
     'test': [],
     'dev': ['pylint', 'autopep8', 'rope', 'PyYAML', 'Pillow'],
-    'dev27': ['pathlib2', 'PySide'],
+    'dev27': ['scandir', 'pathlib2', 'PySide'],
     'dev38': ['PySide2'],
 }
 deps['dev'] = deps['mk-DCC'] + deps['dev']
@@ -34,8 +34,8 @@ setup(
     license='MIT',
     zip_safe=False,
     keywords='',
-    packages=find_packages(where='mk_dcc', exclude=['tests', 'tests.*', '__pycache__', '*.pyc']),
-    package_dir={'': 'mk_dcc',},
+    packages=find_packages(where='src', exclude=['tests', 'tests.*', '__pycache__', '*.pyc']),
+    package_dir={'': 'src',},
     package_data={'': ['**/*.yml']},
     classifiers=[
         'Development Status :: 1 - Planning',
