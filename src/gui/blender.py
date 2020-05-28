@@ -9,7 +9,7 @@ _MK_DCC_ROOT = Path(__file__).parent.parent.parent
 MK_DCC_Main = SourceFileLoader('', (_MK_DCC_ROOT / 'src/gui/main.py').as_posix()).load_module()
 
 
-class MK_DCC_Qt5(MK_DCC_Main.MK_DCC):
+class MK_DCC_Qt5(MK_DCC_Main.MK_DCC_AbstractMainWindow):
     def __init__(self):
         super(MK_DCC_Qt5, self).__init__()
         self.show()  # must-have

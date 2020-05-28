@@ -6,17 +6,17 @@ Then from Maya Script Editor run
 
 [source,python]
 ----
-import src.gui.launch
-reload(src.gui.launch)
+import src.gui.dcc
+reload(src.gui.dcc)
 
 if __name__ == "__main__":
     try:
-        mk_dcc_win.close()
-        mk_dcc_win.deleteLater()
+        mk_dcc_app.win.close()
+        mk_dcc_app.win.deleteLater()
     except:
         pass
         
-    mk_dcc_win = src.gui.launch.maya()
-    mk_dcc_win.show()
+    mk_dcc_app = src.gui.dcc.Maya('base')  # the 'app_name'
+    mk_dcc_app.win.show()
 
 ----

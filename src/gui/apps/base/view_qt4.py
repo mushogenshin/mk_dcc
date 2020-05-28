@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '..\gui\view.ui'
+# Form implementation generated from reading ui file '..\view.ui'
 #
-# Created: Mon May 25 08:28:01 2020
+# Created: Thu May 28 16:27:48 2020
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
 from PySide import QtCore, QtGui
 
-class Ui_MK_DCC(object):
-    def setupUi(self, MK_DCC):
-        MK_DCC.setObjectName("MK_DCC")
-        MK_DCC.resize(282, 426)
-        self.centralwidget = QtGui.QWidget(MK_DCC)
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(282, 426)
+        self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -86,31 +86,31 @@ class Ui_MK_DCC(object):
         self.verticalLayout_4.addWidget(self.misc_grpBox)
         self.tabWidget.addTab(self.cfg_tab, "")
         self.verticalLayout.addWidget(self.tabWidget)
-        MK_DCC.setCentralWidget(self.centralwidget)
+        MainWindow.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(MK_DCC)
+        self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
         self.theme_comboBox.setCurrentIndex(0)
-        QtCore.QMetaObject.connectSlotsByName(MK_DCC)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def retranslateUi(self, MK_DCC):
-        MK_DCC.setWindowTitle(QtGui.QApplication.translate("MK_DCC", "miniTools3", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox_4.setTitle(QtGui.QApplication.translate("MK_DCC", "UDIM", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_2.setText(QtGui.QApplication.translate("MK_DCC", "PushButton", None, QtGui.QApplication.UnicodeUTF8))
-        self.radioButton.setText(QtGui.QApplication.translate("MK_DCC", "RadioButton", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox_3.setTitle(QtGui.QApplication.translate("MK_DCC", "LEGACY", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(QtGui.QApplication.translate("MK_DCC", "PushButton", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.maya_tab), QtGui.QApplication.translate("MK_DCC", "maya", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox.setTitle(QtGui.QApplication.translate("MK_DCC", "SOLARIS", None, QtGui.QApplication.UnicodeUTF8))
-        self.lineEdit.setText(QtGui.QApplication.translate("MK_DCC", "LineEdit", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox_2.setTitle(QtGui.QApplication.translate("MK_DCC", "PDG", None, QtGui.QApplication.UnicodeUTF8))
-        self.spinBox.setPrefix(QtGui.QApplication.translate("MK_DCC", "$ ", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.houdini_tab), QtGui.QApplication.translate("MK_DCC", "houdini", None, QtGui.QApplication.UnicodeUTF8))
-        self.themes_grpBox.setTitle(QtGui.QApplication.translate("MK_DCC", "THEMES", None, QtGui.QApplication.UnicodeUTF8))
-        self.theme_comboBox.setItemText(0, QtGui.QApplication.translate("MK_DCC", "Default", None, QtGui.QApplication.UnicodeUTF8))
-        self.theme_comboBox.setItemText(1, QtGui.QApplication.translate("MK_DCC", "Aqua", None, QtGui.QApplication.UnicodeUTF8))
-        self.theme_comboBox.setItemText(2, QtGui.QApplication.translate("MK_DCC", "Console", None, QtGui.QApplication.UnicodeUTF8))
-        self.theme_comboBox.setItemText(3, QtGui.QApplication.translate("MK_DCC", "Ubuntu", None, QtGui.QApplication.UnicodeUTF8))
-        self.misc_grpBox.setTitle(QtGui.QApplication.translate("MK_DCC", "MISC.", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.cfg_tab), QtGui.QApplication.translate("MK_DCC", "cfg", None, QtGui.QApplication.UnicodeUTF8))
+    def retranslateUi(self, MainWindow):
+        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "miniTools3", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_4.setTitle(QtGui.QApplication.translate("MainWindow", "UDIM", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_2.setText(QtGui.QApplication.translate("MainWindow", "PushButton", None, QtGui.QApplication.UnicodeUTF8))
+        self.radioButton.setText(QtGui.QApplication.translate("MainWindow", "RadioButton", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_3.setTitle(QtGui.QApplication.translate("MainWindow", "LEGACY", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "PushButton", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.maya_tab), QtGui.QApplication.translate("MainWindow", "maya", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox.setTitle(QtGui.QApplication.translate("MainWindow", "SOLARIS", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit.setText(QtGui.QApplication.translate("MainWindow", "LineEdit", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_2.setTitle(QtGui.QApplication.translate("MainWindow", "PDG", None, QtGui.QApplication.UnicodeUTF8))
+        self.spinBox.setPrefix(QtGui.QApplication.translate("MainWindow", "$ ", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.houdini_tab), QtGui.QApplication.translate("MainWindow", "houdini", None, QtGui.QApplication.UnicodeUTF8))
+        self.themes_grpBox.setTitle(QtGui.QApplication.translate("MainWindow", "THEMES", None, QtGui.QApplication.UnicodeUTF8))
+        self.theme_comboBox.setItemText(0, QtGui.QApplication.translate("MainWindow", "Default", None, QtGui.QApplication.UnicodeUTF8))
+        self.theme_comboBox.setItemText(1, QtGui.QApplication.translate("MainWindow", "Aqua", None, QtGui.QApplication.UnicodeUTF8))
+        self.theme_comboBox.setItemText(2, QtGui.QApplication.translate("MainWindow", "Console", None, QtGui.QApplication.UnicodeUTF8))
+        self.theme_comboBox.setItemText(3, QtGui.QApplication.translate("MainWindow", "Ubuntu", None, QtGui.QApplication.UnicodeUTF8))
+        self.misc_grpBox.setTitle(QtGui.QApplication.translate("MainWindow", "MISC.", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.cfg_tab), QtGui.QApplication.translate("MainWindow", "cfg", None, QtGui.QApplication.UnicodeUTF8))
 

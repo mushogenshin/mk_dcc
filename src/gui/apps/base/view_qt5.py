@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '..\gui\view.ui',
-# licensing of '..\gui\view.ui' applies.
+# Form implementation generated from reading ui file '..\view.ui',
+# licensing of '..\view.ui' applies.
 #
-# Created: Mon May 25 10:28:47 2020
+# Created: Thu May 28 16:27:49 2020
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
-class Ui_MK_DCC(object):
-    def setupUi(self, MK_DCC):
-        MK_DCC.setObjectName("MK_DCC")
-        MK_DCC.resize(282, 426)
-        self.centralwidget = QtWidgets.QWidget(MK_DCC)
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(282, 426)
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -87,31 +87,31 @@ class Ui_MK_DCC(object):
         self.verticalLayout_4.addWidget(self.misc_grpBox)
         self.tabWidget.addTab(self.cfg_tab, "")
         self.verticalLayout.addWidget(self.tabWidget)
-        MK_DCC.setCentralWidget(self.centralwidget)
+        MainWindow.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(MK_DCC)
+        self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
         self.theme_comboBox.setCurrentIndex(0)
-        QtCore.QMetaObject.connectSlotsByName(MK_DCC)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def retranslateUi(self, MK_DCC):
-        MK_DCC.setWindowTitle(QtWidgets.QApplication.translate("MK_DCC", "miniTools3", None, -1))
-        self.groupBox_4.setTitle(QtWidgets.QApplication.translate("MK_DCC", "UDIM", None, -1))
-        self.pushButton_2.setText(QtWidgets.QApplication.translate("MK_DCC", "PushButton", None, -1))
-        self.radioButton.setText(QtWidgets.QApplication.translate("MK_DCC", "RadioButton", None, -1))
-        self.groupBox_3.setTitle(QtWidgets.QApplication.translate("MK_DCC", "LEGACY", None, -1))
-        self.pushButton.setText(QtWidgets.QApplication.translate("MK_DCC", "PushButton", None, -1))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.maya_tab), QtWidgets.QApplication.translate("MK_DCC", "maya", None, -1))
-        self.groupBox.setTitle(QtWidgets.QApplication.translate("MK_DCC", "SOLARIS", None, -1))
-        self.lineEdit.setText(QtWidgets.QApplication.translate("MK_DCC", "LineEdit", None, -1))
-        self.groupBox_2.setTitle(QtWidgets.QApplication.translate("MK_DCC", "PDG", None, -1))
-        self.spinBox.setPrefix(QtWidgets.QApplication.translate("MK_DCC", "$ ", None, -1))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.houdini_tab), QtWidgets.QApplication.translate("MK_DCC", "houdini", None, -1))
-        self.themes_grpBox.setTitle(QtWidgets.QApplication.translate("MK_DCC", "THEMES", None, -1))
-        self.theme_comboBox.setItemText(0, QtWidgets.QApplication.translate("MK_DCC", "Default", None, -1))
-        self.theme_comboBox.setItemText(1, QtWidgets.QApplication.translate("MK_DCC", "Aqua", None, -1))
-        self.theme_comboBox.setItemText(2, QtWidgets.QApplication.translate("MK_DCC", "Console", None, -1))
-        self.theme_comboBox.setItemText(3, QtWidgets.QApplication.translate("MK_DCC", "Ubuntu", None, -1))
-        self.misc_grpBox.setTitle(QtWidgets.QApplication.translate("MK_DCC", "MISC.", None, -1))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.cfg_tab), QtWidgets.QApplication.translate("MK_DCC", "cfg", None, -1))
+    def retranslateUi(self, MainWindow):
+        MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "miniTools3", None, -1))
+        self.groupBox_4.setTitle(QtWidgets.QApplication.translate("MainWindow", "UDIM", None, -1))
+        self.pushButton_2.setText(QtWidgets.QApplication.translate("MainWindow", "PushButton", None, -1))
+        self.radioButton.setText(QtWidgets.QApplication.translate("MainWindow", "RadioButton", None, -1))
+        self.groupBox_3.setTitle(QtWidgets.QApplication.translate("MainWindow", "LEGACY", None, -1))
+        self.pushButton.setText(QtWidgets.QApplication.translate("MainWindow", "PushButton", None, -1))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.maya_tab), QtWidgets.QApplication.translate("MainWindow", "maya", None, -1))
+        self.groupBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "SOLARIS", None, -1))
+        self.lineEdit.setText(QtWidgets.QApplication.translate("MainWindow", "LineEdit", None, -1))
+        self.groupBox_2.setTitle(QtWidgets.QApplication.translate("MainWindow", "PDG", None, -1))
+        self.spinBox.setPrefix(QtWidgets.QApplication.translate("MainWindow", "$ ", None, -1))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.houdini_tab), QtWidgets.QApplication.translate("MainWindow", "houdini", None, -1))
+        self.themes_grpBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "THEMES", None, -1))
+        self.theme_comboBox.setItemText(0, QtWidgets.QApplication.translate("MainWindow", "Default", None, -1))
+        self.theme_comboBox.setItemText(1, QtWidgets.QApplication.translate("MainWindow", "Aqua", None, -1))
+        self.theme_comboBox.setItemText(2, QtWidgets.QApplication.translate("MainWindow", "Console", None, -1))
+        self.theme_comboBox.setItemText(3, QtWidgets.QApplication.translate("MainWindow", "Ubuntu", None, -1))
+        self.misc_grpBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "MISC.", None, -1))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.cfg_tab), QtWidgets.QApplication.translate("MainWindow", "cfg", None, -1))
 

@@ -1,1 +1,0 @@
-pyside2-uic ..\gui\view.ui -o ..\gui\view_qt5.py

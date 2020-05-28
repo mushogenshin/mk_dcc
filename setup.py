@@ -7,7 +7,7 @@ deps = {
     'test': [],
     'dev': ['pylint', 'autopep8', 'rope', 'PyYAML', 'Pillow'],
     'dev27': ['scandir', 'pathlib2', 'PySide'],
-    'dev38': ['PySide2'],
+    'dev38': ['PySide2==5.13.1'],
 }
 deps['dev'] = deps['mk-DCC'] + deps['dev']
 deps['dev27'] = deps['dev'] + deps['dev27']

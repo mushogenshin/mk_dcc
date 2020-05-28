@@ -2,7 +2,7 @@ import maya
 
 def get_maya_qt_version():
     '''
-    :param module maya: Autodesk's maya scripting library
+    return int major of Maya Qt version
     '''
     return int(maya.cmds.about(qt=True).partition('.')[0])
 

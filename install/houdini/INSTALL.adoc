@@ -11,17 +11,17 @@ import os
 
 sys.path.append(os.environ['MK_DCC_ROOT'])
 
-import src.gui.launch
-reload(src.gui.launch)
+import src.gui.dcc
+reload(src.gui.dcc)
 
 if __name__ == "hou.session":
     try:
-        mk_dcc_win.close()
-        mk_dcc_win.deleteLater()
+        mk_dcc_app.win.close()
+        mk_dcc_app.win.deleteLater()
     except:
         pass
         
-    mk_dcc_win = src.gui.launch.houdini()
-    mk_dcc_win.show()
+    mk_dcc_app = src.gui.dcc.Houdini('base')  # the 'app_name'
+    mk_dcc_app.win.show()
 
 ----
