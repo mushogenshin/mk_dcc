@@ -3,11 +3,6 @@ from os.path import dirname
 from functools import partial
 import logging
 
-
-logger = logging.getLogger(__name__)
-PYTHON2 = True if sys.version_info.major < 3 else False
-
-
 try:
     from PySide2 import QtCore
     from PySide2.QtWidgets import QMainWindow
@@ -15,6 +10,7 @@ except ImportError:
     from PySide import QtCore
     from PySide.QtGui import QMainWindow
 
+PYTHON2 = True if sys.version_info.major < 3 else False
 
 if not PYTHON2:
     from pathlib import Path
@@ -25,8 +21,10 @@ else:
     import scandir
     from pathlib2 import Path
 
+logger = logging.getLogger(__name__)
 
-class MK_DCC_AbstractMainWindow(QMainWindow):
+
+class AbstractMainWindow(QMainWindow):
     '''
     The base QMainWindow class that will wrap the uic-generated class which is fed into it.
 
@@ -35,7 +33,7 @@ class MK_DCC_AbstractMainWindow(QMainWindow):
     def __init__(self, uic_main_window, app_register_info=('MK DCC', 'Base App')):
         '''
         '''
-        super(MK_DCC_AbstractMainWindow, self).__init__()
+        super(AbstractMainWindow, self).__init__()
 
         self.ui = uic_main_window()
         self.ui.setupUi(self)
@@ -97,7 +95,7 @@ class MK_DCC_AbstractMainWindow(QMainWindow):
     #         qss_file.close()
 
     def closeEvent(self, event):
-        super(MK_DCC_AbstractMainWindow, self).closeEvent(event)
+        super(AbstractMainWindow, self).closeEvent(event)
 
         logger.debug('Saving QSettings of the widget')
         self.write_settings()

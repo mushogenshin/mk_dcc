@@ -7,10 +7,10 @@ except ImportError:
     from PySide.QtCore import Qt
     from PySide.QtGui import QApplication, QWidget
 
-PYTHON2 = True if sys.version_info.major < 3 else False
-
-from src.gui.core import MK_DCC_AbstractMainWindow
+from src.gui.core import AbstractMainWindow
 from src.utils import load_app_view_qt_module
+
+PYTHON2 = True if sys.version_info.major < 3 else False
 
 
 class StandAlone(object):
@@ -19,7 +19,7 @@ class StandAlone(object):
         view_qt = load_app_view_qt_module(app_name, PYTHON2, qt_version)
 
         self.app = QApplication(sys.argv)
-        self.win = MK_DCC_AbstractMainWindow(view_qt.Ui_MainWindow)
+        self.win = AbstractMainWindow(view_qt.Ui_MainWindow)
         self.win.show()
         sys.exit(self.app.exec_())
 
@@ -38,7 +38,7 @@ class Maya(object):
         else:
             from shiboken import wrapInstance  # PySide
 
-        self.win = MK_DCC_AbstractMainWindow(view_qt.Ui_MainWindow)
+        self.win = AbstractMainWindow(view_qt.Ui_MainWindow)
         self.win.setParent(maya_main_window(wrapInstance, QWidget), Qt.Window)
 
 
@@ -47,7 +47,7 @@ class Houdini(object):
         import hou
         view_qt = load_app_view_qt_module(app_name, PYTHON2, 5)
 
-        self.win = MK_DCC_AbstractMainWindow(view_qt.Ui_MainWindow)
+        self.win = AbstractMainWindow(view_qt.Ui_MainWindow)
         self.win.setParent(hou.ui.mainQtWindow(), Qt.Window)
     
 

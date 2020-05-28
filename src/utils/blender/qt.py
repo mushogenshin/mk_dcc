@@ -61,7 +61,7 @@ class QtWindowEventLoop(bpy.types.Operator):
         #     self.set_stylesheet(self.app, stylesheet)
 
         self.event_loop = QtCore.QEventLoop()
-        self.widget = self._widget(*self._args, **self._kwargs)
+        self.widget = self._widget(*self._args, **self._kwargs)  # TODO: MK_DCC app view_qt can be tweak here
 
         logger.debug(self.app)
         logger.debug(self.widget)
