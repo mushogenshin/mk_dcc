@@ -5,14 +5,14 @@ from os.path import dirname
 MK_DCC_ROOT = dirname(dirname(dirname(__file__)))
 
 
-def load_app_view_qt_module(app_name, use_py2=False, qt_version=5):
-    view_qt_module = MK_DCC_ROOT + '/src/gui/app/{}/view_qt{}.py'.format(app_name, qt_version)
+def load_app_uic_gen_mod(app_name, use_py2=False, qt_version=5):
+    uic_gen_mod = MK_DCC_ROOT + '/src/gui/app/{}/ui_qt{}.py'.format(app_name, qt_version)
     if use_py2:
         import imp
-        return imp.load_source('{}_view_qt'.format(app_name), view_qt_module)
+        return imp.load_source('{}_view_qt'.format(app_name), uic_gen_mod)
     else:
         from importlib.machinery import SourceFileLoader
-        return SourceFileLoader('{}_view_qt'.format(app_name), view_qt_module).load_module()
+        return SourceFileLoader('{}_view_qt'.format(app_name), uic_gen_mod).load_module()
 
 def load_pathlib2_from_venv():
     import imp  # Python 2 only

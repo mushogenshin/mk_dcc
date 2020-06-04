@@ -10,17 +10,6 @@ except ImportError:
     from PySide import QtCore
     from PySide.QtGui import QMainWindow
 
-# PYTHON2 = True if sys.version_info.major < 3 else False
-
-# if not PYTHON2:
-#     from pathlib import Path
-# else:
-#     import src.utils
-#     scandir = src.utils.load_scandir_from_venv()
-#     pathlib2 = src.utils.load_pathlib2_from_venv()
-#     import scandir
-#     from pathlib2 import Path
-
 logger = logging.getLogger(__name__)
 
 
