@@ -3,19 +3,19 @@ import logging
 from importlib.machinery import SourceFileLoader
 
 logger = logging.getLogger(__name__)
-MK_DCC_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+MK_DCC_ROOT = Path(__file__).resolve().parent.parent.parent.parent  # resolving symbolic link
 
 import bpy
 
 ################################## Import Blender QtWindowEventLoop ##################################
 
-qt_utils = MK_DCC_ROOT / 'src/utils/blender/qt_dev.py'
+qt_utils = MK_DCC_ROOT / 'src/utils/blender/qt.py'
 qt_utils = SourceFileLoader('', qt_utils.as_posix()).load_module()
 # logger.debug('QtWindowEventLoop: {}'.format(qt_utils.QtWindowEventLoop))
 
 ######################################### Import Custom UI #########################################
 
-mk_dcc_blender = MK_DCC_ROOT / 'src/gui/apps/base/blender_dev.py'  # change this accordingly for each add-on
+mk_dcc_blender = MK_DCC_ROOT / 'src/gui/app/base/blender.py'  # change this accordingly for each add-on
 mk_dcc_blender = SourceFileLoader('', mk_dcc_blender.as_posix()).load_module()
 
 ########################################## Register Add-on ##########################################

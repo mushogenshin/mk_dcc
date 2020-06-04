@@ -16,7 +16,7 @@ view_qt = mk_dcc_utils.load_app_view_qt_module('base', False, 5)  # 'app_name' -
 ################################## Import BlenderWidget QtWindowEventLoop ##################################
 
 import bpy
-blender_qt_utils = SourceFileLoader('', (_MK_DCC_ROOT / 'src/utils/blender/qt_dev.py').as_posix()).load_module()
+blender_qt_utils = SourceFileLoader('', (_MK_DCC_ROOT / 'src/utils/blender/qt.py').as_posix()).load_module()
 
 ######################################################################################################
 

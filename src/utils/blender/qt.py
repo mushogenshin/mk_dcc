@@ -1,9 +1,11 @@
 import sys
 import os
 import logging
+
 import bpy
 
-qt_binding = os.environ.get('QT_PREFERRED_BINDING') # correct qt bindings
+qt_binding = os.environ.get('QT_PREFERRED_BINDING', '') # correct qt bindings
+
 if qt_binding:
     if qt_binding == 'PySide2':
         from PySide2 import QtWidgets, QtCore
@@ -21,10 +23,9 @@ class QtWindowEventLoop(bpy.types.Operator):
     bl_idname = 'screen.qt_event_loop'
     bl_label = 'Qt Event Loop'
 
-    def __init__(self, widget, *args, **kwargs):
+    def __init__(self, widget, uic_main_window):
         self._widget = widget
-        self._args = args
-        self._kwargs = kwargs
+        self._uic_main_window = uic_main_window
 
     def modal(self, context, event):
         # bpy.context.window_manager
@@ -56,12 +57,9 @@ class QtWindowEventLoop(bpy.types.Operator):
             # create the first instance
             self.app = QtWidgets.QApplication(sys.argv)
 
-        # if 'stylesheet' in self._kwargs:
-        #     stylesheet = self._kwargs['stylesheet']
-        #     self.set_stylesheet(self.app, stylesheet)
-
         self.event_loop = QtCore.QEventLoop()
-        self.widget = self._widget(*self._args, **self._kwargs)  # TODO: MK_DCC app view_qt can be tweak here
+        self.widget = self._widget(self._uic_main_window)
+        self.widget.show()
 
         logger.debug(self.app)
         logger.debug(self.widget)
@@ -72,12 +70,3 @@ class QtWindowEventLoop(bpy.types.Operator):
         context.window_manager.modal_handler_add(self)
 
         return {'RUNNING_MODAL'}
-
-    # def set_stylesheet(self, app, filepath):
-    #     file_qss = QtCore.QFile(filepath)
-    #     if file_qss.exists():
-    #         file_qss.open(QtCore.QFile.ReadOnly)
-    #         stylesheet = QtCore.QTextStream(file_qss).readAll()
-    #         app.setStyleSheet(stylesheet)
-    #         file_qss.close()
-            
