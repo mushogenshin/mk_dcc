@@ -9,13 +9,13 @@ import bpy
 
 ################################## Import Blender QtWindowEventLoop ##################################
 
-qt_utils = MK_DCC_ROOT / 'src/utils/blender/qt.py'
+qt_utils = MK_DCC_ROOT / 'src/utils/blender/qt_dev.py'
 qt_utils = SourceFileLoader('', qt_utils.as_posix()).load_module()
 # logger.debug('QtWindowEventLoop: {}'.format(qt_utils.QtWindowEventLoop))
 
 ######################################### Import Custom UI #########################################
 
-mk_dcc_blender = MK_DCC_ROOT / 'src/gui/apps/base/blender.py'  # change this accordingly for each add-on
+mk_dcc_blender = MK_DCC_ROOT / 'src/gui/apps/base/blender_dev.py'  # change this accordingly for each add-on
 mk_dcc_blender = SourceFileLoader('', mk_dcc_blender.as_posix()).load_module()
 
 ########################################## Register Add-on ##########################################

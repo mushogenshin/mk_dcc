@@ -10,13 +10,7 @@ _MK_DCC_ROOT = Path(__file__).parent.parent.parent.parent.parent
 mk_dcc_core = SourceFileLoader('', (_MK_DCC_ROOT / 'src/gui/core.py').as_posix()).load_module()
 mk_dcc_utils = SourceFileLoader('', (_MK_DCC_ROOT / 'src/utils/__init__.py').as_posix()).load_module()
 
-
-class BlenderWidget(mk_dcc_core.AbstractMainWindow):
-    # app_name = Path(__file__).parent.name  # the subdirectory's name in 'apps' folder
-    def __init__(self):
-        view_qt = mk_dcc_utils.load_app_view_qt_module('base', False, 5)  # 'app_name' -- change this accordingly for each add-on
-        super(BlenderWidget, self).__init__(view_qt.Ui_MainWindow)
-        self.show()  # must-have
+view_qt = mk_dcc_utils.load_app_view_qt_module('base', False, 5)  # 'app_name' -- change this accordingly for each add-on
 
 
 ################################## Import BlenderWidget QtWindowEventLoop ##################################
@@ -35,7 +29,7 @@ class WindowOperator(blender_qt_utils.QtWindowEventLoop):
     bl_label = 'MK DCC'
 
     def __init__(self):
-        super(WindowOperator, self).__init__(BlenderWidget)
+        super(WindowOperator, self).__init__(mk_dcc_core.AbstractMainWindow, view_qt.Ui_MainWindow)
 
 
 class QtPanel(bpy.types.Panel):
