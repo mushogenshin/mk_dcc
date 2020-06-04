@@ -1,1 +1,0 @@
-pyside-uic ..\view.ui -o ..\view_qt4.py

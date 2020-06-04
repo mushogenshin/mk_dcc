@@ -1,0 +1,1 @@
+..\..\..\..\..\venv37\Scripts\pyside2-uic.exe ..\ui.ui -o ..\ui_qt5.py

@@ -1,21 +1,38 @@
 from pathlib import Path
-import logging
 from importlib.machinery import SourceFileLoader
 
-logger = logging.getLogger(__name__)
+# import logging
+
+# logger = logging.getLogger('blender_id')
+# logger.setLevel(logging.DEBUG)
+
+# formatter = logging.Formatter('%(levelname)s:%(message)s')
+# stream_handler = logging.StreamHandler()
+# stream_handler.setFormatter(formatter)
+# stream_handler.setLevel(logging.DEBUG)
+# file_handler = logging.FileHandler('log.txt')
+# file_handler.setFormatter(formatter)
+# file_handler.setLevel(logging.DEBUG)
+
+# logger.addHandler(stream_handler)
+# logger.addHandler(file_handler)
+
+
+# Resolving symbolic link
+app_name = Path(__file__).resolve().parent.stem
 MK_DCC_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
 import bpy
 
 ################################## Import Blender QtWindowEventLoop ##################################
 
-qt_utils = MK_DCC_ROOT / 'src/utils/blender/qt_dev.py'
+qt_utils = MK_DCC_ROOT / 'src/utils/blender/qt.py'
 qt_utils = SourceFileLoader('', qt_utils.as_posix()).load_module()
 # logger.debug('QtWindowEventLoop: {}'.format(qt_utils.QtWindowEventLoop))
 
 ######################################### Import Custom UI #########################################
 
-mk_dcc_blender = MK_DCC_ROOT / 'src/gui/apps/base/blender_dev.py'  # change this accordingly for each add-on
+mk_dcc_blender = MK_DCC_ROOT / 'src/gui/app/{}/blender.py'.format(app_name)
 mk_dcc_blender = SourceFileLoader('', mk_dcc_blender.as_posix()).load_module()
 
 ########################################## Register Add-on ##########################################

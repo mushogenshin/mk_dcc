@@ -7,11 +7,11 @@ deps = {
     'test': [],
     'dev': ['pylint', 'autopep8', 'rope', 'PyYAML', 'Pillow'],
     'dev27': ['scandir', 'pathlib2', 'PySide'],
-    'dev38': ['PySide2==5.13.1'],
+    'dev37': ['PySide2==5.13.1'],
 }
 deps['dev'] = deps['mk-DCC'] + deps['dev']
 deps['dev27'] = deps['dev'] + deps['dev27']
-deps['dev38'] = deps['dev'] + deps['dev38']
+deps['dev37'] = deps['dev'] + deps['dev37']
 deps['test'] = deps['mk-DCC'] + deps['test']
 
 install_requires = deps['mk-DCC']

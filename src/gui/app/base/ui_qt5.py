@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '..\view.ui',
-# licensing of '..\view.ui' applies.
+# Form implementation generated from reading ui file '..\ui.ui',
+# licensing of '..\ui.ui' applies.
 #
-# Created: Thu May 28 16:27:49 2020
+# Created: Thu Jun  4 22:22:19 2020
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -95,7 +95,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "miniTools3", None, -1))
+        MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "MK DCC - Base", None, -1))
         self.groupBox_4.setTitle(QtWidgets.QApplication.translate("MainWindow", "UDIM", None, -1))
         self.pushButton_2.setText(QtWidgets.QApplication.translate("MainWindow", "PushButton", None, -1))
         self.radioButton.setText(QtWidgets.QApplication.translate("MainWindow", "RadioButton", None, -1))
