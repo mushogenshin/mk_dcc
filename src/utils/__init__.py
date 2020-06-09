@@ -5,9 +5,9 @@ from os.path import dirname
 MK_DCC_ROOT = dirname(dirname(dirname(__file__)))
 
 
-def load_app_uic_gen_mod(app_name, use_py2=False, qt_version=5):
+def load_app_uic_gen_mod(app_name, py2=False, qt_version=5):
     uic_gen_mod = MK_DCC_ROOT + '/src/gui/app/{}/ui_qt{}.py'.format(app_name, qt_version)
-    if use_py2:
+    if py2:
         import imp
         return imp.load_source('{}_view_qt'.format(app_name), uic_gen_mod)
     else:

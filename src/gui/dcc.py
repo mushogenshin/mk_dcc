@@ -10,13 +10,13 @@ except ImportError:
 from src.gui.core import AbstractMainWindow
 from src.utils import load_app_uic_gen_mod
 
-PYTHON2 = True if sys.version_info.major < 3 else False
+py2 = True if sys.version_info.major < 3 else False
 
 
 class StandAlone(object):
     def __init__(self, app_name):
-        qt_version = 4 if PYTHON2 else 5
-        uic_gen_mod = load_app_uic_gen_mod(app_name, PYTHON2, qt_version)
+        qt_version = 4 if py2 else 5
+        uic_gen_mod = load_app_uic_gen_mod(app_name, py2, qt_version)
 
         self._app = QApplication(sys.argv)
         self._view = AbstractMainWindow(uic_gen_mod.Ui_MainWindow)
@@ -33,7 +33,7 @@ class Maya(object):
         from src.utils.maya.ui import maya_main_window
 
         maya_qt_version = get_maya_qt_version()
-        uic_gen_mod = load_app_uic_gen_mod(app_name, PYTHON2, maya_qt_version)
+        uic_gen_mod = load_app_uic_gen_mod(app_name, py2, maya_qt_version)
 
         if maya_qt_version > 4:
             from shiboken2 import wrapInstance  # PySide 2
@@ -49,7 +49,7 @@ class Maya(object):
 class Houdini(object):
     def __init__(self, app_name):
         import hou
-        uic_gen_mod = load_app_uic_gen_mod(app_name, PYTHON2, 5)
+        uic_gen_mod = load_app_uic_gen_mod(app_name, py2, 5)
 
         self._view = AbstractMainWindow(uic_gen_mod.Ui_MainWindow)
         # TODO: set control and model

@@ -1,8 +1,8 @@
 import sys
 
-PYTHON2 = True if sys.version_info.major < 3 else False
+py2 = True if sys.version_info.major < 3 else False
 
-if not PYTHON2:
+if not py2:
     from pathlib import Path
 else:
     import src.utils
