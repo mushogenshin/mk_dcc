@@ -1,5 +1,4 @@
 {
-    "python.pythonPath": "venv27\\Scripts\\python.exe",
     "python.envFile": "${workspaceFolder}/.vscode/dev.env",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": false,

@@ -32,6 +32,45 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <widget class="QWidget" name="houdini_tab">
+       <attribute name="title">
+        <string>houdini</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>SOLARIS</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <widget class="QLineEdit" name="lineEdit">
+             <property name="text">
+              <string>LineEdit</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>PDG</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QSpinBox" name="spinBox">
+             <property name="prefix">
+              <string>$ </string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="maya_tab">
        <attribute name="title">
         <string>maya</string>
@@ -78,48 +117,9 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="houdini_tab">
+      <widget class="QWidget" name="blender_tab">
        <attribute name="title">
-        <string>houdini</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <widget class="QGroupBox" name="groupBox">
-          <property name="title">
-           <string>SOLARIS</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_5">
-           <item>
-            <widget class="QLineEdit" name="lineEdit">
-             <property name="text">
-              <string>LineEdit</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_2">
-          <property name="title">
-           <string>PDG</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_6">
-           <item>
-            <widget class="QSpinBox" name="spinBox">
-             <property name="prefix">
-              <string>$ </string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="cfg_tab">
-       <attribute name="title">
-        <string>cfg</string>
+        <string>blender</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
@@ -163,6 +163,11 @@
           <property name="title">
            <string>MISC.</string>
           </property>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QPlainTextEdit" name="plainTextEdit"/>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>

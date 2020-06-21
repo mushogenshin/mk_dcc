@@ -14,6 +14,15 @@ def load_app_uic_gen_mod(app_name, py2=False, qt_version=5):
         from importlib.machinery import SourceFileLoader
         return SourceFileLoader('{}_view_qt'.format(app_name), uic_gen_mod).load_module()
 
+def load_app_control(app_name, py2=False):
+    control = MK_DCC_ROOT + '/src/gui/app/{}/control.py'.format(app_name)
+    if py2:
+        import imp
+        return imp.load_source('', control)
+    else:
+        from importlib.machinery import SourceFileLoader
+        return SourceFileLoader('', control).load_module()
+
 def load_pathlib2_from_venv():
     import imp  # Python 2 only
     pathlib2 = MK_DCC_ROOT + '/venv27/Lib/site-packages/pathlib2/__init__.py'
