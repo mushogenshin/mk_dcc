@@ -19,8 +19,9 @@ class StandAlone(object):
         uic_gen_mod = load_app_uic_gen_mod(app_name, py2, qt_version)
 
         self._app = QApplication(sys.argv)
-        self._view = AbstractMainWindow(uic_gen_mod.Ui_MainWindow)
-        # TODO: set control and model
+        self._model = None
+        self._control = None
+        self._view = AbstractMainWindow(uic_gen_mod.Ui_MainWindow, self._control)
         
         self._view.show()
         sys.exit(self._app.exec_())
@@ -40,8 +41,9 @@ class Maya(object):
         else:
             from shiboken import wrapInstance  # PySide
 
-        self._view = AbstractMainWindow(uic_gen_mod.Ui_MainWindow)
-        # TODO: set control and model
+        self._model = None
+        self._control = None
+        self._view = AbstractMainWindow(uic_gen_mod.Ui_MainWindow, self._control)
 
         self._view.setParent(maya_main_window(wrapInstance, QWidget), Qt.Window)
 
@@ -51,8 +53,12 @@ class Houdini(object):
         import hou
         uic_gen_mod = load_app_uic_gen_mod(app_name, py2, 5)
 
-        self._view = AbstractMainWindow(uic_gen_mod.Ui_MainWindow)
-        # TODO: set control and model
+        self._model = None
+        self._control = None
+        self._view = AbstractMainWindow(uic_gen_mod.Ui_MainWindow, self._control)
 
         self._view.setParent(hou.ui.mainQtWindow(), Qt.Window)
-    
+
+
+if __name__ == '__main__':
+    base_app = StandAlone('base')

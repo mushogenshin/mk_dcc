@@ -19,12 +19,13 @@ class AbstractMainWindow(QMainWindow):
 
     :param class uic_main_window: the Ui_MainWindow class dependent on version of uic used (PySide of PySide2)
     '''
-    def __init__(self, uic_main_window, app_register_info=('MK DCC', 'Generic App')):
+    def __init__(self, uic_main_window, control, app_register_info=('MK DCC', 'Generic App')):
         super(AbstractMainWindow, self).__init__()
 
         self.ui = uic_main_window()
         self.ui.setupUi(self)
 
+        self._control = control
         self._app_register_info = app_register_info
 
         self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)

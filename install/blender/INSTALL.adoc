@@ -1,5 +1,6 @@
 === Install
 
+. First make sure PySide2 is present in, for example, `C:\Program Files\Blender Foundation\Blender 2.83\2.83\python\lib\site-packages`
 . Make a directory junction link to `./{app_name}` at `C:\Program Files\Blender Foundation\Blender 2.82\2.82\scripts\addons`. Name that directory however you like.
 . Our new Blender add-on requires that:
 - a `__init__.py` is put under `./{app_name}`

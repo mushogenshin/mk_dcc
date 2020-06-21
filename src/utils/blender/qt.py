@@ -23,16 +23,17 @@ class QtWindowEventLoop(bpy.types.Operator):
     bl_idname = 'screen.qt_event_loop'
     bl_label = 'Qt Event Loop'
 
-    def __init__(self, widget, uic_main_window):
-        self._widget = widget
-        self._uic_main_window = uic_main_window
+    def __init__(self, view, uic_main_window, control):
+        self.view = view
+        self.uic_main_window = uic_main_window
+        self._control = control
 
     def modal(self, context, event):
         # bpy.context.window_manager
         window_manager = context.window_manager
 
         try:  # using try since we got error where the widget is already deleted
-            if not self.widget.isVisible():
+            if not self._view.isVisible():
                 # if widget is closed
                 logger.debug('Finishing modal operator')
                 window_manager.event_timer_remove(self._timer)
@@ -40,7 +41,7 @@ class QtWindowEventLoop(bpy.types.Operator):
             else:
                 logger.debug('Processing the events for Qt window')
                 self.event_loop.processEvents()
-                self.app.sendPostedEvents(None, 0)
+                self._app.sendPostedEvents(None, 0)
         except:
             pass
 
@@ -49,20 +50,20 @@ class QtWindowEventLoop(bpy.types.Operator):
     def execute(self, context):
         logger.debug('Executing operator')
 
-        self.app = QtWidgets.QApplication.instance()
+        self._app = QtWidgets.QApplication.instance()
         # instance() gives the possibility to have multiple windows
         # and close it one by one
 
-        if not self.app:
+        if not self._app:
             # create the first instance
-            self.app = QtWidgets.QApplication(sys.argv)
+            self._app = QtWidgets.QApplication(sys.argv)
 
         self.event_loop = QtCore.QEventLoop()
-        self.widget = self._widget(self._uic_main_window)
-        self.widget.show()
+        self._view = self.view(self.uic_main_window, self._control)
+        self._view.show()
 
-        logger.debug(self.app)
-        logger.debug(self.widget)
+        logger.debug(self._app)
+        logger.debug(self._view)
 
         # run modal
         window_manager = context.window_manager

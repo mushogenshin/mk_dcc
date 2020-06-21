@@ -30,7 +30,7 @@ class WindowOperator(blender_qt_utils.QtWindowEventLoop):
     bl_label = 'MK DCC'
 
     def __init__(self):
-        super(WindowOperator, self).__init__(mk_dcc_core.AbstractMainWindow, uic_gen_mod.Ui_MainWindow)
+        super(WindowOperator, self).__init__(mk_dcc_core.AbstractMainWindow, uic_gen_mod.Ui_MainWindow, None)
 
 
 class QtPanel(bpy.types.Panel):
