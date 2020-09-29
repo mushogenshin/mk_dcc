@@ -29,7 +29,7 @@ setup(
     long_description_content_type='text/markdown',
     include_package_data=True,
     tests_require=test_requires,
-    install_requires=install_requires,
+    install_requires=deps['dev37'],
     extras_require=extra_requires,
     license='MIT',
     zip_safe=False,
@@ -43,6 +43,5 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3.6',
-        'Operating System :: Microsoft :: Windows',
     ],
 )

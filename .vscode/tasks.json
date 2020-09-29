@@ -6,10 +6,10 @@
     {
       "label": "Run py27",
       "type": "shell",
-      "command": ".\\venv27\\Scripts\\python ${file}",
+      "command": "./.venv27/bin/python ${file}",
       "options": {
 		"env": {
-          "PYTHONPATH": "${PYTHONPATH};",
+          "PYTHONPATH": "${PYTHONPATH}:./src;",
           "PATH": "${PATH};"
         }
 	  },
@@ -17,18 +17,16 @@
       "group": "build"
     },
     {
-      "label": "Run py38",
+      "label": "Run py37",
       "type": "shell",
-      "command": ".\\venv38\\Scripts\\python ${file}",
+      "command": "./.venv37/bin/python ${file}",
       "options": {
 		"env": {
-          "PYTHONPATH": "${PYTHONPATH};",
+          "PYTHONPATH": "${PYTHONPATH}:./src;",
           "PATH": "${PATH};"
         }
 	  },
-      "group": {
-        "kind": "build"
-      },
+      "group": "build",
       "problemMatcher": []
     }
   ]
