@@ -17,7 +17,7 @@ class AbstractMainWindow(QMainWindow):
     '''
     The base QMainWindow class that will wrap the uic-generated class which is fed into it.
 
-    :param class uic_main_window: the Ui_MainWindow class dependent on version of uic used (PySide of PySide2)
+    :param class uic_main_window: the Ui_MainWindow class dependent on version of uic used (PySide or PySide2)
     '''
     def __init__(self, uic_main_window, control, app_register_info=('MK DCC', 'Generic App')):
         super(AbstractMainWindow, self).__init__()
