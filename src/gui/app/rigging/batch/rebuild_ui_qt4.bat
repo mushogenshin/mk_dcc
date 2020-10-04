@@ -1,1 +1,1 @@
-..\..\..\..\..\venv27\Scripts\pyside-uic.exe ..\ui.ui -o ..\ui_qt4.py
+..\..\..\..\..\.venv27\Scripts\pyside-uic.exe ..\ui.ui -o ..\ui_qt4.py

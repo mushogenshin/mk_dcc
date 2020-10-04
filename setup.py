@@ -29,7 +29,7 @@ setup(
     long_description_content_type='text/markdown',
     include_package_data=True,
     tests_require=test_requires,
-    install_requires=deps['dev37'],
+    install_requires=install_requires,
     extras_require=extra_requires,
     license='MIT',
     zip_safe=False,

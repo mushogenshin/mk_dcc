@@ -3,8 +3,7 @@
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": false,
     "python.autoComplete.extraPaths": [
-        "F:/dev/git/mk_dcc/venv27/Lib/site-packages",
-        "F:/dev/git/mk_dcc/venv38/Lib/site-packages",
+        "F:/dev/git/mk_dcc/.venv27/Lib/site-packages",
+        "F:/dev/git/mk_dcc/.venv37/Lib/site-packages",
     ],
-    "python.pythonPath": ".venv37/bin/python",
 }
