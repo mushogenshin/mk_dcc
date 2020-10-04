@@ -5,13 +5,13 @@ from setuptools import setup, find_packages
 deps = {
     'mk-DCC': [],
     'test': [],
-    'dev': ['pylint', 'autopep8', 'rope', 'PyYAML', 'Pillow'],
-    'dev27': ['scandir', 'pathlib2', 'PySide'],
-    'dev37': ['PySide2==5.13.1'],
+    'dev': ['PyYAML'],
+    'dev2': ['scandir', 'pathlib2', 'PySide'],
+    'dev3': ['PySide2==5.13.1'],
 }
 deps['dev'] = deps['mk-DCC'] + deps['dev']
-deps['dev27'] = deps['dev'] + deps['dev27']
-deps['dev37'] = deps['dev'] + deps['dev37']
+deps['dev2'] = deps['dev'] + deps['dev2']
+deps['dev3'] = deps['dev'] + deps['dev3']
 deps['test'] = deps['mk-DCC'] + deps['test']
 
 install_requires = deps['mk-DCC']
@@ -29,7 +29,7 @@ setup(
     long_description_content_type='text/markdown',
     include_package_data=True,
     tests_require=test_requires,
-    install_requires=install_requires,
+    install_requires=deps['dev3'],
     extras_require=extra_requires,
     license='MIT',
     zip_safe=False,
@@ -42,6 +42,6 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.8',
     ],
 )

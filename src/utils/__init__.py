@@ -25,10 +25,10 @@ def load_app_control(app_name, py2=False):
 
 def load_pathlib2_from_venv():
     import imp  # Python 2 only
-    pathlib2 = MK_DCC_ROOT + '/.venv27/Lib/site-packages/pathlib2/__init__.py'
+    pathlib2 = MK_DCC_ROOT + '/.venv2/Lib/site-packages/pathlib2/__init__.py'
     return imp.load_source('pathlib2', pathlib2)
 
 def load_scandir_from_venv():
     import imp  # Python 2 only
-    scandir = MK_DCC_ROOT + '/.venv27/Lib/site-packages/scandir.py'
+    scandir = MK_DCC_ROOT + '/.venv2/Lib/site-packages/scandir.py'
     return imp.load_source('scandir', scandir)

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+python3 -m venv ./.venv3
+./.venv3/bin/pip install -e .
