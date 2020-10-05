@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '..\ui.ui'
 #
-# Created: Sun Jun 21 20:48:24 2020
+# Created: Tue Oct  6 03:06:14 2020
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -15,9 +15,9 @@ class Ui_MainWindow(object):
         MainWindow.resize(282, 426)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setObjectName("verticalLayout")
+        self.central_widget_layout = QtGui.QVBoxLayout(self.centralwidget)
+        self.central_widget_layout.setContentsMargins(0, 0, 0, 0)
+        self.central_widget_layout.setObjectName("central_widget_layout")
         self.tabWidget = QtGui.QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName("tabWidget")
         self.houdini_tab = QtGui.QWidget()
@@ -38,7 +38,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_4 = QtGui.QVBoxLayout(self.cfg_tab)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.tabWidget.addTab(self.cfg_tab, "")
-        self.verticalLayout.addWidget(self.tabWidget)
+        self.central_widget_layout.addWidget(self.tabWidget)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)

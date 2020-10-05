@@ -1,6 +1,5 @@
 import os
 import logging as logger
-import maya
 
 
 MAYA_DEFAULT_CONTENT_PATH = ['C:/Program Files/Autodesk/Maya2018/Examples',
@@ -14,6 +13,7 @@ def maya_main_window(wrapInstance, QWidget):
     :param function wrapInstance: of shiboken module
     :param module QWidget:
     '''
+    import maya
     main_window_ptr = maya.OpenMayaUI.MQtUtil.mainWindow()
     return wrapInstance(long(main_window_ptr), QWidget)
 
@@ -24,6 +24,7 @@ def open_content_browser(main_content_path="", landing_subfolder_name=""):
     :param landing_subfolder_name: for example: repo_kitbash_folder_name
     :return:
     """
+    import maya
 
     maya.cmds.scriptedPanel('contentBrowserPanel1', edit=True, tearOff=True, label='Content Browser')
     content_browser_panel_name = maya.cmds.getPanel(scriptType='contentBrowserPanel')[0]

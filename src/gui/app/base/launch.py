@@ -1,15 +1,19 @@
 import sys
 from src.gui.dcc import StandAlone
 
-py2 = True if sys.version_info.major < 3 else False
+is_py2 = True if sys.version_info.major < 3 else False
 
-if not py2:
+if not is_py2:
     from pathlib import Path
 else:
     from pathlib2 import Path
     
 app_name = Path(__file__).parent.stem
 
+# from src.utils import uic_rebuild
+# uic_rebuild(app_name)
+
 if __name__ == '__main__':
     base_app = StandAlone(app_name)
+    base_app.show()
     pass

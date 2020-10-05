@@ -14,7 +14,7 @@
    <string>MK DCC - Rigging</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="central_widget_layout">
     <property name="leftMargin">
      <number>0</number>
     </property>
