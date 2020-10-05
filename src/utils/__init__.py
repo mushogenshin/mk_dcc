@@ -1,3 +1,4 @@
+import platform
 from os import getcwd
 from os.path import dirname
 
@@ -14,6 +15,7 @@ def load_app_uic_gen_mod(app_name, py2=False, qt_version=5):
         from importlib.machinery import SourceFileLoader
         return SourceFileLoader('{}_view_qt'.format(app_name), uic_gen_mod).load_module()
 
+
 def load_app_control(app_name, py2=False):
     control = MK_DCC_ROOT + '/src/gui/app/{}/control.py'.format(app_name)
     if py2:
@@ -23,12 +25,20 @@ def load_app_control(app_name, py2=False):
         from importlib.machinery import SourceFileLoader
         return SourceFileLoader('', control).load_module()
 
+
 def load_pathlib2_from_venv():
     import imp  # Python 2 only
-    pathlib2 = MK_DCC_ROOT + '/.venv2/Lib/site-packages/pathlib2/__init__.py'
+    if platform.system() == "Windows":
+        pathlib2 = MK_DCC_ROOT + '/.venv2/Lib/site-packages/pathlib2/__init__.py'
+    elif platform.system() == "Darwin":
+        pathlib2 = MK_DCC_ROOT + '/.venv2/lib/python2.7/site-packages/pathlib2/__init__.py'
     return imp.load_source('pathlib2', pathlib2)
+
 
 def load_scandir_from_venv():
     import imp  # Python 2 only
-    scandir = MK_DCC_ROOT + '/.venv2/Lib/site-packages/scandir.py'
+    if platform.system() == "Windows":
+        scandir = MK_DCC_ROOT + '/.venv2/Lib/site-packages/scandir.py'
+    elif platform.system() == "Darwin":
+        scandir = MK_DCC_ROOT + '/.venv2/lib/python2.7/site-packages/scandir.py'
     return imp.load_source('scandir', scandir)
