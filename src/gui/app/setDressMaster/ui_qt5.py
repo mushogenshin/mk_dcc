@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui',
 # licensing of 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui' applies.
 #
-# Created: Tue Oct  6 04:10:02 2020
+# Created: Wed Oct  7 05:04:45 2020
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(405, 426)
+        MainWindow.resize(405, 365)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
@@ -32,10 +32,10 @@ class Ui_MainWindow(object):
         self.phys_painter_load_selection_grid_layout = QtWidgets.QGridLayout()
         self.phys_painter_load_selection_grid_layout.setObjectName("phys_painter_load_selection_grid_layout")
         self.phys_painter_group_box_layout.addLayout(self.phys_painter_load_selection_grid_layout)
-        self.pushButton = QtWidgets.QPushButton(self.phys_painter_group_box)
-        self.pushButton.setMinimumSize(QtCore.QSize(0, 40))
-        self.pushButton.setObjectName("pushButton")
-        self.phys_painter_group_box_layout.addWidget(self.pushButton)
+        self.setup_mash_network_btn = QtWidgets.QPushButton(self.phys_painter_group_box)
+        self.setup_mash_network_btn.setMinimumSize(QtCore.QSize(0, 40))
+        self.setup_mash_network_btn.setObjectName("setup_mash_network_btn")
+        self.phys_painter_group_box_layout.addWidget(self.setup_mash_network_btn)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.pushButton_4 = QtWidgets.QPushButton(self.phys_painter_group_box)
@@ -59,6 +59,7 @@ class Ui_MainWindow(object):
         self.phys_painter_group_box_layout.addLayout(self.horizontalLayout)
         self.central_widget_layout.addWidget(self.phys_painter_group_box)
         self.swap_master_group_box = QtWidgets.QGroupBox(self.centralwidget)
+        self.swap_master_group_box.setEnabled(True)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -89,7 +90,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "Set Dress Master", None, -1))
         self.phys_painter_group_box.setTitle(QtWidgets.QApplication.translate("MainWindow", "PHYSX PAINTER", None, -1))
-        self.pushButton.setText(QtWidgets.QApplication.translate("MainWindow", "Setup MASH Network", None, -1))
+        self.setup_mash_network_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Setup MASH Network", None, -1))
         self.pushButton_4.setText(QtWidgets.QApplication.translate("MainWindow", "Go to Time Zero", None, -1))
         self.pushButton_5.setText(QtWidgets.QApplication.translate("MainWindow", "Show Paint Node", None, -1))
         self.pushButton_6.setText(QtWidgets.QApplication.translate("MainWindow", "Interactive Playback", None, -1))

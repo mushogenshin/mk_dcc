@@ -1,48 +1,87 @@
 import sys
-from src.gui.dcc import StandAlone
-from src.utils.qt import pattern
+from functools import partial
 
+import src.gui.dcc
+from src.utils.qt import pattern
+from src.utils.maya import selection
 
 is_py2 = True if sys.version_info.major < 3 else False
 
 
 def add_widgets(ui):
 
-    load_label = "Load"
-    clear_label = "X"
+    # Load Selection
+    load_btn_label = "Load"
+    clear_btn_label = "X"
 
-    load_cloud_pattern = pattern.LoadAndDisplayToLineEdit(
-        "1. Cloud", load_label, clear_label, add_to_container=False
+    ui.load_cloud_pattern = pattern.LoadAndDisplayToLineEdit(
+        "1. Cloud", load_btn_label, clear_btn_label
     )
-    load_scatter_pattern = pattern.LoadAndDisplayToLineEdit(
-        "2. Scatter",  load_label, clear_label, add_to_container=False
+    ui.load_scatter_pattern = pattern.LoadAndDisplayToLineEdit(
+        "2. Scatter",  load_btn_label, clear_btn_label
     )
-    load_ground_pattern = pattern.LoadAndDisplayToLineEdit(
-        "3. Grounds",  load_label, clear_label, add_to_container=False
+    ui.load_ground_pattern = pattern.LoadAndDisplayToLineEdit(
+        "3. Grounds",  load_btn_label, clear_btn_label
     )
 
     for i, layout_pattern in enumerate(
-        [load_cloud_pattern, load_scatter_pattern, load_ground_pattern]
+        [ui.load_cloud_pattern, ui.load_scatter_pattern, ui.load_ground_pattern]
     ):
-        ui.phys_painter_load_selection_grid_layout.addWidget(
-            layout_pattern.label, i, 0
-        )
-        ui.phys_painter_load_selection_grid_layout.addWidget(
-            layout_pattern.line_edit, i, 1
-        )
-        ui.phys_painter_load_selection_grid_layout.addWidget(
-            layout_pattern.load_btn, i, 2
+        layout_pattern.add_to_container(
+            target=ui.phys_painter_load_selection_grid_layout,
+            row=i
         )
 
-        layout_pattern.clear_btn.setMaximumWidth(20)
-        ui.phys_painter_load_selection_grid_layout.addWidget(
-            layout_pattern.clear_btn, i, 3
-        )
-    pass
+    # 
 
 
-def modify_view(app):
+def modify_premade_view(app):
     add_widgets(app._view.ui)
+
+
+def create_connections(app):
+    ui = app._view.ui
+    model_data = app._model.data
+
+    # TODO: not sure why these do not behave properly when being fed in loop
+    ui.load_cloud_pattern.create_connections(
+        selection.filter_meshes_in_selection, 
+        lambda: (),
+        selection.ls_node_name
+    )
+    ui.load_scatter_pattern.create_connections(
+        selection.filter_meshes_in_selection, 
+        lambda: (),
+        selection.ls_node_name
+    )
+    ui.load_ground_pattern.create_connections(
+        selection.filter_meshes_in_selection, 
+        lambda: (),
+        selection.ls_node_name
+    )
+
+    ui.load_cloud_pattern.connect_app_model_update(
+        model_data,
+        "cloud_meshes"
+    )
+    ui.load_scatter_pattern.connect_app_model_update(
+        model_data,
+        "scatter_meshes"
+    )
+    ui.load_ground_pattern.connect_app_model_update(
+        model_data,
+        "ground_meshes"
+    )
+
+    # Debugging
+    ui.setup_mash_network_btn.clicked.connect(partial(
+        print_app_model_data,
+        app=app
+    ))
+
+
+def print_app_model_data(app):
+    print(app._model.data)
 
 
 if __name__ == '__main__':
@@ -59,10 +98,13 @@ if __name__ == '__main__':
         from src.utils import uic_rebuild
         uic_rebuild(app_name)
 
-        SDM_app = StandAlone(app_name)
-        modify_view(SDM_app)
+        SDM_app = src.gui.dcc.StandAlone(app_name)
+        modify_premade_view(SDM_app)
+        create_connections(SDM_app)
         SDM_app.show()
     else:
+        reload(pattern)
+        reload(selection)
         try:
             SDM_app._view.close()
             SDM_app._view.deleteLater()
@@ -70,5 +112,6 @@ if __name__ == '__main__':
             pass
             
         SDM_app = src.gui.dcc.Maya('setDressMaster')
-        modify_view(SDM_app)
+        modify_premade_view(SDM_app)
+        create_connections(SDM_app)
         SDM_app._view.show()

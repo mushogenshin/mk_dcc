@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui'
 #
-# Created: Tue Oct  6 04:10:02 2020
+# Created: Wed Oct  7 05:04:45 2020
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(405, 426)
+        MainWindow.resize(405, 365)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
@@ -31,10 +31,10 @@ class Ui_MainWindow(object):
         self.phys_painter_load_selection_grid_layout = QtGui.QGridLayout()
         self.phys_painter_load_selection_grid_layout.setObjectName("phys_painter_load_selection_grid_layout")
         self.phys_painter_group_box_layout.addLayout(self.phys_painter_load_selection_grid_layout)
-        self.pushButton = QtGui.QPushButton(self.phys_painter_group_box)
-        self.pushButton.setMinimumSize(QtCore.QSize(0, 40))
-        self.pushButton.setObjectName("pushButton")
-        self.phys_painter_group_box_layout.addWidget(self.pushButton)
+        self.setup_mash_network_btn = QtGui.QPushButton(self.phys_painter_group_box)
+        self.setup_mash_network_btn.setMinimumSize(QtCore.QSize(0, 40))
+        self.setup_mash_network_btn.setObjectName("setup_mash_network_btn")
+        self.phys_painter_group_box_layout.addWidget(self.setup_mash_network_btn)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.pushButton_4 = QtGui.QPushButton(self.phys_painter_group_box)
@@ -58,6 +58,7 @@ class Ui_MainWindow(object):
         self.phys_painter_group_box_layout.addLayout(self.horizontalLayout)
         self.central_widget_layout.addWidget(self.phys_painter_group_box)
         self.swap_master_group_box = QtGui.QGroupBox(self.centralwidget)
+        self.swap_master_group_box.setEnabled(True)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -88,7 +89,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Set Dress Master", None, QtGui.QApplication.UnicodeUTF8))
         self.phys_painter_group_box.setTitle(QtGui.QApplication.translate("MainWindow", "PHYSX PAINTER", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Setup MASH Network", None, QtGui.QApplication.UnicodeUTF8))
+        self.setup_mash_network_btn.setText(QtGui.QApplication.translate("MainWindow", "Setup MASH Network", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_4.setText(QtGui.QApplication.translate("MainWindow", "Go to Time Zero", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_5.setText(QtGui.QApplication.translate("MainWindow", "Show Paint Node", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_6.setText(QtGui.QApplication.translate("MainWindow", "Interactive Playback", None, QtGui.QApplication.UnicodeUTF8))

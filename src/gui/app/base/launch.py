@@ -1,5 +1,5 @@
 import sys
-from src.gui.dcc import StandAlone
+import src.gui.dcc
 
 is_py2 = True if sys.version_info.major < 3 else False
 
@@ -14,6 +14,6 @@ app_name = Path(__file__).parent.stem
 # uic_rebuild(app_name)
 
 if __name__ == '__main__':
-    base_app = StandAlone(app_name)
+    base_app = src.gui.dcc.StandAlone(app_name)
     base_app.show()
     pass
