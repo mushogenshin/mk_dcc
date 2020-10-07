@@ -23,13 +23,13 @@ def load_app_MVC(app_name, is_py2, module):
     """
     :param str module: either "control" or "model"
     """
-    module = MK_DCC_ROOT + '/src/gui/app/{}/{}.py'.format(app_name, module)
+    module_path = MK_DCC_ROOT + '/src/gui/app/{}/{}.py'.format(app_name, module)
     if is_py2:
         import imp
-        return imp.load_source('', module)
+        return imp.load_source(module, module_path)
     else:
         from importlib.machinery import SourceFileLoader
-        return SourceFileLoader('', module).load_module()
+        return SourceFileLoader(module, module_path).load_module()
 
 
 def load_pathlib():

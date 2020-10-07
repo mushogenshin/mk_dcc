@@ -13,6 +13,7 @@ class Model(object):
                 "mash_distribute": None,
                 "mash_repro": None,  # the instancer
                 "mash_placer": None,
+                "mash_dynamics": None,
                 "mash_bullet": None,
             },
             "baked": {}

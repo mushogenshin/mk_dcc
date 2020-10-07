@@ -1,13 +1,15 @@
 import sys
 import logging
 
-from src.utils.maya import plugin_utils, ui_utils
+from src.utils.maya import plugin_utils, node_utils, ui_utils
 
 logger = logging.getLogger(__name__)
 is_py2 = True if sys.version_info.major < 3 else False
 
 MASH_PLUGIN_NAME = "MASH"
 MASH_NETWORK_NAME = "SetDressMaster_MASH_Network"
+MASH_PLACER = "MASH_Placer"
+MASH_DYNAMICS = "MASH_Dynamics"
 
 
 def load_mash_api():
@@ -31,66 +33,39 @@ class Control(object):
         network = waiter = distribute = repro = None
         if hasattr(mapi, "Network"):
             network = mapi.Network()    
-            if hasattr(network, "createNetwork"):
+            if hasattr(network, "createNetwork") and \
+                not node_utils.node_exists(MASH_NETWORK_NAME):  # force Singleton
                 network.createNetwork(name=MASH_NETWORK_NAME)
-        
-        attrs = {
-            waiter: "waiter",
-            distribute: "distribute",
-            repro: "instancer"
-        }
-        for k, v in attrs.items():
-            k = getattr(network, v, None)
 
-        self._model._data["mash"]["mash_network"] = network  # not PyNode just yet
-        self._model._data["mash"]["mash_waiter"] = waiter  # not PyNode just yet
-        self._model._data["mash"]["mash_distribute"] = distribute  # not PyNode just yet
-        self._model._data["mash"]["mash_repro"] = repro  # not PyNode just yet
+        if hasattr(network, "__dict__"):
+            waiter = network.__dict__.get("waiter")
+            distribute = network.__dict__.get("distribute")
+            repro = network.__dict__.get("instancer")
+                            
+        self._model._data["mash"]["mash_network"] = network  # MASH.api.Network instance, not PyNode
+        self._model._data["mash"]["mash_waiter"] = node_utils.get_PyNode(waiter)
+        self._model._data["mash"]["mash_distribute"] = node_utils.get_PyNode(distribute)
+        self._model._data["mash"]["mash_repro"] = node_utils.get_PyNode(repro)
 
-    def setup_physx_painter(self):
+    def disable_distribute_node(self):
+        distribute_node = self._model._data["mash"]["mash_distribute"]
+        if hasattr(distribute_node, "pointCount"):
+            distribute_node.pointCount.set(0)
 
-        mash_plugin_loaded = plugin_utils.safe_load_plugin(MASH_PLUGIN_NAME)
-        mapi = load_mash_api()
-        
-        # TODO: Check cloud_meshes
-        # TODO: Check scatter_meshes
-        # TODO: Check ground_meshes
+    def add_generic_node(self, node_type, app_model_data_key):
+        network = self._model._data["mash"]["mash_network"]
+        if hasattr(network, "addNode"):
+            node = network.addNode(node_type)  # not PyNode
+            self._model._data["mash"][app_model_data_key] = node_utils.get_PyNode(node.name)
 
-        # Load mash_network and mash_waiter to model data
-        self.create_mash_network(mapi)
-
-        print("***MODEL DATA:", self._model._data)
-
-        # # accesses the default Distribute node
-        # php_mash_dist = pmc.PyNode(self.mash_network.distribute)
-        # php_mash_dist.pointCount.set(0)  # disables this distribute node
-
-        # # accesses the default Repro node
-        # # php_mash_repro = pmc.PyNode(self.mash_network.instancer)
-
-        # # adds a Placer node
-        # self.mash_placer = self.mash_network.addNode("MASH_Placer")
-        # logger.info("MASH Placer node added: {0}.".format(self.mash_placer.name))
-
-        # self.mash_placer = pmc.PyNode(self.mash_placer.name)
+    def config_placer_node(self):
         # self.mash_placer.scatter.set(True)
         # self.mash_placer.idMode.set(2)  # sets it to "Random"
         # self.mash_placer.randomId1.set(num_instances - 1)  # array index
         # #  TODO: elaborate this with large/small objs
+        pass
 
-        # if cloud_paint_meshes:
-        #     # connects the Clouds to the Placer's paint meshes
-        #     for i, cloud in enumerate(cloud_paint_meshes):
-        #         cloud.worldMesh[0].connect(self.mash_placer.paintMeshes[i])
-        #         logger.info("{0} added as a paint mesh for {1}.".format(cloud.nodeName(),
-        #                                                                 self.mash_placer.nodeName()))
-
-        # # adds a Dynamics node
-        # php_mash_dyn = self.mash_network.addNode("MASH_Dynamics")
-        # logger.info("MASH Dynamics node added: {0}.".format(php_mash_dyn.name))
-
-        # php_mash_dyn = pmc.PyNode(php_mash_dyn.name)
-
+    def config_dynamics_node(self):
         # php_mash_dyn.collisionShape.set(4)  # sets it to "Convex Hull"
 
         # # dynamics parameters
@@ -108,11 +83,18 @@ class Control(object):
         # php_mash_dyn.rollingDamping.set(dyn_rolling_damping)
         # php_mash_dyn.bounce.set(dyn_bounce)
         # php_mash_dyn.collisionJitter.set(dyn_collision_jitter)
+        pass
 
-        # # accesses the Bullet Solver
-        # self.mash_bullet = pmc.PyNode(self.mash_network.getSolver())
-        # logger.info("Bullet Solver automatically created: {0}.".format(self.mash_bullet.nodeName()))
+    def add_paint_meshes(self):
+        # if cloud_paint_meshes:
+        #     # connects the Clouds to the Placer's paint meshes
+        #     for i, cloud in enumerate(cloud_paint_meshes):
+        #         cloud.worldMesh[0].connect(self.mash_placer.paintMeshes[i])
+        #         logger.info("{0} added as a paint mesh for {1}.".format(cloud.nodeName(),
+        #                                                                 self.mash_placer.nodeName()))
+        pass
 
+    def add_ground_meshes(self):
         # if not ground_collide_meshes:
         #     self.mash_bullet.groundPlanePositionY.set(0)  # overrides the default value of -20
         # else:
@@ -122,15 +104,59 @@ class Control(object):
         #         self.mash_network.addCollider(collider.nodeName())
         #         logger.info("{0} added as a collider in {1}.".format(collider.nodeName(),
         #                                                             self.mash_bullet.nodeName()))
+        pass
 
+    def get_bullet_solver(self):
+        # # accesses the Bullet Solver
+        # self.mash_bullet = pmc.PyNode(self.mash_network.getSolver())
+        # logger.info("Bullet Solver automatically created: {0}.".format(self.mash_bullet.nodeName()))
+        pass
+
+    def prepare_time_range(self):
         # # increases the time range; go to first frame
         # extend_time_range(0, 3000, 0)
+        pass
 
+    def focus_to_placer_node(self):
         # # raises the MASH Outliner
         # pmc.mel.MASHOutliner()
 
         # # selects the Placer node
         # self.select_paint_node()
+        pass
+
+    def setup_physx_painter(self):
+
+        mash_plugin_loaded = plugin_utils.safe_load_plugin(MASH_PLUGIN_NAME)
+        mapi = load_mash_api()
+        
+        # TODO: Check cloud_meshes
+        # TODO: Check scatter_meshes
+        # TODO: Check ground_meshes
+
+        # Load mash_network and register related nodes to model data
+        self.create_mash_network(mapi)
+        logger.info("Model data:", self._model._data)
+
+        self.disable_distribute_node()
+
+        # Placer node
+        self.add_generic_node(MASH_PLACER, "mash_placer")
+        self.config_placer_node()
+        # Paint meshes
+        self.add_paint_meshes()
+
+        # Dynamics node
+        self.add_generic_node(MASH_DYNAMICS, "mash_dynamics")
+        self.config_dynamics_node()
+
+        # Bullet Solver
+        self.get_bullet_solver()
+        # Ground meshes
+        self.add_ground_meshes()
+
+        self.prepare_time_range()
+        self.focus_to_placer_node()
 
 
 #         self.Clouds = None

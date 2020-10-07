@@ -18,7 +18,7 @@ def add_widgets(ui):
     clear_btn_label = "X"
 
     ui.load_cloud_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
-        "1. Paint Surface", load_btn_label, clear_btn_label
+        "1. Paint Surface(s)", load_btn_label, clear_btn_label
     )
     ui.load_scatter_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
         "2. Meshes to Scatter",  load_btn_label, clear_btn_label
@@ -60,11 +60,11 @@ def create_connections(app):
 
     ui.setup_mash_network_btn.clicked.connect(app._control.setup_physx_painter)
 
-    # Debugging
-    ui.setup_mash_network_btn.clicked.connect(partial(
-        print_app_model_data,
-        app=app
-    ))
+    # # Debugging
+    # ui.setup_mash_network_btn.clicked.connect(partial(
+    #     print_app_model_data,
+    #     app=app
+    # ))
 
 
 def print_app_model_data(app):
@@ -88,6 +88,7 @@ if __name__ == '__main__':
         create_connections(SDM_app)
         SDM_app.show()
     else:
+        reload(src.gui.dcc)
         reload(pattern_utils)
         reload(selection_utils)
         try:

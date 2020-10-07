@@ -71,20 +71,24 @@ class Houdini(object):
 def load_model_component(app_name, is_py2):
     model = None
     try:
-        model = src.utils.load_app_model(app_name, is_py2).Model()
+        model = src.utils.load_app_model(app_name, is_py2)
     except Exception as e:
         logger.exception("Unable to load app model due to {}".format(e))
+        return None
     else:
-        logger.info("App model loaded successfully")
-    return model
+        logger.info("App model loaded successfully: {}".format(model))
+        if hasattr(model, "Model"):
+            return model.Model()
 
 
 def load_control_component(app_name, is_py2):
     control = None
     try:
-        control = src.utils.load_app_control(app_name, is_py2).Control()
+        control = src.utils.load_app_control(app_name, is_py2)
     except Exception as e:
         logger.exception("Unable to load app control due to {}".format(e))
+        return None
     else:
-        logger.info("App control loaded successfully")
-    return control
+        logger.info("App control loaded successfully: {}".format(control))
+        if hasattr(control, "Control"):
+            return control.Control()
