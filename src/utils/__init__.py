@@ -1,10 +1,12 @@
 import sys
 import platform
+import logging
 from os.path import dirname
 from functools import partial
 
 
 is_py2 = True if sys.version_info.major < 3 else False
+logger = logging.getLogger(__name__)
 _PLATFORM_SYSTEM = platform.system()
 MK_DCC_ROOT = dirname(dirname(dirname(__file__)))
 
@@ -30,6 +32,36 @@ def load_app_MVC(app_name, is_py2, module):
     else:
         from importlib.machinery import SourceFileLoader
         return SourceFileLoader(module, module_path).load_module()
+
+
+load_app_model_module = partial(load_app_MVC, module="model")
+load_app_control_module = partial(load_app_MVC, module="control")
+
+
+def load_model_component(app_name, is_py2):
+    model = None
+    try:
+        model = load_app_model_module(app_name, is_py2)
+    except Exception as e:
+        logger.exception("Unable to load app Model of {} due to {}".format(app_name, e))
+        return None
+    else:
+        logger.info("App Model of {} loaded successfully: {}".format(app_name, model))
+        if hasattr(model, "Model"):
+            return model.Model()
+
+
+def load_control_component(app_name, is_py2):
+    control = None
+    try:
+        control = load_app_control_module(app_name, is_py2)
+    except Exception as e:
+        logger.exception("Unable to load app Control of {} due to {}".format(app_name, e))
+        return None
+    else:
+        logger.info("App Control of {} loaded successfully: {}".format(app_name, control))
+        if hasattr(control, "Control"):
+            return control.Control()
 
 
 def load_pathlib():
@@ -79,7 +111,3 @@ def uic_rebuild(app_name):
             ])
         except:
             pass
-
-
-load_app_control = partial(load_app_MVC, module="control")
-load_app_model = partial(load_app_MVC, module="model")

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui'
 #
-# Created: Wed Oct  7 17:03:42 2020
+# Created: Thu Oct  8 03:19:07 2020
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -40,19 +40,25 @@ class Ui_MainWindow(object):
         self.reset_playback_btn = QtGui.QPushButton(self.phys_painter_group_box)
         self.reset_playback_btn.setObjectName("reset_playback_btn")
         self.horizontalLayout_2.addWidget(self.reset_playback_btn)
-        self.pushButton_5 = QtGui.QPushButton(self.phys_painter_group_box)
-        self.pushButton_5.setObjectName("pushButton_5")
-        self.horizontalLayout_2.addWidget(self.pushButton_5)
+        self.show_paint_node_btn = QtGui.QPushButton(self.phys_painter_group_box)
+        self.show_paint_node_btn.setObjectName("show_paint_node_btn")
+        self.horizontalLayout_2.addWidget(self.show_paint_node_btn)
         self.toggle_interactive_playback_btn = QtGui.QPushButton(self.phys_painter_group_box)
         self.toggle_interactive_playback_btn.setObjectName("toggle_interactive_playback_btn")
         self.horizontalLayout_2.addWidget(self.toggle_interactive_playback_btn)
         self.phys_painter_group_box_layout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
+        self.pushButton = QtGui.QPushButton(self.phys_painter_group_box)
+        self.pushButton.setEnabled(False)
+        self.pushButton.setObjectName("pushButton")
+        self.horizontalLayout.addWidget(self.pushButton)
         self.pushButton_2 = QtGui.QPushButton(self.phys_painter_group_box)
+        self.pushButton_2.setEnabled(False)
         self.pushButton_2.setObjectName("pushButton_2")
         self.horizontalLayout.addWidget(self.pushButton_2)
         self.pushButton_3 = QtGui.QPushButton(self.phys_painter_group_box)
+        self.pushButton_3.setEnabled(False)
         self.pushButton_3.setObjectName("pushButton_3")
         self.horizontalLayout.addWidget(self.pushButton_3)
         self.phys_painter_group_box_layout.addLayout(self.horizontalLayout)
@@ -91,8 +97,9 @@ class Ui_MainWindow(object):
         self.phys_painter_group_box.setTitle(QtGui.QApplication.translate("MainWindow", "PHYSX PAINTER", None, QtGui.QApplication.UnicodeUTF8))
         self.setup_mash_network_btn.setText(QtGui.QApplication.translate("MainWindow", "Setup MASH Network", None, QtGui.QApplication.UnicodeUTF8))
         self.reset_playback_btn.setText(QtGui.QApplication.translate("MainWindow", "Go to Time Zero", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_5.setText(QtGui.QApplication.translate("MainWindow", "Show Paint Node", None, QtGui.QApplication.UnicodeUTF8))
+        self.show_paint_node_btn.setText(QtGui.QApplication.translate("MainWindow", "Show Paint Node", None, QtGui.QApplication.UnicodeUTF8))
         self.toggle_interactive_playback_btn.setText(QtGui.QApplication.translate("MainWindow", "Interactive Playback", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Show Instancer Node", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_2.setText(QtGui.QApplication.translate("MainWindow", "Bake Current", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_3.setText(QtGui.QApplication.translate("MainWindow", "Delete All Setup", None, QtGui.QApplication.UnicodeUTF8))
         self.swap_master_group_box.setTitle(QtGui.QApplication.translate("MainWindow", "SWAP MASTER", None, QtGui.QApplication.UnicodeUTF8))

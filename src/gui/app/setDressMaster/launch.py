@@ -55,10 +55,12 @@ def create_connections(app):
     ui.load_scatter_ui_grp.connect_app_model_update(model_data, "init.scatter_meshes")
     ui.load_ground_ui_grp.connect_app_model_update(model_data, "init.ground_meshes")
 
+    ui.setup_mash_network_btn.clicked.connect(app._control.setup_physx_painter)
+
     ui.reset_playback_btn.clicked.connect(scene_utils.reset_playback)
+    ui.show_paint_node_btn.clicked.connect(app._control.focus_to_placer_node)
     ui.toggle_interactive_playback_btn.clicked.connect(scene_utils.toggle_interactive_playback)
 
-    ui.setup_mash_network_btn.clicked.connect(app._control.setup_physx_painter)
 
     # # Debugging
     # ui.setup_mash_network_btn.clicked.connect(partial(

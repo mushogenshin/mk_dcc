@@ -26,6 +26,16 @@ def raise_attribute_editor(node=None):
             pmc.select(node, r=True)
             pmc.mel.AttributeEditor()  # raise the Attribute Editor
             pmc.mel.updateAE(node)  # update it
+
+
+def raise_mash_outliner():
+    logger.info("Raising MASH Outliner")
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        pmc.mel.MASHOutliner()
             
 
 # def open_content_browser(main_content_path="", landing_subfolder_name=""):

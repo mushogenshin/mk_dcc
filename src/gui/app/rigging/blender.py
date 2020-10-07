@@ -29,7 +29,7 @@ class WindowOperator(blender_qt_utils.QtWindowEventLoop):
 
     def __init__(self):
         uic_gen_mod = mk_dcc_utils.load_app_uic_gen_mod(app_name, False, 5)
-        control = mk_dcc_utils.load_app_control(app_name, False).Control()
+        control = mk_dcc_utils.load_app_control_module(app_name, False).Control()
         super(WindowOperator, self).__init__(mk_dcc_core.AbstractMainWindow, uic_gen_mod.Ui_MainWindow, control)
 
 

@@ -1,9 +1,11 @@
 from functools import partial
 
 try:
-    from PySide2 import QtCore, QtWidgets
+    from PySide2 import QtCore
+    from PySide2.QtWidgets import *
 except ImportError:
-    from PySide import QtCore, QtWidgets
+    from PySide import QtCore
+    from PySide.QtGui import *  # equivalents of PySide2.QtWidgets child classes live here
 
 
 class LoadAndDisplayToLineEdit(object):
@@ -11,18 +13,18 @@ class LoadAndDisplayToLineEdit(object):
         super(LoadAndDisplayToLineEdit, self).__init__()
         self.data = {"loaded": []}
 
-        self.label = QtWidgets.QLabel(label)
+        self.label = QLabel(label)
 
-        self.line_edit = QtWidgets.QLineEdit()
-        self.line_edit.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        self.line_edit = QLineEdit()
+        self.line_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         self.line_edit.setReadOnly(True)
         self.print_line_edit = None
 
-        self.load_btn = QtWidgets.QPushButton(load_btn_label)
+        self.load_btn = QPushButton(load_btn_label)
 
         if clear_btn_label is not None:
-            self.clear_btn = QtWidgets.QPushButton(clear_btn_label)
-            self.clear_btn.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+            self.clear_btn = QPushButton(clear_btn_label)
+            self.clear_btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
             self.clear_btn.setMaximumWidth(max(20 * len(clear_btn_label), 20))
         else:
             self.clear_btn = None
@@ -36,7 +38,7 @@ class LoadAndDisplayToLineEdit(object):
         """
         wdgs = (self.label, self.line_edit, self.load_btn, self.clear_btn)
         if not target:
-            self.container = QtWidgets.QHBoxLayout()
+            self.container = QHBoxLayout()
         else:
             self.container = target
 
