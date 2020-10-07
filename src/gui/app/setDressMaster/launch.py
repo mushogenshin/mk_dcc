@@ -1,12 +1,9 @@
-import sys
 import logging
 from functools import partial
 
 import src.gui.dcc
 from src.utils.qt import pattern_utils
 from src.utils.maya import selection_utils, scene_utils
-
-is_py2 = True if sys.version_info.major < 3 else False
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -45,7 +42,7 @@ def modify_premade_view(app):
 
 def create_connections(app):
     ui = app._view.ui
-    model_data = app._model.data
+    model_data = app._model._data
 
     for layout_pattern in (ui.load_cloud_ui_grp, ui.load_scatter_ui_grp, ui.load_ground_ui_grp):
         layout_pattern.create_connections(
@@ -61,6 +58,8 @@ def create_connections(app):
     ui.reset_playback_btn.clicked.connect(scene_utils.reset_playback)
     ui.toggle_interactive_playback_btn.clicked.connect(scene_utils.toggle_interactive_playback)
 
+    ui.setup_mash_network_btn.clicked.connect(app._control.setup_physx_painter)
+
     # Debugging
     ui.setup_mash_network_btn.clicked.connect(partial(
         print_app_model_data,
@@ -69,17 +68,15 @@ def create_connections(app):
 
 
 def print_app_model_data(app):
-    print(app._model.data)
+    print(app._model._data)
 
 
 if __name__ == '__main__':
     try:
-        import maya
+        import pymel.core as pmc
     except ImportError:
-        if not is_py2:
-            from pathlib import Path
-        else:
-            from pathlib2 import Path
+        from src.utils import load_pathlib
+        Path = load_pathlib()
             
         app_name = Path(__file__).parent.stem
 

@@ -24,6 +24,7 @@ class StandAlone(object):
 
         self._model = load_model_component(app_name, is_py2)
         self._control = load_control_component(app_name, is_py2)
+        self._control._model = self._model
 
         self._view = AbstractMainWindow(uic_gen_mod.Ui_MainWindow, self._control)
 
@@ -48,6 +49,7 @@ class Maya(object):
 
         self._model = load_model_component(app_name, is_py2)
         self._control = load_control_component(app_name, is_py2)
+        self._control._model = self._model
 
         self._view = AbstractMainWindow(uic_gen_mod.Ui_MainWindow, self._control)
         self._view.setParent(maya_main_window(wrapInstance, QWidget), Qt.Window)
@@ -60,6 +62,7 @@ class Houdini(object):
 
         self._model = load_model_component(app_name, is_py2)
         self._control = load_control_component(app_name, is_py2)
+        self._control._model = self._model
 
         self._view = AbstractMainWindow(uic_gen_mod.Ui_MainWindow, self._control)
         self._view.setParent(hou.ui.mainQtWindow(), Qt.Window)

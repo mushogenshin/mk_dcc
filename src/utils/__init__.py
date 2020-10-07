@@ -1,9 +1,10 @@
+import sys
 import platform
-# from os import getcwd
 from os.path import dirname
 from functools import partial
 
 
+is_py2 = True if sys.version_info.major < 3 else False
 _PLATFORM_SYSTEM = platform.system()
 MK_DCC_ROOT = dirname(dirname(dirname(__file__)))
 
@@ -29,6 +30,14 @@ def load_app_MVC(app_name, is_py2, module):
     else:
         from importlib.machinery import SourceFileLoader
         return SourceFileLoader('', module).load_module()
+
+
+def load_pathlib():
+    if not is_py2:
+        from pathlib import Path
+    else:
+        from pathlib2 import Path
+    return Path
 
 
 def load_pathlib2_from_venv():
