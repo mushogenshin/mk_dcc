@@ -13,7 +13,6 @@ from src.gui.core import AbstractMainWindow
 
 is_py2 = True if sys.version_info.major < 3 else False
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 
 
 class StandAlone(object):
@@ -36,8 +35,8 @@ class StandAlone(object):
 class Maya(object):
     def __init__(self, app_name):
         # Check Maya's Qt version
-        from src.utils.maya.introspection import get_maya_qt_version
-        from src.utils.maya.ui import maya_main_window
+        from src.utils.maya.introspection_utils import get_maya_qt_version
+        from src.utils.maya.ui_utils import maya_main_window
 
         maya_qt_version = get_maya_qt_version()
         uic_gen_mod = src.utils.load_app_uic_gen_mod(app_name, is_py2, maya_qt_version)

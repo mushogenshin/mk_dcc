@@ -1,3 +1,7 @@
+import logging
+logger = logging.getLogger(__name__)
+
+
 def filter_meshes_in_selection():
     # Assume user already selected something
     try:

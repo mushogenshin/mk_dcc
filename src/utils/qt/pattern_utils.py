@@ -32,7 +32,7 @@ class LoadAndDisplayToLineEdit(object):
         Create a QHBoxLayout if no target is given, or populate to a row of a 
         given QGridLayout as target
         :param QGridLayout|None target:
-        :param int row:
+        :param int|None row:
         """
         wdgs = (self.label, self.line_edit, self.load_btn, self.clear_btn)
         if not target:
@@ -50,9 +50,13 @@ class LoadAndDisplayToLineEdit(object):
 
     def update_app_model(self, app_model_data, data_key):
         """
-        :param callable func:
+        :param str data_key: support for keys of two-level nested dicts, e.g. "init.mesh_A"
         """
-        app_model_data[data_key] = self.data["loaded"]
+        if "." in data_key:
+            key_1, key_2 = data_key.split(".")
+            app_model_data[key_1][key_2] = self.data["loaded"]
+        else:
+            app_model_data[data_key] = self.data["loaded"]
 
     def load_btn_clicked(self, func):
         """
@@ -98,6 +102,7 @@ class LoadAndDisplayToLineEdit(object):
         self.print_line_edit = print_func
 
     def connect_app_model_update(self, app_model_data, data_key):
+        # TODO: ensure these signals always emitted *after* the signals above
         self.load_btn.clicked.connect(partial(
             self.update_app_model,
             app_model_data=app_model_data,

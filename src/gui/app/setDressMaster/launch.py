@@ -1,38 +1,42 @@
 import sys
+import logging
 from functools import partial
 
 import src.gui.dcc
-from src.utils.qt import pattern
-from src.utils.maya import selection
+from src.utils.qt import pattern_utils
+from src.utils.maya import selection_utils, scene_utils
 
 is_py2 = True if sys.version_info.major < 3 else False
 
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+# SCENE_ENV = scene_utils.get_scene_env()
+
 
 def add_widgets(ui):
-
     # Load Selection
     load_btn_label = "Load"
     clear_btn_label = "X"
 
-    ui.load_cloud_pattern = pattern.LoadAndDisplayToLineEdit(
-        "1. Cloud", load_btn_label, clear_btn_label
+    ui.load_cloud_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
+        "1. Paint Surface", load_btn_label, clear_btn_label
     )
-    ui.load_scatter_pattern = pattern.LoadAndDisplayToLineEdit(
-        "2. Scatter",  load_btn_label, clear_btn_label
+    ui.load_scatter_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
+        "2. Meshes to Scatter",  load_btn_label, clear_btn_label
     )
-    ui.load_ground_pattern = pattern.LoadAndDisplayToLineEdit(
-        "3. Grounds",  load_btn_label, clear_btn_label
+    ui.load_ground_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
+        "3. Landing Surface(s)",  load_btn_label, clear_btn_label
     )
 
     for i, layout_pattern in enumerate(
-        [ui.load_cloud_pattern, ui.load_scatter_pattern, ui.load_ground_pattern]
+        [ui.load_cloud_ui_grp, ui.load_scatter_ui_grp, ui.load_ground_ui_grp]
     ):
         layout_pattern.add_to_container(
             target=ui.phys_painter_load_selection_grid_layout,
             row=i
         )
-
-    # 
 
 
 def modify_premade_view(app):
@@ -43,35 +47,19 @@ def create_connections(app):
     ui = app._view.ui
     model_data = app._model.data
 
-    # TODO: not sure why these do not behave properly when being fed in loop
-    ui.load_cloud_pattern.create_connections(
-        selection.filter_meshes_in_selection, 
-        lambda: (),
-        selection.ls_node_name
-    )
-    ui.load_scatter_pattern.create_connections(
-        selection.filter_meshes_in_selection, 
-        lambda: (),
-        selection.ls_node_name
-    )
-    ui.load_ground_pattern.create_connections(
-        selection.filter_meshes_in_selection, 
-        lambda: (),
-        selection.ls_node_name
-    )
+    for layout_pattern in (ui.load_cloud_ui_grp, ui.load_scatter_ui_grp, ui.load_ground_ui_grp):
+        layout_pattern.create_connections(
+            selection_utils.filter_meshes_in_selection, 
+            lambda: (),
+            selection_utils.ls_node_name
+        )
 
-    ui.load_cloud_pattern.connect_app_model_update(
-        model_data,
-        "cloud_meshes"
-    )
-    ui.load_scatter_pattern.connect_app_model_update(
-        model_data,
-        "scatter_meshes"
-    )
-    ui.load_ground_pattern.connect_app_model_update(
-        model_data,
-        "ground_meshes"
-    )
+    ui.load_cloud_ui_grp.connect_app_model_update(model_data, "init.cloud_meshes")
+    ui.load_scatter_ui_grp.connect_app_model_update(model_data, "init.scatter_meshes")
+    ui.load_ground_ui_grp.connect_app_model_update(model_data, "init.ground_meshes")
+
+    ui.reset_playback_btn.clicked.connect(scene_utils.reset_playback)
+    ui.toggle_interactive_playback_btn.clicked.connect(scene_utils.toggle_interactive_playback)
 
     # Debugging
     ui.setup_mash_network_btn.clicked.connect(partial(
@@ -103,8 +91,8 @@ if __name__ == '__main__':
         create_connections(SDM_app)
         SDM_app.show()
     else:
-        reload(pattern)
-        reload(selection)
+        reload(pattern_utils)
+        reload(selection_utils)
         try:
             SDM_app._view.close()
             SDM_app._view.deleteLater()

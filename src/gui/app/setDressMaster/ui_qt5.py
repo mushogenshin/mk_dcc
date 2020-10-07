@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui',
 # licensing of 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui' applies.
 #
-# Created: Wed Oct  7 05:04:45 2020
+# Created: Wed Oct  7 08:13:05 2020
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -38,15 +38,15 @@ class Ui_MainWindow(object):
         self.phys_painter_group_box_layout.addWidget(self.setup_mash_network_btn)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.pushButton_4 = QtWidgets.QPushButton(self.phys_painter_group_box)
-        self.pushButton_4.setObjectName("pushButton_4")
-        self.horizontalLayout_2.addWidget(self.pushButton_4)
+        self.reset_playback_btn = QtWidgets.QPushButton(self.phys_painter_group_box)
+        self.reset_playback_btn.setObjectName("reset_playback_btn")
+        self.horizontalLayout_2.addWidget(self.reset_playback_btn)
         self.pushButton_5 = QtWidgets.QPushButton(self.phys_painter_group_box)
         self.pushButton_5.setObjectName("pushButton_5")
         self.horizontalLayout_2.addWidget(self.pushButton_5)
-        self.pushButton_6 = QtWidgets.QPushButton(self.phys_painter_group_box)
-        self.pushButton_6.setObjectName("pushButton_6")
-        self.horizontalLayout_2.addWidget(self.pushButton_6)
+        self.toggle_interactive_playback_btn = QtWidgets.QPushButton(self.phys_painter_group_box)
+        self.toggle_interactive_playback_btn.setObjectName("toggle_interactive_playback_btn")
+        self.horizontalLayout_2.addWidget(self.toggle_interactive_playback_btn)
         self.phys_painter_group_box_layout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -91,9 +91,9 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "Set Dress Master", None, -1))
         self.phys_painter_group_box.setTitle(QtWidgets.QApplication.translate("MainWindow", "PHYSX PAINTER", None, -1))
         self.setup_mash_network_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Setup MASH Network", None, -1))
-        self.pushButton_4.setText(QtWidgets.QApplication.translate("MainWindow", "Go to Time Zero", None, -1))
+        self.reset_playback_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Go to Time Zero", None, -1))
         self.pushButton_5.setText(QtWidgets.QApplication.translate("MainWindow", "Show Paint Node", None, -1))
-        self.pushButton_6.setText(QtWidgets.QApplication.translate("MainWindow", "Interactive Playback", None, -1))
+        self.toggle_interactive_playback_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Interactive Playback", None, -1))
         self.pushButton_2.setText(QtWidgets.QApplication.translate("MainWindow", "Bake Current", None, -1))
         self.pushButton_3.setText(QtWidgets.QApplication.translate("MainWindow", "Delete All Setup", None, -1))
         self.swap_master_group_box.setTitle(QtWidgets.QApplication.translate("MainWindow", "SWAP MASTER", None, -1))

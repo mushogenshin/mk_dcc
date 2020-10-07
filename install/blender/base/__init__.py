@@ -26,7 +26,7 @@ import bpy
 
 ################################## Import Blender QtWindowEventLoop ##################################
 
-qt_utils = MK_DCC_ROOT / 'src/utils/blender/qt.py'
+qt_utils = MK_DCC_ROOT / 'src/utils/blender/qt_utils.py'
 qt_utils = SourceFileLoader('', qt_utils.as_posix()).load_module()
 # logger.debug('QtWindowEventLoop: {}'.format(qt_utils.QtWindowEventLoop))
 

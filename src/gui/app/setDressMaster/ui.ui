@@ -55,7 +55,7 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QPushButton" name="pushButton_4">
+          <widget class="QPushButton" name="reset_playback_btn">
            <property name="text">
             <string>Go to Time Zero</string>
            </property>
@@ -69,7 +69,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_6">
+          <widget class="QPushButton" name="toggle_interactive_playback_btn">
            <property name="text">
             <string>Interactive Playback</string>
            </property>

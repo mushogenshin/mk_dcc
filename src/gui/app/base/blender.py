@@ -15,7 +15,7 @@ mk_dcc_utils = SourceFileLoader('', (_MK_DCC_ROOT / 'src/utils/__init__.py').as_
 ################################## Import BlenderWidget QtWindowEventLoop ##################################
 
 import bpy
-blender_qt_utils = SourceFileLoader('', (_MK_DCC_ROOT / 'src/utils/blender/qt.py').as_posix()).load_module()
+blender_qt_utils = SourceFileLoader('', (_MK_DCC_ROOT / 'src/utils/blender/qt_utils.py').as_posix()).load_module()
 
 ######################################################################################################
 
