@@ -7,14 +7,17 @@ class Model(object):
                 "scatter_meshes": [],
                 "ground_meshes": [],
             },
-            "mash": {
-                "mash_network": None,
-                "mash_waiter": None,
-                "mash_distribute": None,
-                "mash_repro": None,  # the instancer
-                "mash_placer": None,
-                "mash_dynamics": None,
-                "mash_bullet": None,
-            },
             "baked": {}
+        }
+        self.init_mash_data()
+
+    def init_mash_data(self):
+        self._data["mash"] = {
+            "mash_network": None,
+            "mash_waiter": None,
+            "mash_distribute": None,
+            "mash_repro": None,  # the instancer
+            "mash_placer": None,
+            "mash_dynamics": None,
+            "mash_bullet": None,
         }

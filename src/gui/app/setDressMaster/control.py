@@ -6,7 +6,8 @@ from src.utils.maya import (
     node_utils, 
     ui_utils, 
     scene_utils,
-    selection_utils
+    selection_utils,
+    attrib_utils
 )
 
 logger = logging.getLogger(__name__)
@@ -50,13 +51,17 @@ class Control(object):
         Initialize a MASH Network
         """
         logger.info("Constructing MASH Network {}".format(MASH_NETWORK_NAME))
-        network = waiter = distribute = repro = None
+        waiter = distribute = repro = None
         scatter_meshes = self.get_init_data("scatter_meshes")
 
-        if hasattr(mapi, "Network"):
+        network = self.get_mash_data("mash_network")
+        if not network and hasattr(mapi, "Network"):
             # Scatter Meshes must be being selected prior to MASH Network creation
             selection_utils.replace_selection(scatter_meshes)
-            network = mapi.Network()    
+
+            network = mapi.Network()  
+            self.set_mash_data("mash_network", network)  # MASH.api.Network instance, not PyNode
+
             if hasattr(network, "createNetwork") and \
                 not node_utils.node_exists(MASH_NETWORK_NAME):  # force Singleton
                 network.createNetwork(name=MASH_NETWORK_NAME)
@@ -66,7 +71,6 @@ class Control(object):
             distribute = network.__dict__.get("distribute")
             repro = network.__dict__.get("instancer")
 
-        self.set_mash_data("mash_network", network)  # MASH.api.Network instance, not PyNode
         self.set_mash_data("mash_waiter", node_utils.get_PyNode(waiter))
         self.set_mash_data("mash_distribute", node_utils.get_PyNode(distribute))
         self.set_mash_data("mash_repro", node_utils.get_PyNode(repro))
@@ -83,6 +87,8 @@ class Control(object):
         if hasattr(network, "addNode"):
             node = network.addNode(node_type)  # not PyNode
             self.set_mash_data(app_model_data_key, node_utils.get_PyNode(node.name))
+            logger.info("--Added to MASH network: {}".format(node))
+            logger.info("--Added to MASH data: {}".format(self.get_mash_data(app_model_data_key)))
 
     def config_placer_node(self):
         logger.info("Configuring MASH Placer of {}".format(MASH_NETWORK_NAME))
@@ -96,33 +102,27 @@ class Control(object):
             placer.randomId1.set(max(num_instances - 1, 0))  # array index
         # TODO: support for large/small objs
 
-    def config_dynamics_node(self):
+    def config_dynamics_node(self, dynamics_parameters):
+        """
+        :param dict dynamics_parameters: e.g.
+            {
+                "friction" = 0.4
+                "rollingFriction" = 0.4
+                "damping" = 0.3
+                "rollingDamping" = 0.1
+                "bounce" = 0.02
+                "collisionJitter" = 0.005
+            }
+        """
         logger.info("Configuring MASH Dynamics of {}".format(MASH_NETWORK_NAME))
-        
-        # dynamics parameters  # TODO: provide UI inputs
-        dyn_friction = 0.4  # 0.3
-        dyn_rolling_friction = 0.4  # 0.2
-        dyn_damping = 0.3  # 0.1
-        dyn_rolling_damping = 0.1  # 0.02
-        dyn_bounce = 0.02  # 0.05
-        dyn_collision_jitter = 0.005
-        
         dynamics = self.get_mash_data("mash_dynamics")
 
         if hasattr(dynamics, "collisionShape"):
             dynamics.collisionShape.set(4)  # set it to "Convex Hull"
-        if hasattr(dynamics, "friction"):
-            dynamics.friction.set(dyn_friction)
-        if hasattr(dynamics, "rollingFriction"):
-            dynamics.rollingFriction.set(dyn_rolling_friction)
-        if hasattr(dynamics, "damping"):
-            dynamics.damping.set(dyn_damping)
-        if hasattr(dynamics, "rollingDamping"):
-            dynamics.rollingDamping.set(dyn_rolling_damping)
-        if hasattr(dynamics, "bounce"):
-            dynamics.bounce.set(dyn_bounce)
-        if hasattr(dynamics, "collisionJitter"):
-            dynamics.collisionJitter.set(dyn_collision_jitter)
+
+        for attr, v in dynamics_parameters.items():
+            if hasattr(dynamics, attr):
+                attrib_utils.set_attrib(dynamics, attr, v)
 
     def add_paint_meshes(self):
         logger.info("Connecting Paint Meshes to MASH Placer of {}".format(MASH_NETWORK_NAME))
@@ -158,7 +158,7 @@ class Control(object):
             if hasattr(network, "addCollider"):
                 for ground_mesh in ground_meshes:
                     logger.info("Adding Collider {}".format(ground_mesh))
-                    network.addCollider(selection_utils.get_node_name(ground_mesh))
+                    network.addCollider(node_utils.get_node_name(ground_mesh))
 
     def prepare_time_range(self):
         scene_utils.set_playback_range(0, TIME_RANGE)
@@ -170,7 +170,10 @@ class Control(object):
         # TODO: show as UI prompt
         logger.info('Start "Interactive Playback" then click "Add" to start painting.')
 
-    def setup_physx_painter(self):
+    def print_model_data(self):
+        logger.info("Updated Model Data: {}".format(self._model._data))
+
+    def setup_physx_painter(self, dynamics_parameters={}):
 
         mash_plugin_loaded = plugin_utils.safe_load_plugin(MASH_PLUGIN_NAME)
         mapi = load_mash_api()
@@ -180,7 +183,7 @@ class Control(object):
 
         # Load mash_network and register related nodes to model data
         self.create_mash_network(mapi)
-        logger.info("Updated Model Data: {}".format(self._model._data))
+        self.print_model_data()
 
         self.disable_distribute_node()
 
@@ -192,7 +195,7 @@ class Control(object):
 
         # Dynamics node
         self.add_generic_node(MASH_DYNAMICS, "mash_dynamics")
-        self.config_dynamics_node()
+        self.config_dynamics_node(dynamics_parameters)
 
         # Bullet Solver
         self.get_bullet_solver()
@@ -204,35 +207,20 @@ class Control(object):
         ui_utils.raise_mash_outliner()
         self.focus_to_placer_node()
 
+        self.print_model_data()
 
-#     def delete_setup(self):
-#         success = "Custom MASH network removed."
+    def delete_setup(self):
+        for data_key, node in self._model._data["mash"].items():
+            if data_key != "mash_network":
+                node_utils.delete(node)
+            else:
+                scene_utils.delete(MASH_NETWORK_NAME)
+                scene_utils.delete(MASH_NETWORK_NAME)  # delete twice due to Maya|MASH bug
 
-#         if self.mash_network:
-#             pmc.delete(self.mash_network.waiter)
-#             logger.info(success)
-#         else:
-#             mash_waiters = [waiter for waiter in pmc.ls(typ='MASH_Waiter') if waiter.nodeName().find(unique_prefix) != -1]
+        # Reset MASH model data
+        self._model.init_mash_data()
+        self.print_model_data()
 
-#             if mash_waiters:
-#                 pmc.delete(mash_waiters)
-#                 logger.info(success)
-#             else:
-#                 logger.info("No custom MASH network found.")
-
-#         # resets the variables
-
-#         self.mash_network = None
-#         self.mash_placer = None
-#         self.mash_bullet = None
-
-#         pmc.select(cl=True)  # clear the selection
-
-#         self.load_clouds()  # resets self.Clouds
-#         self.load_scatters()  # resets self.Scatters
-#         self.load_grounds()  # resets self.Grounds
-
-#         return True
 
 #     def do_bake_current(self):
 

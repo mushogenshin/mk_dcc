@@ -12,20 +12,6 @@ def filter_meshes_in_selection():
         return []
 
 
-def ls_node_name(nodes):
-    """
-    :rtype list:
-    """
-    return [node.nodeName() for node in nodes if hasattr(node, "nodeName")]
-
-
-def get_node_name(node):
-    """
-    :rtype str:
-    """
-    return node.nodeName() if hasattr(node, "nodeName") else str(node)
-
-
 def get_mesh_xforms_in_selection():
     return [node.getParent() for node in filter_meshes_in_selection() if hasattr(node, "getParent")]
 

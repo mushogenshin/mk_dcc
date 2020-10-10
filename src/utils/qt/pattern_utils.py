@@ -31,8 +31,8 @@ class LoadAndDisplayToLineEdit(object):
 
     def add_to_container(self, target=None, row=None):
         """
-        Create a QHBoxLayout if no target is given, or populate to a row of a 
-        given QGridLayout as target
+        Create a QHBoxLayout if no target is given, or populate to a 
+        given QGridLayout as target, using provided row
         :param QGridLayout|None target:
         :param int|None row:
         """
@@ -67,6 +67,9 @@ class LoadAndDisplayToLineEdit(object):
         # Stash what returned
         self.data["loaded"] = func()
         self.update_line_edit("load")
+
+    def loaded(self):
+        self.load_btn.click()
     
     def clear_btn_clicked(self, func):
         """
@@ -74,6 +77,10 @@ class LoadAndDisplayToLineEdit(object):
         """
         self.data["loaded"] = func()
         self.update_line_edit()
+
+    def cleared(self):
+        if hasattr(self.clear_btn, "clicked"):
+            self.clear_btn.click()
 
     def update_line_edit(self, method=""):
         """
@@ -116,3 +123,75 @@ class LoadAndDisplayToLineEdit(object):
                 app_model_data=app_model_data,
                 data_key=data_key
             ))       
+
+
+class LabeledSpinBox(object):
+    def __init__(self, label="", data_key="", double=False, default_value=0):
+        super(LabeledSpinBox, self).__init__()
+
+        self.data = default_value  # store right away 
+        # to avoid QSpinBox|QDoubleSpinBox auto truncation
+
+        self.data_key = data_key
+        self.is_double = double
+        self.label = QLabel(label)
+
+        self.spin_box = QSpinBox() if not self.is_double else QDoubleSpinBox()
+        self.spin_box.setButtonSymbols(QAbstractSpinBox.NoButtons)
+
+        self.spin_box.setValue(self.data)
+
+    def set_step(self, step):
+        self.spin_box.setSingleStep(step)
+
+    def set_decimals(self, decimals):
+        self.spin_box.setDecimals(decimals)
+        self.spin_box.setValue(self.data)  # reapply value from stored data
+
+    def value(self):
+        # may want to update self.data as well
+        return self.spin_box.value()
+
+    def add_to_container(self, target=None, row=None, start_column=None):
+        """
+        Create a QHBoxLayout if no target is given, or populate to a 
+        given QGridLayout as target, using provided row and column
+        :param QGridLayout|None target:
+        :param int|None row, column:
+        """
+        wdgs = (self.label, self.spin_box)
+        if not target:
+            self.container = QHBoxLayout()
+        else:
+            self.container = target
+
+        for i, wdg in enumerate(wdgs):
+            if not (isinstance(row, int) and isinstance(start_column, int)):
+                self.container.addWidget(wdg)
+            else:
+                self.container.addWidget(wdg, row, start_column + i)
+        return self.container
+
+
+class CollapsibleGroupBox(object):
+    """
+    Encapsulate a QGroupBox and make it collapsible
+    """
+    def __init__(self, group_box, expanded_height=0, collapsed_height=20):
+        """
+        :param QGroupBox group_box:
+        """
+        super(CollapsibleGroupBox, self).__init__()
+
+        self.group_box = group_box
+        self.expanded_height = max(self.group_box.height(), expanded_height)
+        self.collapsed_height = collapsed_height
+
+        self.group_box.toggled.connect(self.toggle_height)
+
+    def toggle_height(self, checked):
+        height = self.collapsed_height if not checked else self.expanded_height
+        self.group_box.setFixedHeight(height)
+
+    def toggled(self):
+        self.group_box.setChecked(not self.group_box.isChecked())

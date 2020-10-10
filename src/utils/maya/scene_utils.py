@@ -47,3 +47,17 @@ def toggle_interactive_playback():
             pmc.mel.InteractivePlayback()  # activate interactive playback
         else:
             pmc.play(state=0)  # pause the playback
+
+
+def delete(obj):
+    try:
+        import maya.cmds as cmds
+    except ImportError:
+        pass
+    else:
+        try:
+            cmds.delete(obj)
+        except Exception as e:
+            logger.exception('Unable to delete "{}" due to {}'.format(obj, e))
+        else:
+            logger.info('Successfully deleted "{}"'.format(obj))
