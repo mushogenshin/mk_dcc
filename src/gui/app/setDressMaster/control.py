@@ -219,6 +219,10 @@ class Control(object):
 
         # Reset MASH model data
         self._model.init_mash_data()
+
+        # TODO: there are two more nodes left to delete: 
+        # {MASH_NETWORK_NAME}_Distribute and {MASH_NETWORK_NAME}_ID
+
         self.print_model_data()
 
 

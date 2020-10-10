@@ -127,9 +127,9 @@ def create_connections(app):
 
     # Destruct Setup
     def delete_setup():
-        app._control.delete_setup()
         for input_grp in (ui.PP_load_cloud_ui_grp, ui.PP_load_scatter_ui_grp, ui.PP_load_ground_ui_grp):
             input_grp.cleared()
+        app._control.delete_setup()
 
     ui.PP_delete_all_setup_btn.clicked.connect(delete_setup)
 
