@@ -33,6 +33,7 @@ def load_mash_api():
 class Control(object):
     def __init__(self):
         super(Control, self).__init__()
+        self.SCENE_ENV = scene_utils.get_scene_env()
 
     def get_init_data(self, app_model_data_key):
         return self._model._data["init"][app_model_data_key]
@@ -45,6 +46,16 @@ class Control(object):
 
     def set_mash_data(self, app_model_data_key, value):
         self._model._data["mash"][app_model_data_key] = value
+
+    def get_baked_data(self):
+        return self._model._data["baked"]
+
+    def set_baked_data(self, frame, mesh):
+        if frame in self._model._data["baked"]:
+            self._model._data["baked"][frame].append(mesh)
+        else:
+            self._model._data["baked"][frame] = [mesh]
+
 
     def create_mash_network(self, mapi):
         """
@@ -161,8 +172,8 @@ class Control(object):
                     network.addCollider(node_utils.get_node_name(ground_mesh))
 
     def prepare_time_range(self):
-        scene_utils.set_playback_range(0, TIME_RANGE)
-        scene_utils.reset_playback()
+        scene_utils.set_playback_range(0, TIME_RANGE, self.SCENE_ENV)
+        scene_utils.reset_playback(self.SCENE_ENV)
 
     def focus_to_placer_node(self):
         placer = self.get_mash_data("mash_placer")
@@ -174,7 +185,7 @@ class Control(object):
         logger.info("Updated Model Data: {}".format(self._model._data))
 
     def setup_physx_painter(self, dynamics_parameters={}):
-
+        logger.info("Setting up PhysX Painter")
         mash_plugin_loaded = plugin_utils.safe_load_plugin(MASH_PLUGIN_NAME)
         mapi = load_mash_api()
         
@@ -210,6 +221,7 @@ class Control(object):
         self.print_model_data()
 
     def delete_setup(self):
+        logger.info("Deleting all setup related to {}".format(MASH_NETWORK_NAME))
         for data_key, node in self._model._data["mash"].items():
             if data_key != "mash_network":
                 node_utils.delete(node)
@@ -220,29 +232,33 @@ class Control(object):
         # Reset MASH model data
         self._model.init_mash_data()
 
-        # TODO: there are two more nodes left to delete: 
-        # {MASH_NETWORK_NAME}_Distribute and {MASH_NETWORK_NAME}_ID
+        # There are two more nodes left to delete: {MASH_NETWORK_NAME}_Distribute and {MASH_NETWORK_NAME}_ID
+        scene_utils.delete("{}_Distribute".format(MASH_NETWORK_NAME))
+        scene_utils.delete("{}_ID".format(MASH_NETWORK_NAME))
 
         self.print_model_data()
 
 
-#     def do_bake_current(self):
+    def bake_current(self):
+        logger.info("Baking")
 
-#         is_playing = cmds.play(q=True, st=True)
+        was_playback_running = scene_utils.is_playback_running()
+        scene_utils.toggle_interactive_playback(force_pause=True)  # pause the playback
+        
+        current_frame = scene_utils.get_current_frame(self.SCENE_ENV)
+        repro = self.get_mash_data("mash_repro")
 
-#         if is_playing:
-#             cmds.play(st=0)  # pauses the playback
+        if repro and hasattr(repro, "outMesh"):
+            repro_mesh = repro.outMesh.outputs()[0]   # get the Repro mesh
+            duplicated = node_utils.duplicate(
+                repro_mesh, 
+                name="{}_baked_f{}".format(
+                    node_utils.get_node_name(repro_mesh),
+                    current_frame
+                )   
+            )
+            # Add to Model Data
+            self.set_baked_data(current_frame, duplicated)
 
-#         if self.mash_network:
-#             # gets the Repro
-#             php_mash_repro = pmc.PyNode(self.mash_network.instancer)
-#             php_mash_repro_mesh = php_mash_repro.outMesh.outputs()[0]  # gets the Repro mesh
-#             pmc.duplicate(php_mash_repro_mesh, n="_".join([unique_prefix, "baked",
-#                                                           "f" + str(int(SCENE_ENV.time)),
-#                                                           PhysXPainterDialog.BAKED_MESH_IDENTIFIER]))
-
-#         if is_playing:
-#             pmc.mel.InteractivePlayback()  # resumes the playback
-
-#         return True
-
+        if was_playback_running:
+            scene_utils.toggle_interactive_playback(force_play=True)  # resume the playback

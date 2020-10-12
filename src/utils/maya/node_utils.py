@@ -53,3 +53,15 @@ def delete(node):
             logger.exception("Unable to delete node {} due to {}".format(node, e))
         else:
             logger.info("Successfully deleted node {}".format(node))
+
+
+def duplicate(node, name=""):
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        return
+    else:
+        if name:
+            return pmc.duplicate(node, n=name)
+        else:
+            return pmc.duplicate(node)  # auto naming

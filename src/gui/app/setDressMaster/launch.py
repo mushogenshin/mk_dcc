@@ -10,8 +10,6 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-# SCENE_ENV = scene_utils.get_scene_env()
-
 
 def add_widgets(ui):
     # Load Selection
@@ -67,7 +65,7 @@ def add_widgets(ui):
         spin_box.set_step(0.01)
         spin_box.set_decimals(3)
         spin_box.add_to_container(
-            target=ui.phys_painter_dynamic_parameters_grid_layout,
+            target=ui.PP_dynamic_parameters_grid_layout,
             row=int(i / 2),
             start_column=0 if i % 2 == 0 else 2,
         )
@@ -125,6 +123,8 @@ def create_connections(app):
     ui.PP_show_paint_node_btn.clicked.connect(app._control.focus_to_placer_node)
     ui.PP_toggle_interactive_playback_btn.clicked.connect(scene_utils.toggle_interactive_playback)
 
+    ui.PP_bake_current_btn.clicked.connect(app._control.bake_current)
+
     # Destruct Setup
     def delete_setup():
         for input_grp in (ui.PP_load_cloud_ui_grp, ui.PP_load_scatter_ui_grp, ui.PP_load_ground_ui_grp):
@@ -132,17 +132,6 @@ def create_connections(app):
         app._control.delete_setup()
 
     ui.PP_delete_all_setup_btn.clicked.connect(delete_setup)
-
-
-    # # Debugging
-    # ui.setup_mash_network_btn.clicked.connect(partial(
-    #     print_app_model_data,
-    #     app=app
-    # ))
-
-
-def print_app_model_data(app):
-    print(app._model._data)
 
 
 if __name__ == '__main__':
