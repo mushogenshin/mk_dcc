@@ -97,18 +97,53 @@ def uic_rebuild(app_name):
         rebuilt_qt5 = MK_DCC_ROOT + '/src/gui/app/{}/ui_qt5.py'.format(app_name)
         rebuilt_qt4 = MK_DCC_ROOT + '/src/gui/app/{}/ui_qt4.py'.format(app_name)
         try:
+            # Qt5
             subprocess.call([
                 MK_DCC_ROOT + '/.venv3/Scripts/pyside2-uic.exe',
                 ui_file,
                 "-o",
                 rebuilt_qt5
             ])
+            rename_resources_rc_module(app_name, rebuilt_qt5, 5)
+
+            # Qt4
             subprocess.call([
                 MK_DCC_ROOT + '/.venv2/Scripts/pyside-uic.exe',
                 ui_file,
                 "-o",
                 rebuilt_qt4
             ])
+            rename_resources_rc_module(app_name, rebuilt_qt4, 4)
         except:
             pass
-        # TODO: change last line of import resources_rc for each uic-generated module
+
+
+def rename_resources_rc_module(app_name, uic_output_path, qt_version):
+    """
+    :param str uic_output_path: path to the uic-generated file
+    """
+    pass
+    # DANGER: Maya will fail to parse this, but it won't tell you so
+
+    # import fileinput
+    # replaced = 'from src.gui.app.{} import resources_rc_qt{}'
+
+    # if is_py2:
+    #     for line in fileinput.input(files=uic_output_path, inplace=True):
+    #         print(
+    #             line.replace(
+    #                 'import resources_rc', 
+    #                 replaced.format(app_name, qt_version)
+    #             ), 
+    #             end=''
+    #         )
+    # else:
+    #     with fileinput.input(files=uic_output_path, inplace=True) as uic_output_file:
+    #         for line in uic_output_file:
+    #             print(
+    #                 line.replace(
+    #                     'import resources_rc', 
+    #                     replaced.format(app_name, qt_version)
+    #                 ),
+    #                 end=''
+    #             )
