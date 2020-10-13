@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui',
 # licensing of 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui' applies.
 #
-# Created: Sun Oct 11 06:49:07 2020
+# Created: Tue Oct 13 13:19:13 2020
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -36,8 +36,8 @@ class Ui_MainWindow(object):
         self.PP_dyn_parms_child_group_box.setAlignment(QtCore.Qt.AlignCenter)
         self.PP_dyn_parms_child_group_box.setCheckable(True)
         self.PP_dyn_parms_child_group_box.setObjectName("PP_dyn_parms_child_group_box")
-        self.phys_painter_dynamic_parameters_grid_layout = QtWidgets.QGridLayout(self.PP_dyn_parms_child_group_box)
-        self.phys_painter_dynamic_parameters_grid_layout.setObjectName("phys_painter_dynamic_parameters_grid_layout")
+        self.PP_dynamic_parameters_grid_layout = QtWidgets.QGridLayout(self.PP_dyn_parms_child_group_box)
+        self.PP_dynamic_parameters_grid_layout.setObjectName("PP_dynamic_parameters_grid_layout")
         self.phys_painter_group_box_layout.addWidget(self.PP_dyn_parms_child_group_box)
         self.PP_setup_mash_network_btn = QtWidgets.QPushButton(self.phys_painter_main_group_box)
         self.PP_setup_mash_network_btn.setMinimumSize(QtCore.QSize(0, 40))
@@ -75,14 +75,14 @@ class Ui_MainWindow(object):
         self.phys_painter_group_box_layout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.pushButton = QtWidgets.QPushButton(self.phys_painter_main_group_box)
-        self.pushButton.setEnabled(True)
-        self.pushButton.setObjectName("pushButton")
-        self.horizontalLayout.addWidget(self.pushButton)
-        self.pushButton_2 = QtWidgets.QPushButton(self.phys_painter_main_group_box)
-        self.pushButton_2.setEnabled(True)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.horizontalLayout.addWidget(self.pushButton_2)
+        self.PP_show_instancer_node_btn = QtWidgets.QPushButton(self.phys_painter_main_group_box)
+        self.PP_show_instancer_node_btn.setEnabled(True)
+        self.PP_show_instancer_node_btn.setObjectName("PP_show_instancer_node_btn")
+        self.horizontalLayout.addWidget(self.PP_show_instancer_node_btn)
+        self.PP_bake_current_btn = QtWidgets.QPushButton(self.phys_painter_main_group_box)
+        self.PP_bake_current_btn.setEnabled(True)
+        self.PP_bake_current_btn.setObjectName("PP_bake_current_btn")
+        self.horizontalLayout.addWidget(self.PP_bake_current_btn)
         self.PP_delete_all_setup_btn = QtWidgets.QPushButton(self.phys_painter_main_group_box)
         self.PP_delete_all_setup_btn.setEnabled(True)
         self.PP_delete_all_setup_btn.setObjectName("PP_delete_all_setup_btn")
@@ -126,8 +126,8 @@ class Ui_MainWindow(object):
         self.PP_reset_playback_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Go to Time Zero", None, -1))
         self.PP_show_paint_node_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Show Placer Node", None, -1))
         self.PP_toggle_interactive_playback_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Interactive Playback", None, -1))
-        self.pushButton.setText(QtWidgets.QApplication.translate("MainWindow", "Show Instancer Node", None, -1))
-        self.pushButton_2.setText(QtWidgets.QApplication.translate("MainWindow", "Bake Current", None, -1))
+        self.PP_show_instancer_node_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Show Instancer Node", None, -1))
+        self.PP_bake_current_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Bake Current", None, -1))
         self.PP_delete_all_setup_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Delete All Setup", None, -1))
         self.swap_master_group_box.setTitle(QtWidgets.QApplication.translate("MainWindow", "SWAP MASTER", None, -1))
         self.restore_instancing_group_box.setTitle(QtWidgets.QApplication.translate("MainWindow", "RESTORE INSTANCING", None, -1))

@@ -232,7 +232,7 @@ class Control(object):
         # Reset MASH model data
         self._model.init_mash_data()
 
-        # There are two more nodes left to delete: {MASH_NETWORK_NAME}_Distribute and {MASH_NETWORK_NAME}_ID
+        # There are two more nodes left to delete
         scene_utils.delete("{}_Distribute".format(MASH_NETWORK_NAME))
         scene_utils.delete("{}_ID".format(MASH_NETWORK_NAME))
 
@@ -240,12 +240,11 @@ class Control(object):
 
 
     def bake_current(self):
-        logger.info("Baking")
-
         was_playback_running = scene_utils.is_playback_running()
         scene_utils.toggle_interactive_playback(force_pause=True)  # pause the playback
         
         current_frame = scene_utils.get_current_frame(self.SCENE_ENV)
+        logger.info("Baking from frame {}".format(current_frame))
         repro = self.get_mash_data("mash_repro")
 
         if repro and hasattr(repro, "outMesh"):

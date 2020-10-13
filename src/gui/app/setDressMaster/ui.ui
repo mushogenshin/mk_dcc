@@ -50,7 +50,7 @@
          <property name="checkable">
           <bool>true</bool>
          </property>
-         <layout class="QGridLayout" name="phys_painter_dynamic_parameters_grid_layout"/>
+         <layout class="QGridLayout" name="PP_dynamic_parameters_grid_layout"/>
         </widget>
        </item>
        <item>
@@ -121,7 +121,7 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="PP_show_instancer_node_btn">
            <property name="enabled">
             <bool>true</bool>
            </property>
@@ -131,7 +131,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="PP_bake_current_btn">
            <property name="enabled">
             <bool>true</bool>
            </property>
