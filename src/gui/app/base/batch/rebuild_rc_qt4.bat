@@ -1,0 +1,1 @@
+"..\..\..\..\..\.venv2\Lib\site-packages\PySide\pyside-rcc.exe" ..\rc\resources.qrc -o ..\resources_rc_qt4.py

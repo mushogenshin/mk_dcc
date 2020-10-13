@@ -1,0 +1,1 @@
+"..\..\..\..\..\.venv3\Scripts\pyside2-rcc.exe" ..\rc\resources.qrc -o ..\resources_rc_qt5.py

@@ -111,3 +111,4 @@ def uic_rebuild(app_name):
             ])
         except:
             pass
+        # TODO: change last line of import resources_rc for each uic-generated module

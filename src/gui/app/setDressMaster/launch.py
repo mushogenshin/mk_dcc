@@ -12,7 +12,7 @@ if __name__ == '__main__':
         app_name = Path(__file__).parent.stem
 
         from src.utils import uic_rebuild
-        uic_rebuild(app_name)
+        # uic_rebuild(app_name)
 
         SDM_app = src.gui.dcc.StandAlone(app_name)
         view_wrapper.modify_premade_view(SDM_app)
@@ -20,8 +20,7 @@ if __name__ == '__main__':
         SDM_app.show()
     else:
         reload(src.gui.dcc)
-        reload(pattern_utils)
-        reload(selection_utils)
+        reload(view_wrapper)
         try:
             SDM_app._view.close()
             SDM_app._view.deleteLater()
