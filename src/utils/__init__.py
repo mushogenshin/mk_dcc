@@ -122,25 +122,28 @@ def rename_resources_rc_module(app_name, uic_output_path, qt_version):
     """
     :param str uic_output_path: path to the uic-generated file
     """
-    import fileinput
-    replaced = 'from src.gui.app.{} import resources_rc_qt{}'
+    pass
+    # DANGER: Maya will fail to parse this, but it won't tell you so
 
-    if is_py2:
-        for line in fileinput.input(files=uic_output_path, inplace=True):
-            print(
-                line.replace(
-                    'import resources_rc', 
-                    replaced.format(app_name, qt_version)
-                ), 
-                end=''
-            )
-    else:
-        with fileinput.input(files=uic_output_path, inplace=True) as uic_output_file:
-            for line in uic_output_file:
-                print(
-                    line.replace(
-                        'import resources_rc', 
-                        replaced.format(app_name, qt_version)
-                    ),
-                    end=''
-                )
+    # import fileinput
+    # replaced = 'from src.gui.app.{} import resources_rc_qt{}'
+
+    # if is_py2:
+    #     for line in fileinput.input(files=uic_output_path, inplace=True):
+    #         print(
+    #             line.replace(
+    #                 'import resources_rc', 
+    #                 replaced.format(app_name, qt_version)
+    #             ), 
+    #             end=''
+    #         )
+    # else:
+    #     with fileinput.input(files=uic_output_path, inplace=True) as uic_output_file:
+    #         for line in uic_output_file:
+    #             print(
+    #                 line.replace(
+    #                     'import resources_rc', 
+    #                     replaced.format(app_name, qt_version)
+    #                 ),
+    #                 end=''
+    #             )

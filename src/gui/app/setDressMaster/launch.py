@@ -1,3 +1,10 @@
+# import sys
+# sys.path.append(r"F:\dev\git\mk_dcc")
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+
 import src.gui.dcc
 import src.gui.app.setDressMaster.view_wrapper as view_wrapper
 
