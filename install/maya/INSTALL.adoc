@@ -1,6 +1,9 @@
 === Install
 
-Modify the `./mk_dcc.mod` file and then copy it to `C:\Users\%USERNAME\Documents\maya\modules`
+Modify the `./mk_dcc.mod` file and then copy it to:
+
+  - on Windows: `C:\Users\%USERNAME\Documents\maya\modules`
+  - on MacOS: `/Users/<username>/Library/Preferences/Autodesk/maya/<version>/modules`
 
 Then from Maya Script Editor run
 
