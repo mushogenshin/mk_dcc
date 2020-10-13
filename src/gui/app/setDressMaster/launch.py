@@ -1,3 +1,6 @@
+import sys
+sys.path.append(r"F:\dev\git\mk_dcc")
+
 import src.gui.dcc
 import src.gui.app.setDressMaster.view_wrapper as view_wrapper
 
@@ -19,8 +22,8 @@ if __name__ == '__main__':
         view_wrapper.create_connections(SDM_app)
         SDM_app.show()
     else:
-        reload(src.gui.dcc)
-        reload(view_wrapper)
+        # reload(src.gui.dcc)
+        # reload(view_wrapper)
         try:
             SDM_app._view.close()
             SDM_app._view.deleteLater()
