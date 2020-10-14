@@ -8,7 +8,6 @@ except ImportError:
     from PySide.QtCore import Qt
     from PySide.QtGui import QApplication, QWidget
 
-import src.utils
 from src.gui.core import AbstractMainWindow
 
 is_py2 = True if sys.version_info.major < 3 else False
@@ -17,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 class StandAlone(object):
     def __init__(self, app_name):
+        import src.utils
         qt_version = 4 if is_py2 else 5
         uic_gen_mod = src.utils.load_app_uic_gen_mod(app_name, is_py2, qt_version)
 
@@ -35,6 +35,11 @@ class StandAlone(object):
 
 class Maya(object):
     def __init__(self, app_name):
+        import src.utils
+        
+        if is_py2:
+            reload(src.utils)
+
         # Check Maya's Qt version
         from src.utils.maya.introspection_utils import get_maya_qt_version
         from src.utils.maya.ui_utils import maya_main_window
@@ -57,6 +62,7 @@ class Maya(object):
 
 class Houdini(object):
     def __init__(self, app_name):
+        import src.utils
         import hou
         uic_gen_mod = src.utils.load_app_uic_gen_mod(app_name, is_py2, 5)
 
@@ -66,5 +72,3 @@ class Houdini(object):
 
         self._view = AbstractMainWindow(uic_gen_mod.Ui_MainWindow, self._control)
         self._view.setParent(hou.ui.mainQtWindow(), Qt.Window)
-
-

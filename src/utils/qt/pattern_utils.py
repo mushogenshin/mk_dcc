@@ -14,6 +14,8 @@ class LoadAndDisplayToLineEdit(object):
         self.data = {"loaded": []}
 
         self.label = QLabel(label)
+        self.label.setDisabled(True)
+        self.label.setStyleSheet("font-size: 9px")
 
         self.line_edit = QLineEdit()
         self.line_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
@@ -135,6 +137,7 @@ class LabeledSpinBox(object):
         self.data_key = data_key
         self.is_double = double
         self.label = QLabel(label)
+        self.label.setDisabled(True)
 
         self.spin_box = QSpinBox() if not self.is_double else QDoubleSpinBox()
         self.spin_box.setButtonSymbols(QAbstractSpinBox.NoButtons)

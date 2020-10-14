@@ -122,7 +122,10 @@ def rename_resources_rc_module(app_name, uic_output_path, qt_version):
     """
     :param str uic_output_path: path to the uic-generated file
     """
-    pass
+    import inspect
+    func_name = inspect.currentframe().f_code.co_name
+    print("***(!) Ensure that {} is being enabled (!)***".format(func_name))
+
     # DANGER: Maya will fail to parse this, but it won't tell you so
 
     # import fileinput
@@ -147,3 +150,5 @@ def rename_resources_rc_module(app_name, uic_output_path, qt_version):
     #                 ),
     #                 end=''
     #             )
+
+    # pass

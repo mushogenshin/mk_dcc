@@ -178,7 +178,7 @@ class Control(object):
     def focus_to_placer_node(self):
         placer = self.get_mash_data("mash_placer")
         ui_utils.raise_attribute_editor(placer)
-        # TODO: show as UI prompt
+        # TODO: show below message as UI prompt
         logger.info('Start "Interactive Playback" then click "Add" to start painting.')
 
     def print_model_data(self):
@@ -238,7 +238,6 @@ class Control(object):
 
         self.print_model_data()
 
-
     def bake_current(self):
         was_playback_running = scene_utils.is_playback_running()
         scene_utils.toggle_interactive_playback(force_pause=True)  # pause the playback
@@ -261,3 +260,19 @@ class Control(object):
 
         if was_playback_running:
             scene_utils.toggle_interactive_playback(force_play=True)  # resume the playback
+
+    def show_all_baked(self):
+        logger.info("Showing all baked meshes from {}".format(MASH_NETWORK_NAME))
+        baked_meshes = []
+        baked_data = self.get_baked_data()
+        for frame, meshes in baked_data.items():
+            baked_meshes.extend(meshes)
+        if baked_meshes:
+            selection_utils.replace_selection(baked_meshes)
+
+    def focus_to_instancer_node(self):
+        logger.info("Showing Instancer node of {}".format(MASH_NETWORK_NAME))
+        repro = self.get_mash_data("mash_repro")
+        if repro:
+            selection_utils.replace_selection(repro)
+            ui_utils.raise_attribute_editor(repro)

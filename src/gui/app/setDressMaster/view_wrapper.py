@@ -7,6 +7,8 @@ def add_widgets(ui):
     load_btn_label = "Load"
     clear_btn_label = "X"
 
+    ############################# PHYSX PAINTER #############################
+
     ui.PP_load_cloud_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
         "1. Paint Surface(s)", load_btn_label, clear_btn_label
     )
@@ -66,6 +68,48 @@ def add_widgets(ui):
         expanded_height=105
     )
     ui.PP_dyn_parms_group_box.toggled()
+
+    ui.PP_main_group_box = pattern_utils.CollapsibleGroupBox(
+        ui.phys_painter_main_group_box,
+        expanded_height=430
+    )
+
+    ############################# SWAP MASTER #############################
+
+    ui.SM_load_north_compos_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
+        "1. North\ncomponents", load_btn_label, clear_btn_label
+    )
+    ui.SM_load_south_compos_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
+        "2. South\ncomponents",  load_btn_label, clear_btn_label
+    )
+    ui.SM_load_yaw_compos_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
+        "3. Yaw components\n(optional)",  load_btn_label, clear_btn_label
+    )
+
+    for i, input_grp in enumerate(
+        (ui.SM_load_north_compos_ui_grp, ui.SM_load_south_compos_ui_grp, ui.SM_load_yaw_compos_ui_grp)
+    ):
+        input_grp.add_to_container(
+            target=ui.SM_load_trace_components_grid_layout,
+            row=i
+        )
+
+    ui.SM_load_substitute_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
+        "Replacement Mesh", load_btn_label, clear_btn_label
+    )
+
+    for i, input_grp in enumerate(
+        (ui.SM_load_substitute_ui_grp,)
+    ):
+        input_grp.add_to_container(
+            target=ui.SM_load_substitute_grid_layout,
+            row=i
+        )
+
+    ui.SM_main_group_box = pattern_utils.CollapsibleGroupBox(
+        ui.swap_master_main_group_box,
+        expanded_height=320
+    )
     
 
 def get_dynamics_parameters(ui):
@@ -113,8 +157,10 @@ def create_connections(app):
     ui.PP_reset_playback_btn.clicked.connect(scene_utils.reset_playback)
     ui.PP_show_paint_node_btn.clicked.connect(app._control.focus_to_placer_node)
     ui.PP_toggle_interactive_playback_btn.clicked.connect(scene_utils.toggle_interactive_playback)
+    ui.PP_show_instancer_node_btn.clicked.connect(app._control.focus_to_instancer_node)
 
     ui.PP_bake_current_btn.clicked.connect(app._control.bake_current)
+    ui.PP_show_all_baked_btn.clicked.connect(app._control.show_all_baked)
 
     # Destruct Setup
     def delete_setup():
