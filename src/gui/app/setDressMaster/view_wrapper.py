@@ -1,5 +1,10 @@
 from src.utils.qt import pattern_utils
-from src.utils.maya import selection_utils, scene_utils, node_utils
+from src.utils.maya import (
+    selection_utils, 
+    scene_utils, 
+    node_utils,
+    mesh_utils
+)
 
 
 def add_widgets(ui):
@@ -74,16 +79,18 @@ def add_widgets(ui):
         expanded_height=430
     )
 
+    ui.PP_main_group_box.toggled()
+
     ############################# SWAP MASTER #############################
 
     ui.SM_load_north_compos_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
-        "1. North\ncomponents", load_btn_label, clear_btn_label
+        "1. NORTH\ncomponents", load_btn_label, clear_btn_label
     )
     ui.SM_load_south_compos_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
-        "2. South\ncomponents",  load_btn_label, clear_btn_label
+        "2. SOUTH\ncomponents",  load_btn_label, clear_btn_label
     )
     ui.SM_load_yaw_compos_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
-        "3. Yaw components\n(optional)",  load_btn_label, clear_btn_label
+        "3. YAW components\n(optional)",  load_btn_label, clear_btn_label
     )
 
     for i, input_grp in enumerate(
@@ -106,13 +113,13 @@ def add_widgets(ui):
             row=i
         )
 
-    ui.SM_main_group_box = pattern_utils.CollapsibleGroupBox(
-        ui.swap_master_main_group_box,
-        expanded_height=320
-    )
+    # ui.SM_main_group_box = pattern_utils.CollapsibleGroupBox(
+    #     ui.swap_master_main_group_box,
+    #     expanded_height=320
+    # )
     
 
-def get_dynamics_parameters(ui):
+def get_PP_dynamics_parameters(ui):
     params = {}
     for spin_box in (
         ui.PP_dyn_parm_friction,
@@ -134,24 +141,26 @@ def create_connections(app):
     ui = app._view.ui
     model_data = app._model._data
 
+    ############################# PHYSX PAINTER #############################
+
     # Load and Clear Selection
     for input_grp in (ui.PP_load_cloud_ui_grp, ui.PP_load_scatter_ui_grp, ui.PP_load_ground_ui_grp):
         input_grp.create_connections(
-            selection_utils.filter_meshes_in_selection, 
-            lambda: (),
-            node_utils.ls_node_name
+            selection_utils.filter_meshes_in_selection,  # load_func
+            lambda: (),  # clear_func
+            node_utils.ls_node_name  # print_func
         )
 
-    ui.PP_load_cloud_ui_grp.connect_app_model_update(model_data, "init.cloud_meshes")
-    ui.PP_load_scatter_ui_grp.connect_app_model_update(model_data, "init.scatter_meshes")
-    ui.PP_load_ground_ui_grp.connect_app_model_update(model_data, "init.ground_meshes")
+    ui.PP_load_cloud_ui_grp.connect_app_model_update(model_data, "PP_init.cloud_meshes")
+    ui.PP_load_scatter_ui_grp.connect_app_model_update(model_data, "PP_init.scatter_meshes")
+    ui.PP_load_ground_ui_grp.connect_app_model_update(model_data, "PP_init.ground_meshes")
 
     # Setup MASH Network
-    def setup_mash_network():
-        dynamics_params = get_dynamics_parameters(ui)
+    def setup_PP_mash_network():
+        dynamics_params = get_PP_dynamics_parameters(ui)
         app._control.setup_physx_painter(dynamics_params)
     
-    ui.PP_setup_mash_network_btn.clicked.connect(setup_mash_network)
+    ui.PP_setup_mash_network_btn.clicked.connect(setup_PP_mash_network)
 
     # Helpers
     ui.PP_reset_playback_btn.clicked.connect(scene_utils.reset_playback)
@@ -163,9 +172,23 @@ def create_connections(app):
     ui.PP_show_all_baked_btn.clicked.connect(app._control.show_all_baked)
 
     # Destruct Setup
-    def delete_setup():
+    def delete_PP_setup():
         for input_grp in (ui.PP_load_cloud_ui_grp, ui.PP_load_scatter_ui_grp, ui.PP_load_ground_ui_grp):
             input_grp.cleared()
         app._control.delete_setup()
 
-    ui.PP_delete_all_setup_btn.clicked.connect(delete_setup)
+    ui.PP_delete_all_setup_btn.clicked.connect(delete_PP_setup)
+
+    ############################# SWAP MASTER #############################
+
+    # Load and Clear Selection
+    for input_grp in (ui.SM_load_north_compos_ui_grp, ui.SM_load_south_compos_ui_grp, ui.SM_load_yaw_compos_ui_grp):
+        input_grp.create_connections(
+            selection_utils.filter_meshes_in_selection,  # load_func  # TODO: change this to work with components
+            lambda: (),  # clear_func
+            node_utils.ls_node_name  # print_func  # TODO: change this to work with components
+        )
+
+    ui.SM_load_north_compos_ui_grp.connect_app_model_update(model_data, "SM_init.north_component_IDs")
+    ui.SM_load_south_compos_ui_grp.connect_app_model_update(model_data, "SM_init.south_component_IDs")
+    ui.SM_load_yaw_compos_ui_grp.connect_app_model_update(model_data, "SM_init.yaw_component_IDs")

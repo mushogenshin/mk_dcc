@@ -19,7 +19,7 @@ if __name__ == '__main__':
         app_name = Path(__file__).parent.stem
 
         from src.utils import uic_rebuild
-        uic_rebuild(app_name)
+        # uic_rebuild(app_name)
 
         SDM_app = src.gui.dcc.StandAlone(app_name)
         view_wrapper.modify_premade_view(SDM_app)

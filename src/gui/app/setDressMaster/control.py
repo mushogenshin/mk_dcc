@@ -36,25 +36,25 @@ class Control(object):
         self.SCENE_ENV = scene_utils.get_scene_env()
 
     def get_init_data(self, app_model_data_key):
-        return self._model._data["init"][app_model_data_key]
+        return self._model._data["PP_init"][app_model_data_key]
 
     def set_init_data(self, app_model_data_key, value):
-        self._model._data["init"][app_model_data_key] = value
+        self._model._data["PP_init"][app_model_data_key] = value
 
     def get_mash_data(self, app_model_data_key):
-        return self._model._data["mash"][app_model_data_key]
+        return self._model._data["PP_mash"][app_model_data_key]
 
     def set_mash_data(self, app_model_data_key, value):
-        self._model._data["mash"][app_model_data_key] = value
+        self._model._data["PP_mash"][app_model_data_key] = value
 
     def get_baked_data(self):
-        return self._model._data["baked"]
+        return self._model._data["PP_baked"]
 
     def set_baked_data(self, frame, mesh):
-        if frame in self._model._data["baked"]:
-            self._model._data["baked"][frame].append(mesh)
+        if frame in self._model._data["PP_baked"]:
+            self._model._data["PP_baked"][frame].append(mesh)
         else:
-            self._model._data["baked"][frame] = [mesh]
+            self._model._data["PP_baked"][frame] = [mesh]
 
 
     def create_mash_network(self, mapi):
@@ -222,7 +222,7 @@ class Control(object):
 
     def delete_setup(self):
         logger.info("Deleting all setup related to {}".format(MASH_NETWORK_NAME))
-        for data_key, node in self._model._data["mash"].items():
+        for data_key, node in self._model._data["PP_mash"].items():
             if data_key != "mash_network":
                 node_utils.delete(node)
             else:
@@ -230,7 +230,7 @@ class Control(object):
                 scene_utils.delete(MASH_NETWORK_NAME)  # delete twice due to Maya|MASH bug
 
         # Reset MASH model data
-        self._model.init_mash_data()
+        self._model.init_PP_mash_data()
 
         # There are two more nodes left to delete
         scene_utils.delete("{}_Distribute".format(MASH_NETWORK_NAME))

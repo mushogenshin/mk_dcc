@@ -1,18 +1,30 @@
 class Model(object):
+    """
+    Model of all PhysX Painter, Swap Master, and Restore Instancing UI elements
+    """
     def __init__(self):
         super(Model, self).__init__()
+        # PhysX Painter
         self._data = {
-            "init": {
+            "PP_init": {
                 "cloud_meshes": [],
                 "scatter_meshes": [],
                 "ground_meshes": [],
             },
-            "baked": {}
+            "PP_baked": {}
         }
-        self.init_mash_data()
+        self.init_PP_mash_data()
+        
+        # Swap Master
+        self._data["SM_init"] = {
+            "component_type": 1,
+            "north_component_IDs": [],
+            "south_component_IDs": [],
+            "yaw_component_IDs": [],
+        }
 
-    def init_mash_data(self):
-        self._data["mash"] = {
+    def init_PP_mash_data(self):
+        self._data["PP_mash"] = {
             "mash_network": None,
             "mash_waiter": None,
             "mash_distribute": None,

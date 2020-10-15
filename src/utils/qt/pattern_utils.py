@@ -20,7 +20,7 @@ class LoadAndDisplayToLineEdit(object):
         self.line_edit = QLineEdit()
         self.line_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         self.line_edit.setReadOnly(True)
-        self.print_line_edit = None
+        self.print_line_edit_method = None
 
         self.load_btn = QPushButton(load_btn_label)
 
@@ -67,7 +67,8 @@ class LoadAndDisplayToLineEdit(object):
         :param callable func:
         """
         # Stash what returned
-        self.data["loaded"] = func()
+        if callable(func):
+            self.data["loaded"] = func()
         self.update_line_edit("load")
 
     def loaded(self):
@@ -77,7 +78,8 @@ class LoadAndDisplayToLineEdit(object):
         """
         :param callable func:
         """
-        self.data["loaded"] = func()
+        if callable(func):
+            self.data["loaded"] = func()
         self.update_line_edit()
 
     def cleared(self):
@@ -90,8 +92,8 @@ class LoadAndDisplayToLineEdit(object):
         :param str method: Providing hint if is "load"
         """
         data = self.data["loaded"]
-        if self.print_line_edit:
-            data = self.print_line_edit(data)
+        if callable(self.print_line_edit_method):
+            data = self.print_line_edit_method(data)
         if not data:
             data = "{--Nothing loaded--}" if method == "load" else ""
         self.line_edit.setText(str(data))
@@ -110,7 +112,7 @@ class LoadAndDisplayToLineEdit(object):
                 self.clear_btn_clicked,
                 func=clear_func
             ))
-        self.print_line_edit = print_func
+        self.print_line_edit_method = print_func
 
     def connect_app_model_update(self, app_model_data, data_key):
         # TODO: ensure these signals always emitted *after* the signals above

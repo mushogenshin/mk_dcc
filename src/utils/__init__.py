@@ -2,13 +2,31 @@ import sys
 import platform
 import logging
 from os.path import dirname
-from functools import partial
+from functools import partial, wraps
 
 
 is_py2 = True if sys.version_info.major < 3 else False
 logger = logging.getLogger(__name__)
 _PLATFORM_SYSTEM = platform.system()
 MK_DCC_ROOT = dirname(dirname(dirname(__file__)))
+
+
+# def maya_python(func):
+
+#     @wraps(func)
+#     def wrapper(*args, **kwargs):
+#         print("Calling decorated function")
+#         try:
+#             import maya.cmds as cmds
+#             import pymel.core as pmc
+#         except ImportError:
+#             print("Unable to import maya.cmds and pymel.core")
+#         else:
+#             print("Maya.cmds: {}".format(cmds))
+#             print("Pymel.core: {}".format(pmc))
+#             return func(*args, **kwargs)
+
+#     return wrapper
 
 
 def load_app_uic_gen_mod(app_name, is_py2=False, qt_version=5):
