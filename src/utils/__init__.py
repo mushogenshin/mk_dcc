@@ -144,7 +144,7 @@ def rename_resources_rc_module(app_name, uic_output_path, qt_version):
     func_name = inspect.currentframe().f_code.co_name
     print("***(!) Ensure that {} is being enabled (!)***".format(func_name))
 
-    # DANGER: Maya will fail to parse this, but it won't tell you so
+    # # DANGER: Maya will fail to parse this, but it won't tell you so
 
     # import fileinput
     # replaced = 'from src.gui.app.{} import resources_rc_qt{}'

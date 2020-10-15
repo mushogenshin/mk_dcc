@@ -16,6 +16,13 @@ def get_node_name(node):
     return node.nodeName() if hasattr(node, "nodeName") else str(node)
 
 
+def ls_component_IDs(nodes):
+    """
+    :rtype list:
+    """
+    return [node.index() for node in nodes if hasattr(node, "index")]
+
+
 def get_PyNode(a_str):
     try:
         import pymel.core as pmc

@@ -62,13 +62,13 @@ class LoadAndDisplayToLineEdit(object):
         else:
             app_model_data[data_key] = self.data["loaded"]
 
-    def load_btn_clicked(self, func):
+    def load_btn_clicked(self, func, **kwargs):
         """
         :param callable func:
         """
         # Stash what returned
         if callable(func):
-            self.data["loaded"] = func()
+            self.data["loaded"] = func(**kwargs)
         self.update_line_edit("load")
 
     def loaded(self):
@@ -98,7 +98,7 @@ class LoadAndDisplayToLineEdit(object):
             data = "{--Nothing loaded--}" if method == "load" else ""
         self.line_edit.setText(str(data))
 
-    def create_connections(self, load_func, clear_func, print_func=None):
+    def create_simple_connections(self, load_func, clear_func, print_func=None):
         """
         :param callable print_func: return a list in place of loaded data
         that is processed for nice printing
@@ -107,7 +107,7 @@ class LoadAndDisplayToLineEdit(object):
             self.load_btn_clicked,
             func=load_func
         ))
-        if self.clear_btn and clear_func:
+        if self.clear_btn:
             self.clear_btn.clicked.connect(partial(
                 self.clear_btn_clicked,
                 func=clear_func

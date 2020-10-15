@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui'
 #
-# Created: Thu Oct 15 20:51:14 2020
+# Created: Thu Oct 15 23:03:16 2020
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -186,16 +186,16 @@ class Ui_MainWindow(object):
         self.label.setEnabled(False)
         self.label.setObjectName("label")
         self.horizontalLayout.addWidget(self.label)
-        self.radioButton = QtGui.QRadioButton(self.groupBox)
-        self.radioButton.setChecked(True)
-        self.radioButton.setObjectName("radioButton")
-        self.horizontalLayout.addWidget(self.radioButton)
-        self.radioButton_2 = QtGui.QRadioButton(self.groupBox)
-        self.radioButton_2.setObjectName("radioButton_2")
-        self.horizontalLayout.addWidget(self.radioButton_2)
-        self.radioButton_3 = QtGui.QRadioButton(self.groupBox)
-        self.radioButton_3.setObjectName("radioButton_3")
-        self.horizontalLayout.addWidget(self.radioButton_3)
+        self.SM_trace_vertex_radio_btn = QtGui.QRadioButton(self.groupBox)
+        self.SM_trace_vertex_radio_btn.setChecked(True)
+        self.SM_trace_vertex_radio_btn.setObjectName("SM_trace_vertex_radio_btn")
+        self.horizontalLayout.addWidget(self.SM_trace_vertex_radio_btn)
+        self.SM_trace_edge_radio_btn = QtGui.QRadioButton(self.groupBox)
+        self.SM_trace_edge_radio_btn.setObjectName("SM_trace_edge_radio_btn")
+        self.horizontalLayout.addWidget(self.SM_trace_edge_radio_btn)
+        self.SM_trace_face_radio_btn = QtGui.QRadioButton(self.groupBox)
+        self.SM_trace_face_radio_btn.setObjectName("SM_trace_face_radio_btn")
+        self.horizontalLayout.addWidget(self.SM_trace_face_radio_btn)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.SM_load_trace_components_grid_layout = QtGui.QGridLayout()
         self.SM_load_trace_components_grid_layout.setObjectName("SM_load_trace_components_grid_layout")
@@ -209,12 +209,12 @@ class Ui_MainWindow(object):
         self.SM_load_substitute_grid_layout.setObjectName("SM_load_substitute_grid_layout")
         self.verticalLayout_2.addLayout(self.SM_load_substitute_grid_layout)
         self.swap_master_group_box_layout.addWidget(self.groupBox_2)
-        self.pushButton = QtGui.QPushButton(self.swap_master_main_group_box)
-        self.pushButton.setMinimumSize(QtCore.QSize(0, 32))
-        self.pushButton.setStyleSheet("font-size: 12px;")
-        self.pushButton.setIconSize(QtCore.QSize(32, 32))
-        self.pushButton.setObjectName("pushButton")
-        self.swap_master_group_box_layout.addWidget(self.pushButton)
+        self.SM_swap_selected_btn = QtGui.QPushButton(self.swap_master_main_group_box)
+        self.SM_swap_selected_btn.setMinimumSize(QtCore.QSize(0, 32))
+        self.SM_swap_selected_btn.setStyleSheet("font-size: 12px;")
+        self.SM_swap_selected_btn.setIconSize(QtCore.QSize(32, 32))
+        self.SM_swap_selected_btn.setObjectName("SM_swap_selected_btn")
+        self.swap_master_group_box_layout.addWidget(self.SM_swap_selected_btn)
         self.central_widget_layout.addWidget(self.swap_master_main_group_box)
         self.restore_instancing_group_box = QtGui.QGroupBox(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
@@ -250,11 +250,11 @@ class Ui_MainWindow(object):
         self.pushButton_3.setText(QtGui.QApplication.translate("MainWindow", "Group by Num of Vertices", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Status Quo\'s Representative", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MainWindow", "Trace Type:", None, QtGui.QApplication.UnicodeUTF8))
-        self.radioButton.setText(QtGui.QApplication.translate("MainWindow", "Vertex", None, QtGui.QApplication.UnicodeUTF8))
-        self.radioButton_2.setText(QtGui.QApplication.translate("MainWindow", "Edge", None, QtGui.QApplication.UnicodeUTF8))
-        self.radioButton_3.setText(QtGui.QApplication.translate("MainWindow", "Face", None, QtGui.QApplication.UnicodeUTF8))
+        self.SM_trace_vertex_radio_btn.setText(QtGui.QApplication.translate("MainWindow", "Vertex", None, QtGui.QApplication.UnicodeUTF8))
+        self.SM_trace_edge_radio_btn.setText(QtGui.QApplication.translate("MainWindow", "Edge", None, QtGui.QApplication.UnicodeUTF8))
+        self.SM_trace_face_radio_btn.setText(QtGui.QApplication.translate("MainWindow", "Face", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_2.setTitle(QtGui.QApplication.translate("MainWindow", "Substitute Input", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Swap Selected", None, QtGui.QApplication.UnicodeUTF8))
+        self.SM_swap_selected_btn.setText(QtGui.QApplication.translate("MainWindow", "Swap Selected", None, QtGui.QApplication.UnicodeUTF8))
         self.restore_instancing_group_box.setTitle(QtGui.QApplication.translate("MainWindow", "RESTORE INSTANCING", None, QtGui.QApplication.UnicodeUTF8))
 
 from src.gui.app.setDressMaster import resources_rc_qt4

@@ -1,3 +1,5 @@
+from functools import partial
+
 from src.utils.qt import pattern_utils
 from src.utils.maya import (
     selection_utils, 
@@ -145,7 +147,7 @@ def create_connections(app):
 
     # Load and Clear Selection
     for input_grp in (ui.PP_load_cloud_ui_grp, ui.PP_load_scatter_ui_grp, ui.PP_load_ground_ui_grp):
-        input_grp.create_connections(
+        input_grp.create_simple_connections(
             selection_utils.filter_meshes_in_selection,  # load_func
             lambda: (),  # clear_func
             node_utils.ls_node_name  # print_func
@@ -182,13 +184,35 @@ def create_connections(app):
     ############################# SWAP MASTER #############################
 
     # Load and Clear Selection
+    def get_SM_component_enum():
+        if ui.SM_trace_vertex_radio_btn.isChecked():
+            return 1
+        elif ui.SM_trace_edge_radio_btn.isChecked():
+            return 2
+        elif ui.SM_trace_face_radio_btn.isChecked():
+            return 3
+        else:
+            return 0
+
     for input_grp in (ui.SM_load_north_compos_ui_grp, ui.SM_load_south_compos_ui_grp, ui.SM_load_yaw_compos_ui_grp):
-        input_grp.create_connections(
-            selection_utils.filter_meshes_in_selection,  # load_func  # TODO: change this to work with components
-            lambda: (),  # clear_func
-            node_utils.ls_node_name  # print_func  # TODO: change this to work with components
-        )
+        # Manually connect three load_func, clear_func, print_func
+        input_grp.load_btn.clicked.connect(partial(
+            input_grp.load_btn_clicked,
+            func=mesh_utils.filter_mesh_components_of_type_in_selection,
+            get_component_enum_method=get_SM_component_enum
+        ))
+        input_grp.clear_btn.clicked.connect(partial(
+            input_grp.clear_btn_clicked,
+            func=lambda: ()
+        ))
+        input_grp.print_line_edit_method = node_utils.ls_component_IDs
 
     ui.SM_load_north_compos_ui_grp.connect_app_model_update(model_data, "SM_init.north_component_IDs")
     ui.SM_load_south_compos_ui_grp.connect_app_model_update(model_data, "SM_init.south_component_IDs")
     ui.SM_load_yaw_compos_ui_grp.connect_app_model_update(model_data, "SM_init.yaw_component_IDs")
+
+    # Debugging
+    def print_model_data():    
+        print("Model Data: {}".format(model_data))
+
+    ui.SM_swap_selected_btn.clicked.connect(print_model_data)  

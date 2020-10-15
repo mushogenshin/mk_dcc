@@ -359,7 +359,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="radioButton">
+             <widget class="QRadioButton" name="SM_trace_vertex_radio_btn">
               <property name="text">
                <string>Vertex</string>
               </property>
@@ -369,14 +369,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="radioButton_2">
+             <widget class="QRadioButton" name="SM_trace_edge_radio_btn">
               <property name="text">
                <string>Edge</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="radioButton_3">
+             <widget class="QRadioButton" name="SM_trace_face_radio_btn">
               <property name="text">
                <string>Face</string>
               </property>
@@ -403,7 +403,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="SM_swap_selected_btn">
          <property name="minimumSize">
           <size>
            <width>0</width>
