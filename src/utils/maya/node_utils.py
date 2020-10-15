@@ -24,6 +24,7 @@ def ls_component_IDs(nodes):
 
 
 def get_PyNode(a_str):
+    logger.info('Getting PyNode of "{}"'.format(a_str))
     try:
         import pymel.core as pmc
     except ImportError:
@@ -49,6 +50,7 @@ def node_exists(a_str):
 
 
 def delete(node):
+    logger.info('Deleting "{}"'.format(node))
     try:
         import pymel.core as pmc
     except ImportError:
@@ -63,6 +65,7 @@ def delete(node):
 
 
 def duplicate(node, name=""):
+    logger.info('Duplicating "{}"'.format(node))
     try:
         import pymel.core as pmc
     except ImportError:
@@ -72,3 +75,13 @@ def duplicate(node, name=""):
             return pmc.duplicate(node, n=name)
         else:
             return pmc.duplicate(node)  # auto naming
+
+
+def parent_A_to_B(node_A, node_B):
+    logger.info("Parenting {} to {}".format(node_A, node_B))
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        pmc.parent(node_A, node_B)

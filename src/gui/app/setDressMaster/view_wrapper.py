@@ -1,5 +1,8 @@
 from functools import partial
 
+import logging
+logger = logging.getLogger(__name__)
+
 from src.utils.qt import pattern_utils
 from src.utils.maya import (
     selection_utils, 
@@ -135,6 +138,19 @@ def get_PP_dynamics_parameters(ui):
     return params
 
 
+def set_SM_component_enum(toggled, ui, model_data):
+    component_enum = 0
+    if ui.SM_trace_vertex_radio_btn.isChecked():
+        component_enum = 1
+    elif ui.SM_trace_edge_radio_btn.isChecked():
+        component_enum = 2
+    elif ui.SM_trace_face_radio_btn.isChecked():
+        component_enum = 3
+    logger.info("Using component enum: {}".format(component_enum))
+    # Update Model Data
+    model_data["SM_init"]["component_enum"] = component_enum
+
+
 def modify_premade_view(app):
     add_widgets(app._view.ui)
 
@@ -170,14 +186,14 @@ def create_connections(app):
     ui.PP_toggle_interactive_playback_btn.clicked.connect(scene_utils.toggle_interactive_playback)
     ui.PP_show_instancer_node_btn.clicked.connect(app._control.focus_to_instancer_node)
 
-    ui.PP_bake_current_btn.clicked.connect(app._control.bake_current)
-    ui.PP_show_all_baked_btn.clicked.connect(app._control.show_all_baked)
+    ui.PP_bake_current_btn.clicked.connect(app._control.PP_bake_current)
+    ui.PP_show_all_baked_btn.clicked.connect(app._control.PP_show_all_baked)
 
     # Destruct Setup
     def delete_PP_setup():
         for input_grp in (ui.PP_load_cloud_ui_grp, ui.PP_load_scatter_ui_grp, ui.PP_load_ground_ui_grp):
             input_grp.cleared()
-        app._control.delete_setup()
+        app._control.delete_PP_setup()
 
     ui.PP_delete_all_setup_btn.clicked.connect(delete_PP_setup)
 
@@ -185,14 +201,7 @@ def create_connections(app):
 
     # Load and Clear Selection
     def get_SM_component_enum():
-        if ui.SM_trace_vertex_radio_btn.isChecked():
-            return 1
-        elif ui.SM_trace_edge_radio_btn.isChecked():
-            return 2
-        elif ui.SM_trace_face_radio_btn.isChecked():
-            return 3
-        else:
-            return 0
+        return model_data["SM_init"]["component_enum"]
 
     for input_grp in (ui.SM_load_north_compos_ui_grp, ui.SM_load_south_compos_ui_grp, ui.SM_load_yaw_compos_ui_grp):
         # Manually connect three load_func, clear_func, print_func
@@ -211,8 +220,27 @@ def create_connections(app):
     ui.SM_load_south_compos_ui_grp.connect_app_model_update(model_data, "SM_init.south_component_IDs")
     ui.SM_load_yaw_compos_ui_grp.connect_app_model_update(model_data, "SM_init.yaw_component_IDs")
 
+    ui.SM_trace_vertex_radio_btn.toggled.connect(partial(
+        set_SM_component_enum,
+        ui=ui,
+        model_data=model_data
+    ))
+    ui.SM_trace_edge_radio_btn.toggled.connect(partial(
+        set_SM_component_enum,
+        ui=ui,
+        model_data=model_data
+    ))
+    
+
     # Debugging
     def print_model_data():    
         print("Model Data: {}".format(model_data))
 
-    ui.SM_swap_selected_btn.clicked.connect(print_model_data)  
+    ui.SM_swap_selected_btn.clicked.connect(print_model_data)
+
+
+def init_gui(app):
+    ui = app._view.ui
+    model_data = app._model._data
+
+    set_SM_component_enum(ui.SM_trace_vertex_radio_btn.isChecked(), ui, model_data)

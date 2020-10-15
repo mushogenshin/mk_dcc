@@ -25,3 +25,12 @@ def replace_selection(nodes):
         return
     else:
         pmc.select(nodes, replace=True)
+
+
+def clear_selection():
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        pmc.select(cl=True)

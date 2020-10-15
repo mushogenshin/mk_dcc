@@ -24,6 +24,7 @@ if __name__ == '__main__':
         SDM_app = src.gui.dcc.StandAlone(app_name)
         view_wrapper.modify_premade_view(SDM_app)
         view_wrapper.create_connections(SDM_app)
+        view_wrapper.init_gui(SDM_app)
         SDM_app.show()
     else:
         # reload(src.gui.dcc)
@@ -37,4 +38,5 @@ if __name__ == '__main__':
         SDM_app = src.gui.dcc.Maya('setDressMaster')
         view_wrapper.modify_premade_view(SDM_app)
         view_wrapper.create_connections(SDM_app)
+        view_wrapper.init_gui(SDM_app)
         SDM_app._view.show()

@@ -24,7 +24,7 @@ def filter_mesh_components_of_type_in_selection(**kwargs):
     if callable(get_component_enum_method):
         component_enum = get_component_enum_method()
 
-    logger.info("Using component enum: {}".format(component_enum))
+    logger.debug("Using component enum: {}".format(component_enum))
 
     try:
         import pymel.core as pmc
@@ -46,3 +46,28 @@ def filter_mesh_components_of_type_in_selection(**kwargs):
                 if isinstance(node, pmc.MeshFace)]
         else:
             return []
+
+
+def expand_mesh_with_component_IDs(mesh, component_IDs, component_enum=1):
+    """
+    :param pmc.nt.Mesh mesh:
+    :param int component_enum: 1 for vertices, 2 for edges, 3 for faces
+    """
+    ret = []
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        if isinstance(mesh, pmc.nt.Mesh):
+            try:
+                if component_enum == 1:  # vertices
+                    ret = [mesh.vtx[i] for i in component_IDs]
+                elif component_enum == 2:  # edges
+                    ret = [mesh.e[i] for i in component_IDs]
+                elif component_enum == 3:  # faces
+                    ret = [mesh.f[i] for i in component_IDs]
+            except Exception as e:
+                logger.exception(e)
+            
+    return ret

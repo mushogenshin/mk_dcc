@@ -17,6 +17,7 @@ class Model(object):
         
         # Swap Master
         self._data["SM_init"] = {
+            "component_enum": 0,
             "north_component_IDs": [],
             "south_component_IDs": [],
             "yaw_component_IDs": [],
