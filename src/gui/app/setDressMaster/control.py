@@ -1,4 +1,5 @@
 import sys
+from copy import deepcopy
 import logging
 
 from src.utils.maya import (
@@ -8,7 +9,8 @@ from src.utils.maya import (
     scene_utils,
     selection_utils,
     attrib_utils,
-    transform_utils
+    transform_utils,
+    mesh_utils
 )
 
 logger = logging.getLogger(__name__)
@@ -283,50 +285,61 @@ class Control(object):
 
     ############################# SWAP MASTER #############################
 
-    def get_SM_init_data(self, app_model_data_key):
-        return self._model._data["SM_init"][app_model_data_key]
+    def get_SM_component_data(self, app_model_data_key):
+        return self._model._data["SM_component"][app_model_data_key]
+
+    def get_swap_job_ID_data(self, app_model_data_key):
+        # retain the "component_enum" value
+        component_data = deepcopy(self.get_SM_component_data(app_model_data_key))
+        # convert "children" from components to IDs
+        component_data["children"] = mesh_utils.ls_ID_from_components(component_data["children"])
+        return component_data
     
-    def process_swap_jobs(self, meshes):
+    def batch_process_swap_jobs(self, meshes):
         """
         """
         # Modify class variable of SwapMasterJob first
-        SwapMasterJob._component_type = self.get_SM_init_data("component_enum")
-        SwapMasterJob._North_component_IDs = self.get_SM_init_data("north_component_IDs")
-        SwapMasterJob._South_component_IDs = self.get_SM_init_data("south_component_IDs")
-        SwapMasterJob._Yaw_component_IDs = self.get_SM_init_data("yaw_component_IDs")
+        SwapMasterJob._North_component_IDs = self.get_swap_job_ID_data("north")
+        SwapMasterJob._South_component_IDs = self.get_swap_job_ID_data("south")
+        SwapMasterJob._Yaw_component_IDs = self.get_swap_job_ID_data("yaw")
         
         for mesh in meshes:
             swap_job = SwapMasterJob(mesh)
             swap_job.prepare_hub_joint_elements()
             swap_job.make_hub_joint()
             swap_job.make_nucleus_locator_from_hub_joint()
+
+    def run_swap_master(self):
+        self.batch_process_swap_jobs(selection_utils.filter_meshes_in_selection())
    
 
 class SwapMasterJob(object):
 
-    _component_type = 1
-    _North_component_IDs = []
-    _South_component_IDs = []
-    _Yaw_component_IDs = []
+    _North_component_IDs = {"component_enum": 0, "children": []}
+    _South_component_IDs = {"component_enum": 0, "children": []}
+    _Yaw_component_IDs = {"component_enum": 0, "children": []}
 
     def __init__(self, mesh):
+        """
+        Operate on a given mesh
+        """
         self.mesh = mesh
         logger.info('Initializing new SwapMasterJob for mesh {}'.format(node_utils.get_node_name(self.mesh)))
         
         self.North_components = mesh_utils.expand_mesh_with_component_IDs(
             self.mesh,
-            SwapMasterJob._North_component_IDs,
-            SwapMasterJob._component_type
+            SwapMasterJob._North_component_IDs["children"],
+            SwapMasterJob._North_component_IDs["component_enum"],
         )
         self.South_components = mesh_utils.expand_mesh_with_component_IDs(
             self.mesh,
-            SwapMasterJob._South_component_IDs,
-            SwapMasterJob._component_type
+            SwapMasterJob._South_component_IDs["children"],
+            SwapMasterJob._South_component_IDs["component_enum"],
         )
         self.Yaw_components = mesh_utils.expand_mesh_with_component_IDs(
             self.mesh,
-            SwapMasterJob._Yaw_component_IDs,
-            SwapMasterJob._component_type
+            SwapMasterJob._Yaw_component_IDs["children"],
+            SwapMasterJob._Yaw_component_IDs["component_enum"],
         )
         
         self.hub_joint_start = None
@@ -365,7 +378,6 @@ class SwapMasterJob(object):
             logger.warning("Either HubJoint start or HubJoint end is missing")
 
     def make_nucleus_locator_from_hub_joint(self):
-        from copy import deepcopy
         bounding_objs = deepcopy(self.North_components)
         bounding_objs.extend(self.South_components)
         

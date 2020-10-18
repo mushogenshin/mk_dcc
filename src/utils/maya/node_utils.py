@@ -18,9 +18,30 @@ def get_node_name(node):
 
 def ls_component_IDs(nodes):
     """
-    :rtype list:
+    :rtype str: e.g. '[3:9], [13:15], 39, 41, [53:54], [78:79], 84'
     """
-    return [node.index() for node in nodes if hasattr(node, "index")]
+    from re import findall
+    def get_nice_unflattened_bracket(node):
+        """
+        :rtype str:
+        :return: "[{int}:{int}]" from a PyMEL mesh component, e.g. MeshVertex(u'pSphereShape1.vtx[82:83]')
+        """
+        ret = findall("\[\d+:\d+\]", repr(node))
+        return ret[0] if ret else ""
+        
+    ret = []
+    for node in nodes:
+        if hasattr(node, "index") and hasattr(node, "count"):
+            if node.count() < 2:
+                ret.append(node.index())
+            else:
+                ret.append(get_nice_unflattened_bracket(node))
+                
+    ret_str = ""
+    for i in ret:
+        ret_str += ", {}".format(i)
+
+    return ret_str[2:]
 
 
 def get_PyNode(a_str):

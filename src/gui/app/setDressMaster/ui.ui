@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>470</width>
-    <height>636</height>
+    <width>373</width>
+    <height>581</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -316,16 +316,9 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
-             <widget class="QPushButton" name="pushButton_2">
-              <property name="text">
-               <string>Explode Selected</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QPushButton" name="pushButton_3">
               <property name="text">
-               <string>Group by Num of Vertices</string>
+               <string>Explode and Group by Num of Vertices</string>
               </property>
              </widget>
             </item>

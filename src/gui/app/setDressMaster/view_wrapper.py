@@ -138,19 +138,6 @@ def get_PP_dynamics_parameters(ui):
     return params
 
 
-def set_SM_component_enum(toggled, ui, model_data):
-    component_enum = 0
-    if ui.SM_trace_vertex_radio_btn.isChecked():
-        component_enum = 1
-    elif ui.SM_trace_edge_radio_btn.isChecked():
-        component_enum = 2
-    elif ui.SM_trace_face_radio_btn.isChecked():
-        component_enum = 3
-    logger.info("Using component enum: {}".format(component_enum))
-    # Update Model Data
-    model_data["SM_init"]["component_enum"] = component_enum
-
-
 def modify_premade_view(app):
     add_widgets(app._view.ui)
 
@@ -200,47 +187,48 @@ def create_connections(app):
     ############################# SWAP MASTER #############################
 
     # Load and Clear Selection
-    def get_SM_component_enum():
-        return model_data["SM_init"]["component_enum"]
+    
+    def get_SM_component_enum_from_UI():
+        if ui.SM_trace_vertex_radio_btn.isChecked():
+            return 1
+        elif ui.SM_trace_edge_radio_btn.isChecked():
+            return 2
+        elif ui.SM_trace_face_radio_btn.isChecked():
+            return 3
+
+
+    def print_component_IDs(data):
+        return node_utils.ls_component_IDs(data["children"])
+
 
     for input_grp in (ui.SM_load_north_compos_ui_grp, ui.SM_load_south_compos_ui_grp, ui.SM_load_yaw_compos_ui_grp):
         # Manually connect three load_func, clear_func, print_func
         input_grp.load_btn.clicked.connect(partial(
             input_grp.load_btn_clicked,
             func=mesh_utils.filter_mesh_components_of_type_in_selection,
-            get_component_enum_method=get_SM_component_enum
+            get_component_enum_method=get_SM_component_enum_from_UI
         ))
         input_grp.clear_btn.clicked.connect(partial(
             input_grp.clear_btn_clicked,
-            func=lambda: ()
+            func=lambda: {"component_enum": 0, "children": []}
         ))
-        input_grp.print_line_edit_method = node_utils.ls_component_IDs
+        input_grp.print_line_edit_method = print_component_IDs
 
-    ui.SM_load_north_compos_ui_grp.connect_app_model_update(model_data, "SM_init.north_component_IDs")
-    ui.SM_load_south_compos_ui_grp.connect_app_model_update(model_data, "SM_init.south_component_IDs")
-    ui.SM_load_yaw_compos_ui_grp.connect_app_model_update(model_data, "SM_init.yaw_component_IDs")
-
-    ui.SM_trace_vertex_radio_btn.toggled.connect(partial(
-        set_SM_component_enum,
-        ui=ui,
-        model_data=model_data
-    ))
-    ui.SM_trace_edge_radio_btn.toggled.connect(partial(
-        set_SM_component_enum,
-        ui=ui,
-        model_data=model_data
-    ))
-    
+    ui.SM_load_north_compos_ui_grp.connect_app_model_update(model_data, "SM_component.north")
+    ui.SM_load_south_compos_ui_grp.connect_app_model_update(model_data, "SM_component.south")
+    ui.SM_load_yaw_compos_ui_grp.connect_app_model_update(model_data, "SM_component.yaw")   
 
     # Debugging
     def print_model_data():    
         print("Model Data: {}".format(model_data))
 
-    ui.SM_swap_selected_btn.clicked.connect(print_model_data)
+    def run_swap_master():
+        app._control.run_swap_master()
+        print_model_data()
+
+    ui.SM_swap_selected_btn.clicked.connect(run_swap_master)
 
 
 def init_gui(app):
     ui = app._view.ui
     model_data = app._model._data
-
-    set_SM_component_enum(ui.SM_trace_vertex_radio_btn.isChecked(), ui, model_data)

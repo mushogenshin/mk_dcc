@@ -16,12 +16,7 @@ class Model(object):
         self.init_PP_mash_data()
         
         # Swap Master
-        self._data["SM_init"] = {
-            "component_enum": 0,
-            "north_component_IDs": [],
-            "south_component_IDs": [],
-            "yaw_component_IDs": [],
-        }
+        self.init_SM_data()
 
     def init_PP_mash_data(self):
         self._data["PP_mash"] = {
@@ -33,3 +28,13 @@ class Model(object):
             "mash_dynamics": None,
             "mash_bullet": None,
         }
+
+    def init_SM_data(self):
+        SM_data = {
+            "SM_component": {
+                "north": {"component_enum": 0, "children": []},
+                "south": {"component_enum": 0, "children": []},
+                "yaw": {"component_enum": 0, "children": []},
+            }
+        }
+        self._data.update(SM_data)
