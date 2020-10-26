@@ -51,11 +51,21 @@ def toggle_interactive_playback(force_play=False, force_pause=False):
     except ImportError:
         pass
     else:
-        if not pmc.play(q=True, state=True) or force_play:  # not playing
+        was_playing = pmc.play(q=True, state=True)
+        
+        # Start forcing
+        if force_play:
             pmc.mel.InteractivePlayback()  # activate interactive playback
             return
-        if pmc.play(q=True, state=True) or force_pause:
+        if force_pause:
+            pmc.play(state=0)
+            return
+        # End forcing
+
+        if was_playing:
             pmc.play(state=0)  # pause the playback
+        else:
+            pmc.mel.InteractivePlayback()  # activate interactive playback
 
 
 def is_playback_running():

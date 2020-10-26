@@ -31,10 +31,12 @@ class Model(object):
 
     def init_SM_data(self):
         SM_data = {
-            "SM_component": {
+            "SM_candidate_component": {
                 "north": {"component_enum": 0, "children": []},
                 "south": {"component_enum": 0, "children": []},
                 "yaw": {"component_enum": 0, "children": []},
-            }
+            },
+            "SM_xform_reconstruction": {},
+            "SM_substitute_root": None
         }
         self._data.update(SM_data)

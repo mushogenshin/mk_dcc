@@ -245,6 +245,8 @@ class Control(object):
 
     def PP_bake_current(self):
         was_playback_running = scene_utils.is_playback_running()
+        logger.info("Playback was running: {}".format(was_playback_running))
+
         scene_utils.toggle_interactive_playback(force_pause=True)  # pause the playback
         
         current_frame = scene_utils.get_current_frame(self.SCENE_ENV)
@@ -285,31 +287,39 @@ class Control(object):
 
     ############################# SWAP MASTER #############################
 
-    def get_SM_component_data(self, app_model_data_key):
-        return self._model._data["SM_component"][app_model_data_key]
+    def get_SM_candidate_component_data(self, app_model_data_key):
+        return self._model._data["SM_candidate_component"][app_model_data_key]
 
     def get_swap_job_ID_data(self, app_model_data_key):
-        # retain the "component_enum" value
-        component_data = deepcopy(self.get_SM_component_data(app_model_data_key))
-        # convert "children" from components to IDs
-        component_data["children"] = mesh_utils.ls_ID_from_components(component_data["children"])
-        return component_data
+        """
+        Will fail with MASH instancing
+        """
+        # # retain the "component_enum" value
+        # component_data = deepcopy(self.get_SM_candidate_component_data(app_model_data_key))
+        
+        # # convert "children" from components to IDs: 
+        # component_data["children"] = mesh_utils.ls_ID_from_components(component_data["children"])
+
+        # return component_data
+        pass
+
+    def clear_SM_xform_reconstruction_data(self):
+        self._model._data["SM_xform_reconstruction"] = {}
     
     def batch_process_swap_jobs(self, meshes):
         """
         """
         # Modify class variable of SwapMasterJob first
-        SwapMasterJob._North_component_IDs = self.get_swap_job_ID_data("north")
-        SwapMasterJob._South_component_IDs = self.get_swap_job_ID_data("south")
-        SwapMasterJob._Yaw_component_IDs = self.get_swap_job_ID_data("yaw")
+        SwapMasterJob._North_component_IDs = self.get_SM_candidate_component_data("north")
+        SwapMasterJob._South_component_IDs = self.get_SM_candidate_component_data("south")
+        SwapMasterJob._Yaw_component_IDs = self.get_SM_candidate_component_data("yaw")
         
         for mesh in meshes:
-            swap_job = SwapMasterJob(mesh)
-            swap_job.prepare_hub_joint_elements()
-            swap_job.make_hub_joint()
-            swap_job.make_nucleus_locator_from_hub_joint()
+            swap_job = SwapMasterJob(mesh, self._model._data)
+            swap_job.xform_reconstruction(self._model._data)
 
-    def run_swap_master(self):
+    def preview_SM_nuclei(self):
+        self.clear_SM_xform_reconstruction_data()
         self.batch_process_swap_jobs(selection_utils.filter_meshes_in_selection())
    
 
@@ -319,7 +329,7 @@ class SwapMasterJob(object):
     _South_component_IDs = {"component_enum": 0, "children": []}
     _Yaw_component_IDs = {"component_enum": 0, "children": []}
 
-    def __init__(self, mesh):
+    def __init__(self, mesh, app_model_data=None):
         """
         Operate on a given mesh
         """
@@ -348,7 +358,17 @@ class SwapMasterJob(object):
         
         self.nucleus_locator = None
 
-    def prepare_hub_joint_elements(self):
+        if app_model_data:
+            app_model_data["SM_xform_reconstruction"][self.mesh] = {
+                "hub_joint": None,
+                "nucleus_locator": None
+            }
+
+    def prepare_hub_joint_elements(self, app_model_data=None):
+        """
+        :param dict app_model_data: to update
+        mesh: {"hub_joint": [self.hub_joint_start, self.hub_joint_end]}
+        """
         if self.South_components:
             self.hub_joint_start = transform_utils.create_center_thingy_from(
                 self.South_components,
@@ -361,7 +381,10 @@ class SwapMasterJob(object):
             )
             
         # TODO: create self.hub_joint_aim from self.Yaw_components as well
-        selection_utils.clear_selection()
+
+        if app_model_data:
+            app_model_data["SM_xform_reconstruction"][self.mesh]["hub_joint"] = \
+                [self.hub_joint_start, self.hub_joint_end]
 
     def has_hub_joint_elements(self):
         return self.hub_joint_start and self.hub_joint_end
@@ -377,9 +400,15 @@ class SwapMasterJob(object):
         else:
             logger.warning("Either HubJoint start or HubJoint end is missing")
 
-    def make_nucleus_locator_from_hub_joint(self):
+    def make_nucleus_locator_from_hub_joint(self, app_model_data=None):
+        """
+        :param dict app_model_data: to update
+        mesh: {"nucleus_locator": self.nucleus_locator}
+        """
         bounding_objs = deepcopy(self.North_components)
         bounding_objs.extend(self.South_components)
+
+        # logger.info("Creating nucleus locator from bounding objects: {}".format(bounding_objs))
         
         # Create new locator virtually at the center of the HubJoint
         self.nucleus_locator = transform_utils.create_center_thingy_from(
@@ -394,3 +423,11 @@ class SwapMasterJob(object):
         
         # TODO: set display Local Scale of locator relative 
         # to the mesh's bounding box
+
+        if app_model_data:
+            app_model_data["SM_xform_reconstruction"][self.mesh]["nucleus_locator"] = self.nucleus_locator
+
+    def xform_reconstruction(self, app_model_data=None):
+        self.prepare_hub_joint_elements(app_model_data)
+        self.make_hub_joint()
+        self.make_nucleus_locator_from_hub_joint(app_model_data)

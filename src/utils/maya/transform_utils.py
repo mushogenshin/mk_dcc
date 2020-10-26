@@ -49,7 +49,7 @@ def create_center_thingy_from(objects=(), thingy="locator"):
         elif thingy == "joint":
             centered_thingy = pmc.joint(p=(posX, posY, posZ))
 
-        pmc.select(objects, r=True)
+        pmc.select(cl=True)
 
     return centered_thingy
 

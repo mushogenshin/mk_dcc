@@ -77,14 +77,14 @@ def add_widgets(ui):
         ui.PP_dyn_parms_child_group_box,
         expanded_height=105
     )
-    ui.PP_dyn_parms_group_box.toggled()
 
     ui.PP_main_group_box = pattern_utils.CollapsibleGroupBox(
         ui.phys_painter_main_group_box,
-        expanded_height=430
+        expanded_height=460
     )
 
     ui.PP_main_group_box.toggled()
+    ui.PP_dyn_parms_group_box.toggled()
 
     ############################# SWAP MASTER #############################
 
@@ -198,14 +198,16 @@ def create_connections(app):
 
 
     def print_component_IDs(data):
-        return node_utils.ls_component_IDs(data["children"])
+        # return node_utils.ls_component_IDs(data["children"])
+        return data["children"]
 
 
     for input_grp in (ui.SM_load_north_compos_ui_grp, ui.SM_load_south_compos_ui_grp, ui.SM_load_yaw_compos_ui_grp):
         # Manually connect three load_func, clear_func, print_func
         input_grp.load_btn.clicked.connect(partial(
             input_grp.load_btn_clicked,
-            func=mesh_utils.filter_mesh_components_of_type_in_selection,
+            # func=mesh_utils.filter_mesh_components_of_type_in_selection,
+            func=mesh_utils.filter_mesh_components_of_type_in_selection_as_IDs,
             get_component_enum_method=get_SM_component_enum_from_UI
         ))
         input_grp.clear_btn.clicked.connect(partial(
@@ -214,19 +216,21 @@ def create_connections(app):
         ))
         input_grp.print_line_edit_method = print_component_IDs
 
-    ui.SM_load_north_compos_ui_grp.connect_app_model_update(model_data, "SM_component.north")
-    ui.SM_load_south_compos_ui_grp.connect_app_model_update(model_data, "SM_component.south")
-    ui.SM_load_yaw_compos_ui_grp.connect_app_model_update(model_data, "SM_component.yaw")   
+    ui.SM_load_north_compos_ui_grp.connect_app_model_update(model_data, "SM_candidate_component.north")
+    ui.SM_load_south_compos_ui_grp.connect_app_model_update(model_data, "SM_candidate_component.south")
+    ui.SM_load_yaw_compos_ui_grp.connect_app_model_update(model_data, "SM_candidate_component.yaw")   
 
     # Debugging
-    def print_model_data():    
-        print("Model Data: {}".format(model_data))
+    def print_model_data():
+        from pprint import pprint
+        print("Model Data:")
+        pprint(model_data)
 
-    def run_swap_master():
-        app._control.run_swap_master()
+    def preview_SM_nuclei():
+        app._control.preview_SM_nuclei()
         print_model_data()
 
-    ui.SM_swap_selected_btn.clicked.connect(run_swap_master)
+    ui.SM_preview_nuclei_btn.clicked.connect(preview_SM_nuclei)
 
 
 def init_gui(app):

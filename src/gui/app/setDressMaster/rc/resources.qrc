@@ -1,10 +1,13 @@
 <RCC>
   <qresource prefix="icons">
+    <file>baseline_fast_forward_white_48dp.png</file>
+    <file>baseline_engineering_white_48dp.png</file>
+    <file>baseline_scatter_plot_white_48dp.png</file>
     <file>baseline_wb_iridescent_white_48dp.png</file>
-    <file>baseline_save_alt_white_48dp.png</file>
-    <file>baseline_list_alt_white_48dp.png</file>
-    <file>baseline_waves_white_48dp.png</file>
+    <file>icon_bake_current.png</file>
+    <file>icon_show_all_baked.png</file>
     <file>baseline_brush_white_48dp.png</file>
+    <file>baseline_list_alt_white_48dp.png</file>
     <file>baseline_exposure_zero_white_48dp.png</file>
     <file>baseline_play_circle_outline_white_48dp.png</file>
     <file>baseline_clear_white_48dp.png</file>

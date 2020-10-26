@@ -49,6 +49,12 @@ def filter_mesh_components_of_type_in_selection(**kwargs):
         return ret
 
 
+def filter_mesh_components_of_type_in_selection_as_IDs(**kwargs):
+    ret = filter_mesh_components_of_type_in_selection(**kwargs)
+    ret["children"] = ls_ID_from_components(ret["children"])
+    return ret
+
+
 def ls_ID_from_components(nodes):
     """
     Given a list of PyMEL mesh components, return a flattened list of IDs
