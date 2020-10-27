@@ -107,7 +107,7 @@ def add_widgets(ui):
         )
 
     ui.SM_load_substitute_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
-        "Replacement Mesh", load_btn_label, clear_btn_label
+        "Mesh | Root Node", load_btn_label, clear_btn_label
     )
 
     for i, input_grp in enumerate(
@@ -231,6 +231,8 @@ def create_connections(app):
         print_model_data()
 
     ui.SM_preview_nuclei_btn.clicked.connect(preview_SM_nuclei)
+    ui.SM_abort_nuclei_btn.clicked.connect(app._control.abort_SM_nuclei)
+    ui.SM_swap_selected_btn.clicked.connect(app._control.swap_selected)
 
 
 def init_gui(app):

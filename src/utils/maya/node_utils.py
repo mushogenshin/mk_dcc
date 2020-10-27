@@ -70,7 +70,7 @@ def node_exists(a_str):
         return cmds.objExists(a_str)
 
 
-def delete(node):
+def delete_one(node):
     logger.info('Deleting "{}"'.format(node))
     try:
         import pymel.core as pmc
@@ -83,6 +83,11 @@ def delete(node):
             logger.exception("Unable to delete node {} due to {}".format(node, e))
         else:
             logger.info("Successfully deleted node {}".format(node))
+
+
+def delete_many(nodes):
+    for node in nodes:
+        delete_one(node)
 
 
 def duplicate(node, name=""):

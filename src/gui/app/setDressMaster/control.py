@@ -229,7 +229,7 @@ class Control(object):
         logger.info("Deleting all setup related to {}".format(MASH_NETWORK_NAME))
         for data_key, node in self._model._data["PP_mash"].items():
             if data_key != "mash_network":
-                node_utils.delete(node)
+                node_utils.delete_one(node)
             else:
                 scene_utils.delete(MASH_NETWORK_NAME)
                 scene_utils.delete(MASH_NETWORK_NAME)  # delete twice due to Maya|MASH bug
@@ -303,6 +303,9 @@ class Control(object):
         # return component_data
         pass
 
+    def clear_SM_jobs_data(self):
+        self._model._data["SM_jobs"] = []
+
     def clear_SM_xform_reconstruction_data(self):
         self._model._data["SM_xform_reconstruction"] = {}
     
@@ -314,14 +317,28 @@ class Control(object):
         SwapMasterJob._South_component_IDs = self.get_SM_candidate_component_data("south")
         SwapMasterJob._Yaw_component_IDs = self.get_SM_candidate_component_data("yaw")
         
+        self.clear_SM_jobs_data()
+
         for mesh in meshes:
             swap_job = SwapMasterJob(mesh, self._model._data)
             swap_job.xform_reconstruction(self._model._data)
+            self._model._data["SM_jobs"].append(swap_job)
 
     def preview_SM_nuclei(self):
         self.clear_SM_xform_reconstruction_data()
         self.batch_process_swap_jobs(selection_utils.filter_meshes_in_selection())
-   
+
+    def abort_SM_nuclei(self):
+        for swap_job in  self._model._data["SM_jobs"]:
+            swap_job.delete_hub_joint()
+            swap_job.delete_nucleus_locator()
+        self.clear_SM_jobs_data()
+        self.clear_SM_xform_reconstruction_data()
+
+    def swap_selected(self, use_instancing):
+        for swap_job in  self._model._data["SM_jobs"]:
+            pass  # TODO
+
 
 class SwapMasterJob(object):
 
@@ -424,6 +441,10 @@ class SwapMasterJob(object):
         # TODO: set display Local Scale of locator relative 
         # to the mesh's bounding box
 
+        # Hide the hub joint
+        if hasattr(self.hub_joint_start, "visibility"):
+            self.hub_joint_start.visibility.set(False)
+
         if app_model_data:
             app_model_data["SM_xform_reconstruction"][self.mesh]["nucleus_locator"] = self.nucleus_locator
 
@@ -431,3 +452,12 @@ class SwapMasterJob(object):
         self.prepare_hub_joint_elements(app_model_data)
         self.make_hub_joint()
         self.make_nucleus_locator_from_hub_joint(app_model_data)
+
+    def delete_hub_joint(self):
+        joints = [jnt for jnt in (self.hub_joint_aim, self.hub_joint_end, self.hub_joint_start) \
+            if jnt is not None]
+        node_utils.delete_many(joints)
+    
+    def delete_nucleus_locator(self):
+        if self.nucleus_locator is not None:
+            node_utils.delete_one(self.nucleus_locator)

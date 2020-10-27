@@ -31,6 +31,7 @@ class Model(object):
 
     def init_SM_data(self):
         SM_data = {
+            "SM_jobs": [],
             "SM_candidate_component": {
                 "north": {"component_enum": 0, "children": []},
                 "south": {"component_enum": 0, "children": []},

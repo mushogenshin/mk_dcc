@@ -462,7 +462,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="SM_delete_nuclei_btn">
+          <widget class="QToolButton" name="SM_abort_nuclei_btn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
