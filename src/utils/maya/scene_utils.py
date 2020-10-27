@@ -11,6 +11,19 @@ def get_scene_env():
         return pmc.language.Env()
 
 
+def get_option_var_dict():
+    try:
+        from pymel.core.language import OptionVarDict
+    except ImportError:
+        return None
+    else:
+        return OptionVarDict()
+
+
+def get_scene_up_axis():
+    return get_option_var_dict().get("upAxisDirection", "")
+
+
 def get_current_frame(SCENE_ENV=None):
     SCENE_ENV = get_scene_env() if not SCENE_ENV else SCENE_ENV
     if hasattr(SCENE_ENV, "time"):

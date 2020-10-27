@@ -73,6 +73,8 @@ def add_widgets(ui):
             start_column=0 if i % 2 == 0 else 2,
         )
 
+    # Collapsible GroupBox
+
     ui.PP_dyn_parms_group_box = pattern_utils.CollapsibleGroupBox(
         ui.PP_dyn_parms_child_group_box,
         expanded_height=105
@@ -118,10 +120,20 @@ def add_widgets(ui):
             row=i
         )
 
+    # Collapsible GroupBox
+
+    ui.SM_orient_reconstruct_group_box = pattern_utils.CollapsibleGroupBox(
+         ui.SM_orient_reconstruct_child_group_box,
+         expanded_height=75
+    )
+
     # ui.SM_main_group_box = pattern_utils.CollapsibleGroupBox(
     #     ui.swap_master_main_group_box,
     #     expanded_height=320
     # )
+    # ui.SM_main_group_box.toggled()
+
+    ui.SM_orient_reconstruct_group_box.toggled()
     
 
 def get_PP_dynamics_parameters(ui):
@@ -247,13 +259,18 @@ def create_connections(app):
     def get_SM_use_instancing_mode_from_UI():
         return ui.SM_swap_use_instancing_check_box.isChecked()
 
+    def get_SM_remove_proxies_mode_from_UI():
+        return ui.SM_remove_proxies_check_box.isChecked()
+
     ui.SM_proceed_swapping_btn.clicked.connect(partial(
         app._control.do_swap,
-        get_use_instancing_mode_method=get_SM_use_instancing_mode_from_UI
+        get_use_instancing_mode_method=get_SM_use_instancing_mode_from_UI,
+        get_remove_proxies_mode_method=get_SM_remove_proxies_mode_from_UI
     ))
     ui.SM_fast_forward_swap_btn.clicked.connect(partial(
         app._control.fast_forward_swap,
-        get_use_instancing_mode_method=get_SM_use_instancing_mode_from_UI
+        get_use_instancing_mode_method=get_SM_use_instancing_mode_from_UI,
+        get_remove_proxies_mode_method=get_SM_remove_proxies_mode_from_UI
     ))
 
 

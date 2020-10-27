@@ -73,13 +73,17 @@ def node_exists(a_str):
         return cmds.objExists(a_str)
 
 
-def delete_one(node):
+def delete_one(node, is_mesh=False):
     logger.info('Deleting "{}"'.format(node))
     try:
         import pymel.core as pmc
     except ImportError:
         pass
     else:
+        
+        if is_mesh and hasattr(node, "getParent"):
+            node = node.getParent()
+
         try:
             pmc.delete(node)
         except Exception as e:

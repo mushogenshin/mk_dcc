@@ -82,3 +82,35 @@ def set_rotation_from_joint_orient(obj, joint):
     logger.info('Setting rotation of "{}" with orientation of "{}"'.format(obj, joint))
     if hasattr(obj, "setRotation") and hasattr(joint, "getOrientation"):
         obj.setRotation(joint.getOrientation())
+
+
+def aim_constrain_with_world_up_object(target, obj, up_obj, world_up_vector):
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        pmc.aimConstraint(
+            target, 
+            obj, 
+            worldUpType="object", 
+            worldUpObject=up_obj, 
+            worldUpVector=world_up_vector,
+            maintainOffset=False
+        )
+
+
+def match_transforms(obj, target, translation=True, rotation=True):
+    """
+    :param PyNode obj, target:
+    """
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        WORLD_SPACE = "world"
+        if translation and hasattr(obj, "setTranslation") and hasattr(target, "getTranslation"):
+            obj.setTranslation(target.getTranslation(space=WORLD_SPACE), space=WORLD_SPACE)
+        if rotation and hasattr(obj, "setRotation") and hasattr(target, "getRotation"):
+            obj.setRotation(target.getRotation(space=WORLD_SPACE), space=WORLD_SPACE)

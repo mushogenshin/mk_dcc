@@ -306,6 +306,9 @@ class Control(object):
         SwapMasterJob._North_component_IDs = self.get_SM_candidate_component_data("north")
         SwapMasterJob._South_component_IDs = self.get_SM_candidate_component_data("south")
         SwapMasterJob._Yaw_component_IDs = self.get_SM_candidate_component_data("yaw")
+
+        SwapMasterJob._aim_axis, SwapMasterJob._up_axis, SwapMasterJob._world_up_vector = \
+            SwapMasterJob.ls_hub_joint_axes()
         
         self.clear_SM_jobs_data()
 
@@ -323,7 +326,7 @@ class Control(object):
             swap_job.delete_nucleus_locator()
         self.clear_SM_jobs_data()
 
-    def do_swap(self, get_use_instancing_mode_method, post_cleanup=False):
+    def do_swap(self, get_use_instancing_mode_method, get_remove_proxies_mode_method, post_cleanup=False):
         """
         :param callable get_use_instancing_mode_method:
         """
@@ -331,20 +334,23 @@ class Control(object):
             use_instancing = get_use_instancing_mode_method()
         else:
             use_instancing = True
-        logger.info("Use Instancing Mode: {}".format(use_instancing))
+        if callable(get_remove_proxies_mode_method):
+            remove_proxies = get_remove_proxies_mode_method()
+        else:
+            remove_proxies = True
+        logger.info("Use Instancing Mode: {}; Remove Proxies Mode: {}".format(use_instancing, remove_proxies))
 
-        SwapMasterJob._substitute_root = self.get_SM_substitute_root_data()
-
-        if SwapMasterJob._substitute_root:
+        SwapMasterJob._substitute_template_root = self.get_SM_substitute_root_data()
+        if SwapMasterJob._substitute_template_root:
             for swap_job in  self._model._data["SM_jobs"]:
-                swap_job.swap(use_instancing)
+                swap_job.swap(use_instancing, remove_proxies)
 
         if post_cleanup:
             self.abort_SM_nuclei()
 
-    def fast_forward_swap(self, get_use_instancing_mode_method):
+    def fast_forward_swap(self, get_use_instancing_mode_method, get_remove_proxies_mode_method):
         self.preview_SM_nuclei()
-        self.do_swap(get_use_instancing_mode_method, post_cleanup=True)
+        self.do_swap(get_use_instancing_mode_method, get_remove_proxies_mode_method, post_cleanup=True)
 
 
 class SwapMasterJob(object):
@@ -352,7 +358,12 @@ class SwapMasterJob(object):
     _North_component_IDs = {"component_enum": 0, "children": []}
     _South_component_IDs = {"component_enum": 0, "children": []}
     _Yaw_component_IDs = {"component_enum": 0, "children": []}
-    _substitute_root = None
+    
+    _aim_axis = ""
+    _up_axis = ""
+    _world_up_vector = None
+
+    _substitute_template_root = None
 
     def __init__(self, mesh, app_model_data=None):
         """
@@ -379,15 +390,33 @@ class SwapMasterJob(object):
         
         self.hub_joint_start = None
         self.hub_joint_end = None
-        self.hub_joint_aim = None
+        self.hub_joint_yaw = None
         
         self.nucleus_locator = None
+        self.swapped = None
+
+    @staticmethod
+    def ls_hub_joint_axes():
+        scene_up_axis = scene_utils.get_scene_up_axis()
+        logger.info("Scene up axis: {}".format(scene_up_axis))
+        
+        if scene_up_axis == "y":
+            aim_axis = "yzx"  # Y-axis pointing down the bone
+            up_axis = "zup"
+            world_up_vector = (0, 0, 1)
+        elif scene_up_axis == "z":
+            aim_axis = "zxy"  # Z-axis pointing down the bone
+            up_axis = "xup"
+            world_up_vector = (1, 0, 0)
+        else:
+            aim_axis = "xyz"  # X-axis pointing down the bone
+            up_axis = "yup"
+            world_up_vector = (0, 1, 0)
+        
+        logger.info('Using aim axis "{}"; up axis "{}"; world up vector: {}'.format(aim_axis, up_axis, world_up_vector))
+        return aim_axis, up_axis, world_up_vector
 
     def prepare_hub_joint_elements(self):
-        """
-        :param dict app_model_data: to update
-        mesh: {"hub_joint": [self.hub_joint_start, self.hub_joint_end]}
-        """
         if self.South_components:
             self.hub_joint_start = transform_utils.create_center_thingy_from(
                 self.South_components,
@@ -398,8 +427,12 @@ class SwapMasterJob(object):
                 self.North_components,
                 thingy="joint"
             )
-            
-        # TODO: create self.hub_joint_aim from self.Yaw_components as well
+        
+        if self.Yaw_components:
+            self.hub_joint_yaw = transform_utils.create_center_thingy_from(
+                self.Yaw_components,
+                thingy="joint"
+            )
 
 
     def has_hub_joint_elements(self):
@@ -410,20 +443,29 @@ class SwapMasterJob(object):
         Connect hub joints and orient it
         """
         if self.has_hub_joint_elements():
-            # parent joint
-            node_utils.parent_A_to_B(self.hub_joint_end, self.hub_joint_start)
-            # orient joint start to joint end
-            transform_utils.orient_joint(self.hub_joint_start, "xyz", "yup")
-            # TODO: aimConstraint HubJoint to self.hub_joint_aim
-            logger.info("Parented and oriented HubJoint for SwapMasterJob")
+            if not self.hub_joint_yaw:
+                # Use parent and joint orient
+                node_utils.parent_A_to_B(self.hub_joint_end, self.hub_joint_start)
+                transform_utils.orient_joint(self.hub_joint_start, SwapMasterJob._aim_axis, SwapMasterJob._up_axis)
+
+                # # Hide the hub joint
+                # if hasattr(self.hub_joint_start, "visibility"):
+                #     self.hub_joint_start.visibility.set(False)
+
+                logger.info("Parented and oriented HubJoint for SwapMasterJob")
+            else:
+                # Use aimConstraint
+                transform_utils.aim_constrain_with_world_up_object(
+                    self.hub_joint_end,
+                    self.hub_joint_start,
+                    self.hub_joint_yaw,
+                    SwapMasterJob._world_up_vector
+                )
+                logger.info("Aim constrained HubJoint for SwapMasterJob")
         else:
             logger.warning("Either HubJoint start or HubJoint end is missing")
 
     def make_nucleus_locator_from_hub_joint(self):
-        """
-        :param dict app_model_data: to update
-        mesh: {"nucleus_locator": self.nucleus_locator}
-        """
         bounding_objs = deepcopy(self.North_components)
         bounding_objs.extend(self.South_components)
 
@@ -434,6 +476,11 @@ class SwapMasterJob(object):
             bounding_objs,
             thingy="locator"
         )
+
+        if self.hub_joint_yaw:
+            # TODO: remove the AimConstraint; freeze transform
+            pass
+
         # Copy orient from HubJoint
         transform_utils.set_rotation_from_joint_orient(
             self.nucleus_locator,
@@ -442,10 +489,6 @@ class SwapMasterJob(object):
         
         # TODO: set display Local Scale of locator relative 
         # to the mesh's bounding box
-
-        # Hide the hub joint
-        if hasattr(self.hub_joint_start, "visibility"):
-            self.hub_joint_start.visibility.set(False)
 
     def xform_reconstruction(self):
         """
@@ -456,7 +499,7 @@ class SwapMasterJob(object):
         self.make_nucleus_locator_from_hub_joint()
 
     def delete_hub_joint(self):
-        joints = [jnt for jnt in (self.hub_joint_aim, self.hub_joint_end, self.hub_joint_start) \
+        joints = [jnt for jnt in (self.hub_joint_yaw, self.hub_joint_end, self.hub_joint_start) \
             if jnt is not None]
         node_utils.delete_many(joints)
     
@@ -464,11 +507,25 @@ class SwapMasterJob(object):
         if self.nucleus_locator is not None:
             node_utils.delete_one(self.nucleus_locator)
 
-    def swap(self, use_instancing):
-        print("TODO: perform swapping using data from class variable _substitute_root")
-        # Duplicate
-        duplicated = node_utils.duplicate(
-            SwapMasterJob._substitute_root, 
+    def remove_proxy(self):
+        node_utils.delete_one(self.status_quo_mesh)
+
+    def swap(self, use_instancing, remove_proxy):
+        """
+        :param bool use_instancing, remove_proxy:
+        """
+        # Duplicate|Instance
+        self.swapped = node_utils.duplicate(
+            SwapMasterJob._substitute_template_root, 
             as_instance=use_instancing
         )
-        # TODO: Match transforms with Nucleus Locator
+        # Match transforms with Nucleus Locator
+        self.swapped = self.swapped[0] if self.swapped else None
+
+        if not self.swapped:
+            return
+        else:
+            transform_utils.match_transforms(self.swapped, self.nucleus_locator)
+
+        if remove_proxy:
+            node_utils.delete_one(self.status_quo_mesh, is_mesh=True)
