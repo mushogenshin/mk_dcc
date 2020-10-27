@@ -55,11 +55,14 @@ class Control(object):
     def get_PP_baked_data(self):
         return self._model._data["PP_baked"]
 
-    def set_PP_baked_data(self, frame, mesh):
+    def set_PP_baked_data(self, frame, meshes):
+        """
+        :param list meshes:
+        """
         if frame in self._model._data["PP_baked"]:
-            self._model._data["PP_baked"][frame].append(mesh)
+            self._model._data["PP_baked"][frame].extend(meshes)
         else:
-            self._model._data["PP_baked"][frame] = [mesh]
+            self._model._data["PP_baked"][frame] = meshes
 
 
     def create_mash_network(self, mapi):
@@ -289,27 +292,14 @@ class Control(object):
 
     def get_SM_candidate_component_data(self, app_model_data_key):
         return self._model._data["SM_candidate_component"][app_model_data_key]
-
-    def get_swap_job_ID_data(self, app_model_data_key):
-        """
-        Will fail with MASH instancing
-        """
-        # # retain the "component_enum" value
-        # component_data = deepcopy(self.get_SM_candidate_component_data(app_model_data_key))
-        
-        # # convert "children" from components to IDs: 
-        # component_data["children"] = mesh_utils.ls_ID_from_components(component_data["children"])
-
-        # return component_data
-        pass
+    
+    def get_SM_substitute_root_data(self):
+        return self._model._data["SM_substitute_root"]
 
     def clear_SM_jobs_data(self):
         self._model._data["SM_jobs"] = []
-
-    def clear_SM_xform_reconstruction_data(self):
-        self._model._data["SM_xform_reconstruction"] = {}
     
-    def batch_process_swap_jobs(self, meshes):
+    def init_swap_jobs(self, meshes):
         """
         """
         # Modify class variable of SwapMasterJob first
@@ -320,24 +310,41 @@ class Control(object):
         self.clear_SM_jobs_data()
 
         for mesh in meshes:
-            swap_job = SwapMasterJob(mesh, self._model._data)
-            swap_job.xform_reconstruction(self._model._data)
+            swap_job = SwapMasterJob(mesh)
+            swap_job.xform_reconstruction()
             self._model._data["SM_jobs"].append(swap_job)
 
     def preview_SM_nuclei(self):
-        self.clear_SM_xform_reconstruction_data()
-        self.batch_process_swap_jobs(selection_utils.filter_meshes_in_selection())
+        self.init_swap_jobs(selection_utils.filter_meshes_in_selection())
 
     def abort_SM_nuclei(self):
         for swap_job in  self._model._data["SM_jobs"]:
             swap_job.delete_hub_joint()
             swap_job.delete_nucleus_locator()
         self.clear_SM_jobs_data()
-        self.clear_SM_xform_reconstruction_data()
 
-    def swap_selected(self, use_instancing):
-        for swap_job in  self._model._data["SM_jobs"]:
-            pass  # TODO
+    def do_swap(self, get_use_instancing_mode_method, post_cleanup=False):
+        """
+        :param callable get_use_instancing_mode_method:
+        """
+        if callable(get_use_instancing_mode_method):
+            use_instancing = get_use_instancing_mode_method()
+        else:
+            use_instancing = True
+        logger.info("Use Instancing Mode: {}".format(use_instancing))
+
+        SwapMasterJob._substitute_root = self.get_SM_substitute_root_data()
+
+        if SwapMasterJob._substitute_root:
+            for swap_job in  self._model._data["SM_jobs"]:
+                swap_job.swap(use_instancing)
+
+        if post_cleanup:
+            self.abort_SM_nuclei()
+
+    def fast_forward_swap(self, get_use_instancing_mode_method):
+        self.preview_SM_nuclei()
+        self.do_swap(get_use_instancing_mode_method, post_cleanup=True)
 
 
 class SwapMasterJob(object):
@@ -345,26 +352,27 @@ class SwapMasterJob(object):
     _North_component_IDs = {"component_enum": 0, "children": []}
     _South_component_IDs = {"component_enum": 0, "children": []}
     _Yaw_component_IDs = {"component_enum": 0, "children": []}
+    _substitute_root = None
 
     def __init__(self, mesh, app_model_data=None):
         """
         Operate on a given mesh
         """
-        self.mesh = mesh
-        logger.info('Initializing new SwapMasterJob for mesh {}'.format(node_utils.get_node_name(self.mesh)))
+        self.status_quo_mesh = mesh
+        logger.info('Initializing new SwapMasterJob for mesh {}'.format(node_utils.get_node_name(self.status_quo_mesh)))
         
         self.North_components = mesh_utils.expand_mesh_with_component_IDs(
-            self.mesh,
+            self.status_quo_mesh,
             SwapMasterJob._North_component_IDs["children"],
             SwapMasterJob._North_component_IDs["component_enum"],
         )
         self.South_components = mesh_utils.expand_mesh_with_component_IDs(
-            self.mesh,
+            self.status_quo_mesh,
             SwapMasterJob._South_component_IDs["children"],
             SwapMasterJob._South_component_IDs["component_enum"],
         )
         self.Yaw_components = mesh_utils.expand_mesh_with_component_IDs(
-            self.mesh,
+            self.status_quo_mesh,
             SwapMasterJob._Yaw_component_IDs["children"],
             SwapMasterJob._Yaw_component_IDs["component_enum"],
         )
@@ -375,13 +383,7 @@ class SwapMasterJob(object):
         
         self.nucleus_locator = None
 
-        if app_model_data:
-            app_model_data["SM_xform_reconstruction"][self.mesh] = {
-                "hub_joint": None,
-                "nucleus_locator": None
-            }
-
-    def prepare_hub_joint_elements(self, app_model_data=None):
+    def prepare_hub_joint_elements(self):
         """
         :param dict app_model_data: to update
         mesh: {"hub_joint": [self.hub_joint_start, self.hub_joint_end]}
@@ -399,14 +401,14 @@ class SwapMasterJob(object):
             
         # TODO: create self.hub_joint_aim from self.Yaw_components as well
 
-        if app_model_data:
-            app_model_data["SM_xform_reconstruction"][self.mesh]["hub_joint"] = \
-                [self.hub_joint_start, self.hub_joint_end]
 
     def has_hub_joint_elements(self):
         return self.hub_joint_start and self.hub_joint_end
 
     def make_hub_joint(self):
+        """
+        Connect hub joints and orient it
+        """
         if self.has_hub_joint_elements():
             # parent joint
             node_utils.parent_A_to_B(self.hub_joint_end, self.hub_joint_start)
@@ -417,7 +419,7 @@ class SwapMasterJob(object):
         else:
             logger.warning("Either HubJoint start or HubJoint end is missing")
 
-    def make_nucleus_locator_from_hub_joint(self, app_model_data=None):
+    def make_nucleus_locator_from_hub_joint(self):
         """
         :param dict app_model_data: to update
         mesh: {"nucleus_locator": self.nucleus_locator}
@@ -445,13 +447,13 @@ class SwapMasterJob(object):
         if hasattr(self.hub_joint_start, "visibility"):
             self.hub_joint_start.visibility.set(False)
 
-        if app_model_data:
-            app_model_data["SM_xform_reconstruction"][self.mesh]["nucleus_locator"] = self.nucleus_locator
-
-    def xform_reconstruction(self, app_model_data=None):
-        self.prepare_hub_joint_elements(app_model_data)
+    def xform_reconstruction(self):
+        """
+        Make Nucleus Locator from Hub Joint
+        """
+        self.prepare_hub_joint_elements()
         self.make_hub_joint()
-        self.make_nucleus_locator_from_hub_joint(app_model_data)
+        self.make_nucleus_locator_from_hub_joint()
 
     def delete_hub_joint(self):
         joints = [jnt for jnt in (self.hub_joint_aim, self.hub_joint_end, self.hub_joint_start) \
@@ -461,3 +463,12 @@ class SwapMasterJob(object):
     def delete_nucleus_locator(self):
         if self.nucleus_locator is not None:
             node_utils.delete_one(self.nucleus_locator)
+
+    def swap(self, use_instancing):
+        print("TODO: perform swapping using data from class variable _substitute_root")
+        # Duplicate
+        duplicated = node_utils.duplicate(
+            SwapMasterJob._substitute_root, 
+            as_instance=use_instancing
+        )
+        # TODO: Match transforms with Nucleus Locator

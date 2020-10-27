@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>373</width>
-    <height>663</height>
+    <height>655</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -336,7 +336,7 @@
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Status Quo Input</string>
+          <string>Traces of Status Quo's Representative</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
@@ -416,110 +416,106 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <property name="spacing">
-          <number>9</number>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>2-step Swap</string>
          </property>
-         <property name="leftMargin">
-          <number>0</number>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
-         <property name="topMargin">
-          <number>0</number>
+         <property name="checkable">
+          <bool>true</bool>
          </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QToolButton" name="SM_preview_nuclei_btn">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">font-size: 10px;</string>
-           </property>
-           <property name="text">
-            <string>Preview Reconstruction</string>
-           </property>
-           <property name="icon">
-            <iconset resource="rc/resources.qrc">
-             <normaloff>:/icons/baseline_engineering_white_48dp.png</normaloff>:/icons/baseline_engineering_white_48dp.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>20</width>
-             <height>20</height>
-            </size>
-           </property>
-           <property name="toolButtonStyle">
-            <enum>Qt::ToolButtonTextUnderIcon</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="SM_abort_nuclei_btn">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">font-size: 10px;</string>
-           </property>
-           <property name="text">
-            <string>Abort</string>
-           </property>
-           <property name="icon">
-            <iconset resource="rc/resources.qrc">
-             <normaloff>:/icons/baseline_clear_white_48dp.png</normaloff>:/icons/baseline_clear_white_48dp.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>20</width>
-             <height>20</height>
-            </size>
-           </property>
-           <property name="toolButtonStyle">
-            <enum>Qt::ToolButtonTextUnderIcon</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="SM_swap_selected_btn">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">font-size: 10px;</string>
-           </property>
-           <property name="text">
-            <string>Swap Selected</string>
-           </property>
-           <property name="icon">
-            <iconset resource="rc/resources.qrc">
-             <normaloff>:/icons/baseline_scatter_plot_white_48dp.png</normaloff>:/icons/baseline_scatter_plot_white_48dp.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>20</width>
-             <height>20</height>
-            </size>
-           </property>
-           <property name="toolButtonStyle">
-            <enum>Qt::ToolButtonTextUnderIcon</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QToolButton" name="SM_preview_nuclei_btn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 10px;</string>
+            </property>
+            <property name="text">
+             <string>Preview Reconstruction</string>
+            </property>
+            <property name="icon">
+             <iconset resource="rc/resources.qrc">
+              <normaloff>:/icons/baseline_engineering_white_48dp.png</normaloff>:/icons/baseline_engineering_white_48dp.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="SM_abort_nuclei_btn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 10px;</string>
+            </property>
+            <property name="text">
+             <string>Abort</string>
+            </property>
+            <property name="icon">
+             <iconset resource="rc/resources.qrc">
+              <normaloff>:/icons/baseline_clear_white_48dp.png</normaloff>:/icons/baseline_clear_white_48dp.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="SM_proceed_swapping_btn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 10px;</string>
+            </property>
+            <property name="text">
+             <string>Proceed Swapping</string>
+            </property>
+            <property name="icon">
+             <iconset resource="rc/resources.qrc">
+              <normaloff>:/icons/baseline_scatter_plot_white_48dp.png</normaloff>:/icons/baseline_scatter_plot_white_48dp.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -574,23 +570,6 @@
         </layout>
        </item>
       </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QGroupBox" name="restore_instancing_group_box">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="title">
-       <string>RESTORE INSTANCING</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <layout class="QVBoxLayout" name="restore_instancing_group_box_layout"/>
      </widget>
     </item>
    </layout>

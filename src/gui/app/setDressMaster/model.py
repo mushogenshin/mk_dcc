@@ -37,7 +37,6 @@ class Model(object):
                 "south": {"component_enum": 0, "children": []},
                 "yaw": {"component_enum": 0, "children": []},
             },
-            "SM_xform_reconstruction": {},
             "SM_substitute_root": None
         }
         self._data.update(SM_data)

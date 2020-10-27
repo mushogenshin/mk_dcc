@@ -13,7 +13,10 @@ def get_node_name(node):
     """
     :rtype str:
     """
-    return node.nodeName() if hasattr(node, "nodeName") else str(node)
+    if node is not None:
+        return node.nodeName() if hasattr(node, "nodeName") else str(node)
+    else:
+        return ""
 
 
 def ls_component_IDs(nodes):
@@ -90,17 +93,21 @@ def delete_many(nodes):
         delete_one(node)
 
 
-def duplicate(node, name=""):
+def duplicate(node, as_instance=False, name=""):
+    """
+    :rtype list:
+    """
     logger.info('Duplicating "{}"'.format(node))
     try:
         import pymel.core as pmc
     except ImportError:
-        return
+        return []
     else:
+        cmd = getattr(pmc, "duplicate") if not as_instance else getattr(pmc, "instance")
         if name:
-            return pmc.duplicate(node, n=name)
+            return cmd(node, n=name)
         else:
-            return pmc.duplicate(node)  # auto naming
+            return cmd(node)  # auto naming
 
 
 def parent_A_to_B(node_A, node_B):

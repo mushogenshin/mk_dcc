@@ -146,6 +146,12 @@ def create_connections(app):
     ui = app._view.ui
     model_data = app._model._data
 
+    # Debugging
+    def print_model_data():
+        from pprint import pprint
+        print("***APP MODEL DATA:")
+        pprint(model_data)
+
     ############################# PHYSX PAINTER #############################
 
     # Load and Clear Selection
@@ -186,7 +192,7 @@ def create_connections(app):
 
     ############################# SWAP MASTER #############################
 
-    # Load and Clear Selection
+    # Status Quo's Traces
     
     def get_SM_component_enum_from_UI():
         if ui.SM_trace_vertex_radio_btn.isChecked():
@@ -196,11 +202,8 @@ def create_connections(app):
         elif ui.SM_trace_face_radio_btn.isChecked():
             return 3
 
-
     def print_component_IDs(data):
-        # return node_utils.ls_component_IDs(data["children"])
         return data["children"]
-
 
     for input_grp in (ui.SM_load_north_compos_ui_grp, ui.SM_load_south_compos_ui_grp, ui.SM_load_yaw_compos_ui_grp):
         # Manually connect three load_func, clear_func, print_func
@@ -220,11 +223,17 @@ def create_connections(app):
     ui.SM_load_south_compos_ui_grp.connect_app_model_update(model_data, "SM_candidate_component.south")
     ui.SM_load_yaw_compos_ui_grp.connect_app_model_update(model_data, "SM_candidate_component.yaw")   
 
-    # Debugging
-    def print_model_data():
-        from pprint import pprint
-        print("Model Data:")
-        pprint(model_data)
+    # Substitute Input
+
+    ui.SM_load_substitute_ui_grp.create_simple_connections(
+        selection_utils.get_first_xform_in_selection,  # load_func
+        lambda: None,  # clear_func
+        node_utils.get_node_name  # print_func
+    )
+
+    ui.SM_load_substitute_ui_grp.connect_app_model_update(model_data, "SM_substitute_root")
+
+    # Orientation Reconstruction
 
     def preview_SM_nuclei():
         app._control.preview_SM_nuclei()
@@ -232,7 +241,20 @@ def create_connections(app):
 
     ui.SM_preview_nuclei_btn.clicked.connect(preview_SM_nuclei)
     ui.SM_abort_nuclei_btn.clicked.connect(app._control.abort_SM_nuclei)
-    ui.SM_swap_selected_btn.clicked.connect(app._control.swap_selected)
+
+    # Do Swap
+
+    def get_SM_use_instancing_mode_from_UI():
+        return ui.SM_swap_use_instancing_check_box.isChecked()
+
+    ui.SM_proceed_swapping_btn.clicked.connect(partial(
+        app._control.do_swap,
+        get_use_instancing_mode_method=get_SM_use_instancing_mode_from_UI
+    ))
+    ui.SM_fast_forward_swap_btn.clicked.connect(partial(
+        app._control.fast_forward_swap,
+        get_use_instancing_mode_method=get_SM_use_instancing_mode_from_UI
+    ))
 
 
 def init_gui(app):
