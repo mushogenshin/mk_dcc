@@ -114,7 +114,7 @@ def duplicate(node, as_instance=False, name=""):
             return cmd(node)  # auto naming
 
 
-def parent_A_to_B(node_A, node_B):
+def parent_A_to_B(node_A, node_B, zero_child_transforms=False):
     logger.info("Parenting {} to {}".format(node_A, node_B))
     try:
         import pymel.core as pmc
@@ -122,3 +122,16 @@ def parent_A_to_B(node_A, node_B):
         pass
     else:
         pmc.parent(node_A, node_B)
+        if zero_child_transforms:
+            node_A.setTranslation((0, 0, 0))
+
+
+def parent_to_world(node, former_parent_to_delete=None):
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        pmc.parent(node, world=True)
+        if former_parent_to_delete is not None:
+            pmc.delete(former_parent_to_delete)

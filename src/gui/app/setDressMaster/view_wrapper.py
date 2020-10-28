@@ -227,7 +227,7 @@ def create_connections(app):
         ))
         input_grp.clear_btn.clicked.connect(partial(
             input_grp.clear_btn_clicked,
-            func=lambda: {"component_enum": 0, "children": []}
+            func=lambda: {"component_enum": 0, "children": [], "mesh": None}
         ))
         input_grp.print_line_edit_method = print_component_IDs
 

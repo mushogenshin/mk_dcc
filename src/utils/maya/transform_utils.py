@@ -2,12 +2,15 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def get_center_position(objects):
+WORLD_SPACE = "world"
+
+
+def get_center_position(objects, as_point=False):
     posX = posY = posZ = 0
     try:
         import pymel.core as pmc
     except ImportError:
-        pass
+        return posX, posY, posZ
     else:
         pos = [pmc.xform(obj, q=True, ws=True, bb=True) for obj in objects]
 
@@ -20,7 +23,10 @@ def get_center_position(objects):
             posY = (pos[1] + pos[4]) / 2
             posZ = (pos[2] + pos[5]) / 2
 
-    return posX, posY, posZ
+        if not as_point:
+            return posX, posY, posZ
+        else:
+            return pmc.dt.Point(posX, posY, posZ)
 
 
 def create_center_thingy_from(objects=(), thingy="locator"):
@@ -133,8 +139,50 @@ def match_transforms(obj, target, translation=True, rotation=True):
     except ImportError:
         pass
     else:
-        WORLD_SPACE = "world"
         if translation and hasattr(obj, "setTranslation") and hasattr(target, "getTranslation"):
             obj.setTranslation(target.getTranslation(space=WORLD_SPACE), space=WORLD_SPACE)
         if rotation and hasattr(obj, "setRotation") and hasattr(target, "getRotation"):
             obj.setRotation(target.getRotation(space=WORLD_SPACE), space=WORLD_SPACE)
+
+
+def get_rotate_pivot(node, is_mesh=False):
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        if is_mesh and hasattr(node, "getParent"):
+            node = node.getParent()
+
+        if hasattr(node, "getRotatePivot"):
+            return node.getRotatePivot(space=WORLD_SPACE)
+
+
+def get_translation_between_two_points(src, dst):
+    """
+    :param pmc.dt.Point src, dst:
+    """
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        if isinstance(src, pmc.dt.Point) and isinstance(dst, pmc.dt.Point):
+            return dst - src
+
+
+def make_space_locator(name=""):
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        if not name:
+            return pmc.spaceLocator()
+        else:
+            return pmc.spaceLocator(n=name)
+
+
+def set_translation(node, vector):
+    if hasattr(node, "setTranslation"):
+        node.setTranslation(vector)

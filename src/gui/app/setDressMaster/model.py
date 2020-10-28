@@ -33,9 +33,9 @@ class Model(object):
         SM_data = {
             "SM_jobs": [],
             "SM_candidate_component": {
-                "north": {"component_enum": 0, "children": []},
-                "south": {"component_enum": 0, "children": []},
-                "yaw": {"component_enum": 0, "children": []},
+                "north": {"component_enum": 0, "children": [], "mesh": None},
+                "south": {"component_enum": 0, "children": [], "mesh": None},
+                "yaw": {"component_enum": 0, "children": [], "mesh": None},
             },
             "SM_substitute_root": None
         }

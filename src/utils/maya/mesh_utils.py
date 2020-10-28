@@ -18,15 +18,25 @@ def filter_mesh_components_of_type_in_selection(**kwargs):
     component_enum: 1 for vertices, 2 for edges, 3 for faces
     :param callable get_component_enum_method:
     :rtype dict:
-    :return: {"component_enum": 0, "children": []}
+    :return: {"component_enum": 0, "children": [], "mesh": None}
     """
+    component_enum_dict = {1: "Vertex", 2: "Edge", 3: "Face"}
+
     get_component_enum_method = kwargs.get("get_component_enum_method")
-    ret = {"component_enum": 0, "children": []}
+    ret = {"component_enum": 0, "children": [], "mesh": None}
     
     if callable(get_component_enum_method):
         ret["component_enum"] = get_component_enum_method()
 
-    logger.debug("Using component enum: {}".format(ret["component_enum"]))
+    logger.debug("Using component enum: {} ({})".format(
+        ret["component_enum"],
+        component_enum_dict.get(ret["component_enum"], "")
+    ))
+
+    def get_mesh_node_from_first_component(components):
+        component = components[0] if components else None
+        if component and hasattr(component, "node"):
+            return component.node()
 
     try:
         import pymel.core as pmc
@@ -34,18 +44,16 @@ def filter_mesh_components_of_type_in_selection(**kwargs):
         return ret
     else:
         if ret["component_enum"] == 1:  # vertices
-            logger.info("Filtering components of polygonal mesh vertex type")
             ret["children"] = [node for node in pmc.selected() \
                 if isinstance(node, pmc.MeshVertex)]
         elif ret["component_enum"] == 2:  # edges
-            logger.info("Filtering components of polygonal mesh edge type")
             ret["children"] = [node for node in pmc.selected() \
                 if isinstance(node, pmc.MeshEdge)]
         elif ret["component_enum"] == 3:  # faces
-            logger.info("Filtering components of polygonal mesh face type")
             ret["children"] = [node for node in pmc.selected() \
                 if isinstance(node, pmc.MeshFace)]
         
+        ret["mesh"] = get_mesh_node_from_first_component(ret["children"])
         return ret
 
 
@@ -93,3 +101,8 @@ def expand_mesh_with_component_IDs(mesh, component_IDs, component_enum=1):
                 logger.exception(e)
             
     return ret
+
+
+def get_bounding_box_center(mesh):
+    if hasattr(mesh, "boundingBox"):
+        return mesh.boundingBox().center()  # returned in object-space

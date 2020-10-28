@@ -15,7 +15,7 @@ def get_option_var_dict():
     try:
         from pymel.core.language import OptionVarDict
     except ImportError:
-        return None
+        return {}
     else:
         return OptionVarDict()
 

@@ -1,7 +1,6 @@
 import sys
-from copy import deepcopy
-from collections import namedtuple
 import logging
+from collections import namedtuple
 
 from src.utils.maya import (
     plugin_utils, 
@@ -46,9 +45,6 @@ class Control(object):
 
     def get_PP_init_data(self, app_model_data_key):
         return self._model._data["PP_init"][app_model_data_key]
-
-    # def set_init_data(self, app_model_data_key, value):
-    #     self._model._data["PP_init"][app_model_data_key] = value
 
     def get_PP_mash_data(self, app_model_data_key):
         return self._model._data["PP_mash"][app_model_data_key]
@@ -307,11 +303,12 @@ class Control(object):
         """
         """
         # Modify class variable of SwapMasterJob first
-        SwapMasterJob._North_component_IDs = self.get_SM_candidate_component_data("north")
-        SwapMasterJob._South_component_IDs = self.get_SM_candidate_component_data("south")
+        SwapMasterJob.North_component_IDs = self.get_SM_candidate_component_data("north")
+        SwapMasterJob.South_component_IDs = self.get_SM_candidate_component_data("south")
         SwapMasterJob._Yaw_component_IDs = self.get_SM_candidate_component_data("yaw")
-
-        SwapMasterJob._axis_cfg = SwapMasterJob.get_hub_joint_axis_cfg()
+        
+        SwapMasterJob.get_statusquo_repr_hub_jnt_start_to_rotate_pivot_vec()
+        SwapMasterJob.get_hub_joint_axis_cfg()
         
         self.clear_SM_jobs_data()
 
@@ -343,8 +340,8 @@ class Control(object):
             remove_proxies = True
         logger.info("Use Instancing Mode: {}; Remove Proxies Mode: {}".format(use_instancing, remove_proxies))
 
-        SwapMasterJob._substitute_template_root = self.get_SM_substitute_root_data()
-        if SwapMasterJob._substitute_template_root:
+        SwapMasterJob.substitute_template_root = self.get_SM_substitute_root_data()
+        if SwapMasterJob.substitute_template_root:  # TODO: remove this restriction
             for swap_job in  self._model._data["SM_jobs"]:
                 swap_job.swap(use_instancing, remove_proxies)
 
@@ -358,29 +355,30 @@ class Control(object):
 
 class SwapMasterJob(object):
 
-    _North_component_IDs = {"component_enum": 0, "children": []}
-    _South_component_IDs = {"component_enum": 0, "children": []}
-    _Yaw_component_IDs = {"component_enum": 0, "children": []}
+    North_component_IDs = {"component_enum": 0, "children": [], "mesh": None}
+    South_component_IDs = {"component_enum": 0, "children": [], "mesh": None}
+    Yaw_component_IDs = {"component_enum": 0, "children": [], "mesh": None}
     
-    _axis_cfg = None
-    _substitute_template_root = None
+    axis_cfg = None
+    statusquo_repr_hub_jnt_start_to_rotate_pivot_vec = None
+    substitute_template_root = None
 
-    def __init__(self, mesh, app_model_data=None):
+    def __init__(self, status_quo_mesh, app_model_data=None):
         """
         Operate on a given mesh
         """
-        self.status_quo_mesh = mesh
+        self.status_quo_mesh = status_quo_mesh
         logger.info('Initializing new SwapMasterJob for mesh {}'.format(node_utils.get_node_name(self.status_quo_mesh)))
         
         self.North_components = mesh_utils.expand_mesh_with_component_IDs(
             self.status_quo_mesh,
-            SwapMasterJob._North_component_IDs["children"],
-            SwapMasterJob._North_component_IDs["component_enum"],
+            SwapMasterJob.North_component_IDs["children"],
+            SwapMasterJob.North_component_IDs["component_enum"],
         )
         self.South_components = mesh_utils.expand_mesh_with_component_IDs(
             self.status_quo_mesh,
-            SwapMasterJob._South_component_IDs["children"],
-            SwapMasterJob._South_component_IDs["component_enum"],
+            SwapMasterJob.South_component_IDs["children"],
+            SwapMasterJob.South_component_IDs["component_enum"],
         )
         self.Yaw_components = mesh_utils.expand_mesh_with_component_IDs(
             self.status_quo_mesh,
@@ -396,12 +394,41 @@ class SwapMasterJob(object):
         self.swapped = None
 
     @staticmethod
-    def get_hub_joint_axis_cfg():
+    def get_statusquo_repr_hub_jnt_start_point():
+        return transform_utils.get_center_position(
+            mesh_utils.expand_mesh_with_component_IDs(
+                SwapMasterJob.South_component_IDs["mesh"],
+                SwapMasterJob.South_component_IDs["children"],
+                SwapMasterJob.South_component_IDs["component_enum"]
+            ),
+            as_point=True
+        )
+
+    @staticmethod
+    def get_statusquo_repr_rotate_pivot_point():
+        return transform_utils.get_rotate_pivot(
+            SwapMasterJob.South_component_IDs["mesh"],
+            is_mesh=True
+        )
+
+    @classmethod
+    def get_statusquo_repr_hub_jnt_start_to_rotate_pivot_vec(cls):
+        cls.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec = transform_utils.get_translation_between_two_points(
+            cls.get_statusquo_repr_hub_jnt_start_point(),
+            cls.get_statusquo_repr_rotate_pivot_point()
+        )
+        logger.info("Translation from start of Hub Joint to RotatePivot: {}".format(
+            cls.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec
+        ))
+
+    @classmethod
+    def get_hub_joint_axis_cfg(cls):
         """
         :rtype AxisCfg:
         """
         scene_up_axis = scene_utils.get_scene_up_axis()
-        logger.info("Scene up axis: {}".format(scene_up_axis))
+        if scene_up_axis:
+            logger.info("Current Maya scene up axis: {}".format(scene_up_axis))
         
         if scene_up_axis == "y":
             JO_aim_axis = "yzx"  # Y-axis pointing down the bone
@@ -422,7 +449,7 @@ class SwapMasterJob(object):
         logger.info('Using Joint Orient aim axis "{}"; Joint Orient up axis "{}"'.format(JO_aim_axis, JO_up_axis))
         logger.info('Using Aim vector {}; Up vector {}'.format(aim_vec, up_vec))
 
-        return AxisCfg(JO_aim_axis, JO_up_axis, aim_vec, up_vec)
+        cls.axis_cfg = AxisCfg(JO_aim_axis, JO_up_axis, aim_vec, up_vec)
 
     def prepare_hub_joint_elements(self):
         if self.South_components:
@@ -456,39 +483,31 @@ class SwapMasterJob(object):
                 node_utils.parent_A_to_B(self.hub_joint_end, self.hub_joint_start)
                 transform_utils.orient_joint(
                     self.hub_joint_start, 
-                    SwapMasterJob._axis_cfg.JO_aim_axis, 
-                    SwapMasterJob._axis_cfg.JO_up_axis, 
+                    SwapMasterJob.axis_cfg.JO_aim_axis, 
+                    SwapMasterJob.axis_cfg.JO_up_axis, 
                 )
-
-                # # Hide the hub joint
-                # if hasattr(self.hub_joint_start, "visibility"):
-                #     self.hub_joint_start.visibility.set(False)
-
                 logger.info("Parented and oriented HubJoint for SwapMasterJob")
             else:
                 # Use aimConstraint
                 transform_utils.aim_constrain_with_world_up_object(
                     self.hub_joint_end,
                     self.hub_joint_start,
-                    SwapMasterJob._axis_cfg.aim_vec,
-                    SwapMasterJob._axis_cfg.up_vec,
+                    SwapMasterJob.axis_cfg.aim_vec,
+                    SwapMasterJob.axis_cfg.up_vec,
                     self.hub_joint_yaw,  # world up object
                 )
                 logger.info("Aim constrained HubJoint for SwapMasterJob")
+            # Hide the hub joints
+            for jnt in (self.hub_joint_start, self.hub_joint_end, self.hub_joint_yaw):
+                if hasattr(jnt, "visibility"):
+                    jnt.visibility.set(False)
         else:
             logger.warning("Either HubJoint start or HubJoint end is missing")
 
-    def make_nucleus_locator_from_hub_joint(self):
-        bounding_objs = deepcopy(self.North_components)
-        bounding_objs.extend(self.South_components)
-
-        # logger.info("Creating nucleus locator from bounding objects: {}".format(bounding_objs))
-        
-        # Create new locator virtually at the center of the HubJoint
-        self.nucleus_locator = transform_utils.create_center_thingy_from(
-            bounding_objs,
-            thingy="locator"
-        )
+    def make_nucleus_locator_from_hub_joint(self):       
+        # Create new locator at HubJoint start
+        self.nucleus_locator = transform_utils.make_space_locator()
+        transform_utils.match_transforms(self.nucleus_locator, self.hub_joint_start, rotation=False)
 
         if self.hub_joint_yaw:
             transform_utils.bake_aim_constraint_to_joint_orient(self.hub_joint_start)
@@ -497,6 +516,21 @@ class SwapMasterJob(object):
         transform_utils.set_rotation_from_joint_orient(
             self.nucleus_locator,
             self.hub_joint_start
+        )
+
+        # Move nucleus locator to supposed rotatePivot of object
+        dummy_locator_parent = node_utils.duplicate(self.nucleus_locator)
+        if dummy_locator_parent:
+            dummy_locator_parent = dummy_locator_parent[0]
+        node_utils.parent_A_to_B(self.nucleus_locator, dummy_locator_parent, zero_child_transforms=True)
+        
+        transform_utils.set_translation(
+            self.nucleus_locator, 
+            SwapMasterJob.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec
+        )
+        node_utils.parent_to_world(
+            self.nucleus_locator,
+            former_parent_to_delete=dummy_locator_parent
         )
         
         # TODO: set display Local Scale of locator relative 
@@ -528,9 +562,12 @@ class SwapMasterJob(object):
         """
         # Duplicate|Instance
         self.swapped = node_utils.duplicate(
-            SwapMasterJob._substitute_template_root, 
+            SwapMasterJob.substitute_template_root, 
             as_instance=use_instancing
-        )
+        )  
+        
+        # TODO: support when SwapMasterJob.substitute_template_root is None
+
         # Match transforms with Nucleus Locator
         self.swapped = self.swapped[0] if self.swapped else None
 
