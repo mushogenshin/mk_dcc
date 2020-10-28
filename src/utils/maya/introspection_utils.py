@@ -8,6 +8,5 @@ def get_maya_qt_version():
 
 # def get_maya_version():
 #     import maya
-#     # TODO
 #     # print('Maya version: ')
 #     pass

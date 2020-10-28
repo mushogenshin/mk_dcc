@@ -84,7 +84,13 @@ def set_rotation_from_joint_orient(obj, joint):
         obj.setRotation(joint.getOrientation())
 
 
-def aim_constrain_with_world_up_object(target, obj, up_obj, world_up_vector):
+def aim_constrain_with_world_up_object(
+    target, 
+    obj, 
+    aim_vector, 
+    up_vector, 
+    world_up_obj
+):
     try:
         import pymel.core as pmc
     except ImportError:
@@ -93,11 +99,29 @@ def aim_constrain_with_world_up_object(target, obj, up_obj, world_up_vector):
         pmc.aimConstraint(
             target, 
             obj, 
+            aimVector=aim_vector,
+            upVector=up_vector,
             worldUpType="object", 
-            worldUpObject=up_obj, 
-            worldUpVector=world_up_vector,
+            worldUpObject=world_up_obj, 
             maintainOffset=False
         )
+
+
+def bake_aim_constraint_to_joint_orient(joint):
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        # Remove Constraints
+        constraints = set(pmc.listConnections(joint, source=True, destination=False, type="aimConstraint"))
+        if constraints:
+            try:
+                pmc.delete(constraints)
+            except:
+                pass
+        # Freeze Transforms
+        pmc.makeIdentity(joint, apply=True, translate=False, scale=False, rotate=True)
 
 
 def match_transforms(obj, target, translation=True, rotation=True):

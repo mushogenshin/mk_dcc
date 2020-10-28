@@ -1,5 +1,6 @@
 import sys
 from copy import deepcopy
+from collections import namedtuple
 import logging
 
 from src.utils.maya import (
@@ -31,6 +32,9 @@ def load_mash_api():
         return None
     else:
         return MASH.api
+
+
+AxisCfg = namedtuple("AxisCfg", ["JO_aim_axis", "JO_up_axis", "aim_vec", "up_vec"])
 
 
 class Control(object):
@@ -307,8 +311,7 @@ class Control(object):
         SwapMasterJob._South_component_IDs = self.get_SM_candidate_component_data("south")
         SwapMasterJob._Yaw_component_IDs = self.get_SM_candidate_component_data("yaw")
 
-        SwapMasterJob._aim_axis, SwapMasterJob._up_axis, SwapMasterJob._world_up_vector = \
-            SwapMasterJob.ls_hub_joint_axes()
+        SwapMasterJob._axis_cfg = SwapMasterJob.get_hub_joint_axis_cfg()
         
         self.clear_SM_jobs_data()
 
@@ -359,10 +362,7 @@ class SwapMasterJob(object):
     _South_component_IDs = {"component_enum": 0, "children": []}
     _Yaw_component_IDs = {"component_enum": 0, "children": []}
     
-    _aim_axis = ""
-    _up_axis = ""
-    _world_up_vector = None
-
+    _axis_cfg = None
     _substitute_template_root = None
 
     def __init__(self, mesh, app_model_data=None):
@@ -396,25 +396,33 @@ class SwapMasterJob(object):
         self.swapped = None
 
     @staticmethod
-    def ls_hub_joint_axes():
+    def get_hub_joint_axis_cfg():
+        """
+        :rtype AxisCfg:
+        """
         scene_up_axis = scene_utils.get_scene_up_axis()
         logger.info("Scene up axis: {}".format(scene_up_axis))
         
         if scene_up_axis == "y":
-            aim_axis = "yzx"  # Y-axis pointing down the bone
-            up_axis = "zup"
-            world_up_vector = (0, 0, 1)
+            JO_aim_axis = "yzx"  # Y-axis pointing down the bone
+            JO_up_axis = "zup"
+            aim_vec = (0, 1, 0)
+            up_vec = (0, 0, 1)
         elif scene_up_axis == "z":
-            aim_axis = "zxy"  # Z-axis pointing down the bone
-            up_axis = "xup"
-            world_up_vector = (1, 0, 0)
+            JO_aim_axis = "zxy"  # Z-axis pointing down the bone
+            JO_up_axis = "xup"
+            aim_vec = (0, 0, 1)
+            up_vec = (1, 0, 0)
         else:
-            aim_axis = "xyz"  # X-axis pointing down the bone
-            up_axis = "yup"
-            world_up_vector = (0, 1, 0)
+            JO_aim_axis = "xyz"  # X-axis pointing down the bone
+            JO_up_axis = "yup"
+            aim_vec = (1, 0, 0)
+            up_vec = (0, 1, 0)
         
-        logger.info('Using aim axis "{}"; up axis "{}"; world up vector: {}'.format(aim_axis, up_axis, world_up_vector))
-        return aim_axis, up_axis, world_up_vector
+        logger.info('Using Joint Orient aim axis "{}"; Joint Orient up axis "{}"'.format(JO_aim_axis, JO_up_axis))
+        logger.info('Using Aim vector {}; Up vector {}'.format(aim_vec, up_vec))
+
+        return AxisCfg(JO_aim_axis, JO_up_axis, aim_vec, up_vec)
 
     def prepare_hub_joint_elements(self):
         if self.South_components:
@@ -446,7 +454,11 @@ class SwapMasterJob(object):
             if not self.hub_joint_yaw:
                 # Use parent and joint orient
                 node_utils.parent_A_to_B(self.hub_joint_end, self.hub_joint_start)
-                transform_utils.orient_joint(self.hub_joint_start, SwapMasterJob._aim_axis, SwapMasterJob._up_axis)
+                transform_utils.orient_joint(
+                    self.hub_joint_start, 
+                    SwapMasterJob._axis_cfg.JO_aim_axis, 
+                    SwapMasterJob._axis_cfg.JO_up_axis, 
+                )
 
                 # # Hide the hub joint
                 # if hasattr(self.hub_joint_start, "visibility"):
@@ -458,8 +470,9 @@ class SwapMasterJob(object):
                 transform_utils.aim_constrain_with_world_up_object(
                     self.hub_joint_end,
                     self.hub_joint_start,
-                    self.hub_joint_yaw,
-                    SwapMasterJob._world_up_vector
+                    SwapMasterJob._axis_cfg.aim_vec,
+                    SwapMasterJob._axis_cfg.up_vec,
+                    self.hub_joint_yaw,  # world up object
                 )
                 logger.info("Aim constrained HubJoint for SwapMasterJob")
         else:
@@ -478,8 +491,7 @@ class SwapMasterJob(object):
         )
 
         if self.hub_joint_yaw:
-            # TODO: remove the AimConstraint; freeze transform
-            pass
+            transform_utils.bake_aim_constraint_to_joint_orient(self.hub_joint_start)
 
         # Copy orient from HubJoint
         transform_utils.set_rotation_from_joint_orient(
