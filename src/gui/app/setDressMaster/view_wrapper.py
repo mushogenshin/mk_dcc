@@ -85,9 +85,6 @@ def add_widgets(ui):
         expanded_height=460
     )
 
-    ui.PP_main_group_box.toggled()
-    ui.PP_dyn_parms_group_box.toggled()
-
     ############################# SWAP MASTER #############################
 
     ui.SM_load_north_compos_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
@@ -127,13 +124,10 @@ def add_widgets(ui):
          expanded_height=75
     )
 
-    # ui.SM_main_group_box = pattern_utils.CollapsibleGroupBox(
-    #     ui.swap_master_main_group_box,
-    #     expanded_height=320
-    # )
-    # ui.SM_main_group_box.toggled()
-
-    ui.SM_orient_reconstruct_group_box.toggled()
+    ui.SM_main_group_box = pattern_utils.CollapsibleGroupBox(
+        ui.swap_master_main_group_box,
+        expanded_height=450
+    )
     
 
 def get_PP_dynamics_parameters(ui):
@@ -276,4 +270,9 @@ def create_connections(app):
 
 def init_gui(app):
     ui = app._view.ui
-    model_data = app._model._data
+    # model_data = app._model._data
+
+    # ui.PP_main_group_box.toggled()
+    ui.PP_dyn_parms_group_box.toggled()
+    ui.SM_main_group_box.toggled()
+    ui.SM_orient_reconstruct_group_box.toggled()

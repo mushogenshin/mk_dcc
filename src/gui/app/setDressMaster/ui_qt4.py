@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui'
 #
-# Created: Tue Oct 27 13:46:55 2020
+# Created: Wed Oct 28 23:27:52 2020
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -303,7 +303,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Set Dress Master", None, QtGui.QApplication.UnicodeUTF8))
-        self.phys_painter_main_group_box.setTitle(QtGui.QApplication.translate("MainWindow", "PHYSX PAINTER", None, QtGui.QApplication.UnicodeUTF8))
+        self.phys_painter_main_group_box.setTitle(QtGui.QApplication.translate("MainWindow", "--  PHYSX PAINTER  --", None, QtGui.QApplication.UnicodeUTF8))
         self.PP_dyn_parms_child_group_box.setTitle(QtGui.QApplication.translate("MainWindow", "Dynamics Parameter Preset", None, QtGui.QApplication.UnicodeUTF8))
         self.PP_setup_mash_network_btn.setText(QtGui.QApplication.translate("MainWindow", "Setup MASH Network", None, QtGui.QApplication.UnicodeUTF8))
         self.PP_toggle_interactive_playback_btn.setText(QtGui.QApplication.translate("MainWindow", "Interactive Playback", None, QtGui.QApplication.UnicodeUTF8))
@@ -313,7 +313,7 @@ class Ui_MainWindow(object):
         self.PP_bake_current_btn.setText(QtGui.QApplication.translate("MainWindow", "Bake Current", None, QtGui.QApplication.UnicodeUTF8))
         self.PP_show_all_baked_btn.setText(QtGui.QApplication.translate("MainWindow", "Show All Baked", None, QtGui.QApplication.UnicodeUTF8))
         self.PP_delete_all_setup_btn.setText(QtGui.QApplication.translate("MainWindow", "Delete MASH Setup", None, QtGui.QApplication.UnicodeUTF8))
-        self.swap_master_main_group_box.setTitle(QtGui.QApplication.translate("MainWindow", "SWAP MASTER", None, QtGui.QApplication.UnicodeUTF8))
+        self.swap_master_main_group_box.setTitle(QtGui.QApplication.translate("MainWindow", "--  SWAP MASTER  --", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_3.setTitle(QtGui.QApplication.translate("MainWindow", "Prep", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_3.setText(QtGui.QApplication.translate("MainWindow", "Explode and Group by Num of Vertices", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Proxy Template Input", None, QtGui.QApplication.UnicodeUTF8))

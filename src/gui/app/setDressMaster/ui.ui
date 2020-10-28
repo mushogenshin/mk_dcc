@@ -36,7 +36,7 @@
        <string notr="true"/>
       </property>
       <property name="title">
-       <string>PHYSX PAINTER</string>
+       <string>--  PHYSX PAINTER  --</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -298,7 +298,7 @@
        <string notr="true"/>
       </property>
       <property name="title">
-       <string>SWAP MASTER</string>
+       <string>--  SWAP MASTER  --</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>

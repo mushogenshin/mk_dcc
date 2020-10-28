@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui',
 # licensing of 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui' applies.
 #
-# Created: Tue Oct 27 13:46:55 2020
+# Created: Wed Oct 28 23:27:52 2020
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -304,7 +304,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "Set Dress Master", None, -1))
-        self.phys_painter_main_group_box.setTitle(QtWidgets.QApplication.translate("MainWindow", "PHYSX PAINTER", None, -1))
+        self.phys_painter_main_group_box.setTitle(QtWidgets.QApplication.translate("MainWindow", "--  PHYSX PAINTER  --", None, -1))
         self.PP_dyn_parms_child_group_box.setTitle(QtWidgets.QApplication.translate("MainWindow", "Dynamics Parameter Preset", None, -1))
         self.PP_setup_mash_network_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Setup MASH Network", None, -1))
         self.PP_toggle_interactive_playback_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Interactive Playback", None, -1))
@@ -314,7 +314,7 @@ class Ui_MainWindow(object):
         self.PP_bake_current_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Bake Current", None, -1))
         self.PP_show_all_baked_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Show All Baked", None, -1))
         self.PP_delete_all_setup_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Delete MASH Setup", None, -1))
-        self.swap_master_main_group_box.setTitle(QtWidgets.QApplication.translate("MainWindow", "SWAP MASTER", None, -1))
+        self.swap_master_main_group_box.setTitle(QtWidgets.QApplication.translate("MainWindow", "--  SWAP MASTER  --", None, -1))
         self.groupBox_3.setTitle(QtWidgets.QApplication.translate("MainWindow", "Prep", None, -1))
         self.pushButton_3.setText(QtWidgets.QApplication.translate("MainWindow", "Explode and Group by Num of Vertices", None, -1))
         self.groupBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "Proxy Template Input", None, -1))
