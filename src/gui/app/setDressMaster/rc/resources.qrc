@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>baseline_broken_image_white_48dp.png</file>
     <file>baseline_fast_forward_white_48dp.png</file>
     <file>baseline_engineering_white_48dp.png</file>
     <file>baseline_scatter_plot_white_48dp.png</file>

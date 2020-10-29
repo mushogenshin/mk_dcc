@@ -135,3 +135,11 @@ def parent_to_world(node, former_parent_to_delete=None):
         pmc.parent(node, world=True)
         if former_parent_to_delete is not None:
             pmc.delete(former_parent_to_delete)
+
+
+def set_visibility(nodes, on=True, is_mesh=False):
+    for node in nodes:
+        if is_mesh and hasattr(node, "getParent"):
+            node = node.getParent()
+        if hasattr(node, "visibility"):
+            node.visibility.set(True if on else False)

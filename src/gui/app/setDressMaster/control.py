@@ -244,6 +244,12 @@ class Control(object):
         scene_utils.delete("{}_Distribute".format(MASH_NETWORK_NAME))
         scene_utils.delete("{}_ID".format(MASH_NETWORK_NAME))
 
+        # Turn on visibility, which was turned off automatically by MASH, for scatter_meshes
+        node_utils.set_visibility(
+            self.get_PP_init_data("scatter_meshes"),
+            is_mesh=True
+        )
+
         self.print_model_data()
 
     def PP_bake_current(self):
@@ -289,6 +295,11 @@ class Control(object):
 
 
     ############################# SWAP MASTER #############################
+
+    def explode_and_group_by_poly_count():
+        mesh_utils.explode_and_group_by_poly_count(
+            selection_utils.filter_meshes_in_selection()
+        )
 
     def get_SM_candidate_component_data(self, app_model_data_key):
         return self._model._data["SM_candidate_component"][app_model_data_key]

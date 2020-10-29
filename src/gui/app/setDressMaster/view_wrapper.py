@@ -126,7 +126,7 @@ def add_widgets(ui):
 
     ui.SM_main_group_box = pattern_utils.CollapsibleGroupBox(
         ui.swap_master_main_group_box,
-        expanded_height=450
+        expanded_height=520
     )
     
 
@@ -197,6 +197,10 @@ def create_connections(app):
     ui.PP_delete_all_setup_btn.clicked.connect(delete_PP_setup)
 
     ############################# SWAP MASTER #############################
+
+    # Prep
+
+    ui.SM_explode_and_group_btn.clicked.connect(app._control.explode_and_group_by_poly_count)
 
     # Status Quo's Traces
     

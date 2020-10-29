@@ -114,3 +114,40 @@ def get_bounding_box_dimensions(mesh):
         return bbox.width(), bbox.height(), bbox.depth()
     else:
         return 1, 1, 1
+
+
+def explode_and_group_by_poly_count(meshes, make_groups=True, grp_prefix="grouped_by_polyCount"):
+    num_grouped = {}
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        return num_grouped
+    else:
+        all_exploded = []
+        for mesh in meshes:
+            try:
+                exploded = pmc.polySeparate(mesh, constructionHistory=False)
+            except:
+                all_exploded.append(exploded)
+            else:
+                all_exploded.extend(exploded)
+                
+        for mesh in all_exploded:
+            polycount = mesh.numFaces()
+            if polycount not in num_grouped:
+                num_grouped[polycount] = [mesh]
+            else:
+                num_grouped[polycount].append(mesh)
+                
+        pmc.select(cl=True)
+        
+        if not make_groups:
+            return num_grouped
+        else:
+            null_grouped = {}
+            for k, v in num_grouped.items():
+                empty_grp = pmc.group(em=True, n="_".join([grp_prefix, str(k)]))
+                pmc.parent(v, empty_grp)
+                null_grouped[empty_grp] = v
+            pmc.select(cl=True)
+            return null_grouped
