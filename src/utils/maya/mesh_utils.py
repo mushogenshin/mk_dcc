@@ -106,3 +106,11 @@ def expand_mesh_with_component_IDs(mesh, component_IDs, component_enum=1):
 def get_bounding_box_center(mesh):
     if hasattr(mesh, "boundingBox"):
         return mesh.boundingBox().center()  # returned in object-space
+
+
+def get_bounding_box_dimensions(mesh):
+    if hasattr(mesh, "boundingBox"):
+        bbox = mesh.boundingBox()
+        return bbox.width(), bbox.height(), bbox.depth()
+    else:
+        return 1, 1, 1

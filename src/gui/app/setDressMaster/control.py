@@ -307,6 +307,7 @@ class Control(object):
         SwapMasterJob.South_component_IDs = self.get_SM_candidate_component_data("south")
         SwapMasterJob._Yaw_component_IDs = self.get_SM_candidate_component_data("yaw")
         
+        SwapMasterJob.get_statusquo_repr_bbox_dimensions()
         SwapMasterJob.get_statusquo_repr_hub_jnt_start_to_rotate_pivot_vec()
         SwapMasterJob.get_hub_joint_axis_cfg()
         
@@ -360,6 +361,7 @@ class SwapMasterJob(object):
     Yaw_component_IDs = {"component_enum": 0, "children": [], "mesh": None}
     
     axis_cfg = None
+    statusquo_repr_bbox_dimensions = (1, 1, 1)
     statusquo_repr_hub_jnt_start_to_rotate_pivot_vec = None
     substitute_template_root = None
 
@@ -413,10 +415,16 @@ class SwapMasterJob(object):
 
     @classmethod
     def get_statusquo_repr_hub_jnt_start_to_rotate_pivot_vec(cls):
-        cls.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec = transform_utils.get_translation_between_two_points(
-            cls.get_statusquo_repr_hub_jnt_start_point(),
-            cls.get_statusquo_repr_rotate_pivot_point()
-        )
+        # zero out any rotation on statusquo_repr mesh first
+        with transform_utils.zero_but_restore_transforms_afterwards(
+            cls.South_component_IDs["mesh"],
+            is_mesh=True
+        ):
+            cls.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec = transform_utils.get_translation_between_two_points(
+                cls.get_statusquo_repr_hub_jnt_start_point(),
+                cls.get_statusquo_repr_rotate_pivot_point()
+            )
+
         logger.info("Translation from start of Hub Joint to RotatePivot: {}".format(
             cls.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec
         ))
@@ -450,6 +458,12 @@ class SwapMasterJob(object):
         logger.info('Using Aim vector {}; Up vector {}'.format(aim_vec, up_vec))
 
         cls.axis_cfg = AxisCfg(JO_aim_axis, JO_up_axis, aim_vec, up_vec)
+
+    @classmethod
+    def get_statusquo_repr_bbox_dimensions(cls):
+        cls.statusquo_repr_bbox_dimensions = mesh_utils.get_bounding_box_dimensions(
+            cls.South_component_IDs["mesh"]
+        )
 
     def prepare_hub_joint_elements(self):
         if self.South_components:
@@ -533,8 +547,11 @@ class SwapMasterJob(object):
             former_parent_to_delete=dummy_locator_parent
         )
         
-        # TODO: set display Local Scale of locator relative 
-        # to the mesh's bounding box
+        # set display Local Scale of locator relative to the mesh's bounding box
+        transform_utils.set_locator_local_scale(
+            self.nucleus_locator,
+            SwapMasterJob.statusquo_repr_bbox_dimensions
+        )
 
     def xform_reconstruction(self):
         """

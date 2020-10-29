@@ -146,6 +146,9 @@ def match_transforms(obj, target, translation=True, rotation=True):
 
 
 def get_rotate_pivot(node, is_mesh=False):
+    """
+    :rtype pmc.dt.Point:
+    """
     try:
         import pymel.core as pmc
     except ImportError:
@@ -183,6 +186,85 @@ def make_space_locator(name=""):
             return pmc.spaceLocator(n=name)
 
 
+def set_locator_local_scale(loc, dimensions):
+    """
+    :param pmc.nt.Locator loc:
+    :param tuple dimensions: width, height, depth
+    """
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        if hasattr(loc, "getShape"):
+            loc = loc.getShape()
+        if hasattr(loc, "lsx"):
+            loc.lsx.set(dimensions[0])
+        if hasattr(loc, "lsy"):
+            loc.lsy.set(dimensions[1])
+        if hasattr(loc, "lsz"):
+            loc.lsz.set(dimensions[2])
+
+
 def set_translation(node, vector):
     if hasattr(node, "setTranslation"):
         node.setTranslation(vector)
+
+
+class zero_but_restore_transforms_afterwards(object):
+
+    def __init__(self, node, is_mesh=False):
+        super(zero_but_restore_transforms_afterwards, self).__init__()
+        self.node = node
+        self.xform_node = None
+        self.parent = None
+        self.rotation = None
+
+        try:
+            import pymel.core as pmc
+        except ImportError:
+            pass
+        else:
+            if not is_mesh:
+                self.xform_node = self.node
+            elif hasattr(node, "getParent"):
+                self.xform_node = node.getParent()
+
+            if hasattr(self.xform_node, "getParent"):
+                self.parent = self.xform_node.getParent()
+
+            logger.info("Storing transforms for {}".format(self.xform_node))
+    
+    def __enter__(self):
+        self.is_rotation_zero = True
+        try:
+            import pymel.core as pmc
+        except ImportError:
+            pass
+        else:
+            if self.parent is not None:  # parent to world first
+                pmc.parent(self.xform_node, world=True)
+
+            if hasattr(self.xform_node, "getRotation"):
+                self.rotation = self.xform_node.getRotation()
+            
+            if hasattr(self.rotation, "isZero"):
+                self.is_rotation_zero = self.rotation.isZero()
+                
+            if not self.is_rotation_zero and hasattr(self.xform_node, "setRotation"):
+                logger.info("Resetting transforms from rotation {}".format(self.rotation))
+                self.xform_node.setRotation((0, 0, 0))
+            
+    def __exit__(self, *exec_info):
+        try:
+            import pymel.core as pmc
+        except ImportError:
+            pass
+        else:
+            if hasattr(self.xform_node, "getRotation"):
+                logger.info("Transforms before exiting: rotation {}".format(self.xform_node.getRotation()))
+            if not self.is_rotation_zero and hasattr(self.xform_node, "setRotation"):
+                logger.info("Restoring transforms for {}".format(self.xform_node))
+                self.xform_node.setRotation(self.rotation)
+            if self.parent is not None:
+                pmc.parent(self.xform_node, self.parent)
