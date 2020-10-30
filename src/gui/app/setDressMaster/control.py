@@ -247,10 +247,7 @@ class Control(object):
         scene_utils.delete("{}_ID".format(MASH_NETWORK_NAME))
 
         # Turn on visibility, which was turned off automatically by MASH, for scatter_meshes
-        node_utils.set_visibility(
-            self.get_PP_init_data("scatter_meshes"),
-            is_mesh=True
-        )
+        node_utils.set_visibility(self.get_PP_init_data("scatter_meshes"))
 
         self.print_model_data()
 
@@ -298,10 +295,13 @@ class Control(object):
 
     ############################# SWAP MASTER #############################
 
-    def explode_and_group_by_poly_count(self):
+    def explode_mash_mesh_and_group_by_poly_count(self):
         mesh_utils.explode_and_group_by_poly_count(
             selection_utils.filter_meshes_in_selection()
         )
+
+    def run_thru_scene_and_group_by_poly_count(self):
+        mesh_utils.explode_and_group_by_poly_count()
 
     def get_SM_candidate_component_data(self, app_model_data_key):
         return self._model._data["SM_candidate_component"][app_model_data_key]
@@ -602,16 +602,16 @@ class SwapMasterJob(object):
         dummy_locator_parent = node_utils.duplicate(self.nucleus_locator)
         if dummy_locator_parent:
             dummy_locator_parent = dummy_locator_parent[0]
-        node_utils.parent_A_to_B(self.nucleus_locator, dummy_locator_parent, zero_child_transforms=True)
+            node_utils.parent_A_to_B(self.nucleus_locator, dummy_locator_parent, zero_child_transforms=True)
         
-        transform_utils.set_translation(
-            self.nucleus_locator, 
-            SwapMasterJob.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec
-        )
-        node_utils.parent_to_world(
-            self.nucleus_locator,
-            former_parent_to_delete=dummy_locator_parent
-        )
+            transform_utils.set_translation(
+                self.nucleus_locator, 
+                SwapMasterJob.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec
+            )
+            node_utils.parent_to_world(
+                self.nucleus_locator,
+                former_parent_to_delete=dummy_locator_parent
+            )
         
         # set display Local Scale of locator relative to the mesh's bounding box
         transform_utils.set_locator_local_scale(

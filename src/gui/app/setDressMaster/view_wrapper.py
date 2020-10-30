@@ -106,7 +106,7 @@ def add_widgets(ui):
         )
 
     ui.SM_load_substitute_ui_grp = pattern_utils.LoadAndDisplayToLineEdit(
-        "Mesh | Root Node", load_btn_label, clear_btn_label
+        "Mesh | Root Node  ", load_btn_label, clear_btn_label
     )
 
     for i, input_grp in enumerate(
@@ -126,7 +126,7 @@ def add_widgets(ui):
 
     ui.SM_main_group_box = pattern_utils.CollapsibleGroupBox(
         ui.swap_master_main_group_box,
-        expanded_height=520
+        expanded_height=600
     )
     
 
@@ -190,17 +190,22 @@ def create_connections(app):
 
     # Destruct Setup
     def delete_PP_setup():
+        app._control.delete_PP_setup()
         for input_grp in (ui.PP_load_cloud_ui_grp, ui.PP_load_scatter_ui_grp, ui.PP_load_ground_ui_grp):
             input_grp.cleared()
-        app._control.delete_PP_setup()
 
     ui.PP_delete_all_setup_btn.clicked.connect(delete_PP_setup)
 
     ############################# SWAP MASTER #############################
 
     # Prep
+    def scene_prep_strategy(checked):
+        ui.SM_explode_and_group_btn.setDisabled(not checked)
+        ui.SM_run_thru_scene_and_group_btn.setDisabled(checked)
 
-    ui.SM_explode_and_group_btn.clicked.connect(app._control.explode_and_group_by_poly_count)
+    ui.SM_prep_mash_scene_radio_btn.toggled.connect(scene_prep_strategy)
+    ui.SM_explode_and_group_btn.clicked.connect(app._control.explode_mash_mesh_and_group_by_poly_count)
+    ui.SM_run_thru_scene_and_group_btn.clicked.connect(app._control.run_thru_scene_and_group_by_poly_count)
 
     # Status Quo's Traces
     
@@ -270,6 +275,8 @@ def create_connections(app):
     # Show Results
     ui.SM_show_swapped_btn.clicked.connect(app._control.show_swapped)
 
+    scene_prep_strategy(ui.SM_prep_mash_scene_radio_btn.isChecked())
+
 
 def init_gui(app):
     ui = app._view.ui
@@ -277,5 +284,5 @@ def init_gui(app):
 
     # ui.PP_main_group_box.toggled()
     ui.PP_dyn_parms_group_box.toggled()
-    ui.SM_main_group_box.toggled()
+    # ui.SM_main_group_box.toggled()
     ui.SM_orient_reconstruct_group_box.toggled()

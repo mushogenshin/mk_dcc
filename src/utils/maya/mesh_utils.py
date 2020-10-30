@@ -116,28 +116,37 @@ def get_bounding_box_dimensions(mesh):
         return 1, 1, 1
 
 
-def explode_and_group_by_poly_count(meshes, make_groups=True, grp_prefix="grouped_by_polyCount"):
+def explode_and_group_by_poly_count(meshes=None, make_groups=True, grp_prefix="grouped_by_polyCount"):
+    """
+    Do explode (polySeparate) only if meshes is given, otherwise running through the whole scene as-is
+    """
     num_grouped = {}
     try:
         import pymel.core as pmc
     except ImportError:
         return num_grouped
     else:
-        all_exploded = []
-        for mesh in meshes:
-            try:
-                exploded = pmc.polySeparate(mesh, constructionHistory=False)
-            except:
-                all_exploded.append(exploded)
-            else:
-                all_exploded.extend(exploded)
-                
-        for mesh in all_exploded:
-            polycount = mesh.numFaces()
+        if meshes is not None:
+            # Run on polySeparated meshes
+            all_separated = []
+            for mesh in meshes:
+                try:
+                    exploded = pmc.polySeparate(mesh, constructionHistory=False)
+                    # return list of pmc.nt.Transform
+                except:
+                    all_separated.append(exploded)
+                else:
+                    all_separated.extend(exploded)
+        else:
+            # Run through scene as-is
+            all_separated = [mesh.getParent() for mesh in pmc.ls(type="mesh")]
+                    
+        for xform in all_separated:
+            polycount = xform.numFaces()
             if polycount not in num_grouped:
-                num_grouped[polycount] = [mesh]
+                num_grouped[polycount] = [xform]
             else:
-                num_grouped[polycount].append(mesh)
+                num_grouped[polycount].append(xform)
                 
         pmc.select(cl=True)
         
