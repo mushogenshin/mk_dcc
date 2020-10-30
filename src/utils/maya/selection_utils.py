@@ -17,6 +17,16 @@ def get_mesh_xforms_in_selection():
     return [node.getParent() for node in filter_meshes_in_selection() if hasattr(node, "getParent")]
 
 
+def get_first_xform_in_selection():
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        return None
+    else:
+        xforms = pmc.ls(sl=True, type="transform")
+        return xforms[0] if xforms else None
+
+
 def replace_selection(nodes):
     logger.info("Replacing selection with specified nodes")
     try:

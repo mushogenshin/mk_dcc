@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>373</width>
-    <height>581</height>
+    <height>732</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
        <string notr="true"/>
       </property>
       <property name="title">
-       <string>PHYSX PAINTER</string>
+       <string>--  PHYSX PAINTER  --</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -60,6 +60,13 @@
           <bool>true</bool>
          </property>
          <layout class="QGridLayout" name="PP_dynamic_parameters_grid_layout"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
         </widget>
        </item>
        <item>
@@ -105,7 +112,7 @@
          <item row="0" column="2">
           <widget class="QToolButton" name="PP_toggle_interactive_playback_btn">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -131,7 +138,7 @@
          <item row="0" column="1">
           <widget class="QToolButton" name="PP_show_paint_node_btn">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -157,7 +164,7 @@
          <item row="0" column="0">
           <widget class="QToolButton" name="PP_reset_playback_btn">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -183,7 +190,7 @@
          <item row="1" column="0">
           <widget class="QToolButton" name="PP_show_instancer_node_btn">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -209,7 +216,7 @@
          <item row="1" column="1">
           <widget class="QToolButton" name="PP_bake_current_btn">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -219,7 +226,7 @@
            </property>
            <property name="icon">
             <iconset resource="rc/resources.qrc">
-             <normaloff>:/icons/baseline_save_alt_white_48dp.png</normaloff>:/icons/baseline_save_alt_white_48dp.png</iconset>
+             <normaloff>:/icons/icon_bake_current.png</normaloff>:/icons/icon_bake_current.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -235,7 +242,7 @@
          <item row="1" column="2">
           <widget class="QToolButton" name="PP_show_all_baked_btn">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -245,7 +252,7 @@
            </property>
            <property name="icon">
             <iconset resource="rc/resources.qrc">
-             <normaloff>:/icons/baseline_waves_white_48dp.png</normaloff>:/icons/baseline_waves_white_48dp.png</iconset>
+             <normaloff>:/icons/icon_show_all_baked.png</normaloff>:/icons/icon_show_all_baked.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -266,7 +273,7 @@
           <bool>true</bool>
          </property>
          <property name="text">
-          <string>Delete All Setup</string>
+          <string>Delete MASH Setup</string>
          </property>
          <property name="icon">
           <iconset resource="rc/resources.qrc">
@@ -298,7 +305,7 @@
        <string notr="true"/>
       </property>
       <property name="title">
-       <string>SWAP MASTER</string>
+       <string>--  SWAP MASTER  --</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -309,6 +316,12 @@
       <layout class="QVBoxLayout" name="swap_master_group_box_layout">
        <item>
         <widget class="QGroupBox" name="groupBox_3">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Prep</string>
          </property>
@@ -316,9 +329,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
-             <widget class="QPushButton" name="pushButton_3">
+             <widget class="QPushButton" name="SM_explode_and_group_btn">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="text">
-               <string>Explode and Group by Num of Vertices</string>
+               <string>Explode Mesh and Group by PolyCount</string>
+              </property>
+              <property name="icon">
+               <iconset resource="rc/resources.qrc">
+                <normaloff>:/icons/baseline_broken_image_white_48dp.png</normaloff>:/icons/baseline_broken_image_white_48dp.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -328,15 +354,22 @@
         </widget>
        </item>
        <item>
+        <widget class="Line" name="line_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Status Quo's Representative</string>
+          <string>Proxy Template Input</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
@@ -363,6 +396,9 @@
             </item>
             <item>
              <widget class="QRadioButton" name="SM_trace_edge_radio_btn">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Edge</string>
               </property>
@@ -370,6 +406,9 @@
             </item>
             <item>
              <widget class="QRadioButton" name="SM_trace_face_radio_btn">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Face</string>
               </property>
@@ -384,9 +423,16 @@
         </widget>
        </item>
        <item>
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBox_2">
          <property name="title">
-          <string>Substitute Input</string>
+          <string>Hi-Res Template Input</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
@@ -396,45 +442,249 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="SM_swap_selected_btn">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">font-size: 12px;</string>
-         </property>
-         <property name="text">
-          <string>Swap Selected</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>32</width>
-           <height>32</height>
-          </size>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QGroupBox" name="SM_orient_reconstruct_child_group_box">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>2-step Swap</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QToolButton" name="SM_preview_nuclei_btn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 10px;</string>
+            </property>
+            <property name="text">
+             <string>Preview Reconstruction</string>
+            </property>
+            <property name="icon">
+             <iconset resource="rc/resources.qrc">
+              <normaloff>:/icons/baseline_engineering_white_48dp.png</normaloff>:/icons/baseline_engineering_white_48dp.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="SM_abort_nuclei_btn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 10px;</string>
+            </property>
+            <property name="text">
+             <string>Abort</string>
+            </property>
+            <property name="icon">
+             <iconset resource="rc/resources.qrc">
+              <normaloff>:/icons/baseline_clear_white_48dp.png</normaloff>:/icons/baseline_clear_white_48dp.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="SM_proceed_swapping_btn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 10px;</string>
+            </property>
+            <property name="text">
+             <string>Proceed w/ Swapping</string>
+            </property>
+            <property name="icon">
+             <iconset resource="rc/resources.qrc">
+              <normaloff>:/icons/baseline_scatter_plot_white_48dp.png</normaloff>:/icons/baseline_scatter_plot_white_48dp.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="leftMargin">
+            <number>11</number>
+           </property>
+           <property name="topMargin">
+            <number>11</number>
+           </property>
+           <property name="rightMargin">
+            <number>11</number>
+           </property>
+           <property name="bottomMargin">
+            <number>11</number>
+           </property>
+           <item>
+            <widget class="QCheckBox" name="SM_swap_use_instancing_check_box">
+             <property name="styleSheet">
+              <string notr="true">font-size: 10px;</string>
+             </property>
+             <property name="text">
+              <string>Instancing</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="SM_remove_proxies_check_box">
+             <property name="styleSheet">
+              <string notr="true">font-size: 10px;</string>
+             </property>
+             <property name="text">
+              <string>Remove Proxies</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QPushButton" name="SM_fast_forward_swap_btn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font-size: 13px;</string>
+           </property>
+           <property name="text">
+            <string>Fast-Forward Swap</string>
+           </property>
+           <property name="icon">
+            <iconset resource="rc/resources.qrc">
+             <normaloff>:/icons/baseline_fast_forward_white_48dp.png</normaloff>:/icons/baseline_fast_forward_white_48dp.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>36</width>
+             <height>36</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QToolButton" name="SM_show_swapped_btn">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font-size: 10px;</string>
+           </property>
+           <property name="text">
+            <string>Show Last Swapped</string>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
       </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QGroupBox" name="restore_instancing_group_box">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="title">
-       <string>RESTORE INSTANCING</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <layout class="QVBoxLayout" name="restore_instancing_group_box_layout"/>
      </widget>
     </item>
    </layout>

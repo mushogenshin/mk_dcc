@@ -11,6 +11,19 @@ def get_scene_env():
         return pmc.language.Env()
 
 
+def get_option_var_dict():
+    try:
+        from pymel.core.language import OptionVarDict
+    except ImportError:
+        return {}
+    else:
+        return OptionVarDict()
+
+
+def get_scene_up_axis():
+    return get_option_var_dict().get("upAxisDirection", "")
+
+
 def get_current_frame(SCENE_ENV=None):
     SCENE_ENV = get_scene_env() if not SCENE_ENV else SCENE_ENV
     if hasattr(SCENE_ENV, "time"):
@@ -51,11 +64,21 @@ def toggle_interactive_playback(force_play=False, force_pause=False):
     except ImportError:
         pass
     else:
-        if not pmc.play(q=True, state=True) or force_play:  # not playing
+        was_playing = pmc.play(q=True, state=True)
+        
+        # Start forcing
+        if force_play:
             pmc.mel.InteractivePlayback()  # activate interactive playback
             return
-        if pmc.play(q=True, state=True) or force_pause:
+        if force_pause:
+            pmc.play(state=0)
+            return
+        # End forcing
+
+        if was_playing:
             pmc.play(state=0)  # pause the playback
+        else:
+            pmc.mel.InteractivePlayback()  # activate interactive playback
 
 
 def is_playback_running():

@@ -18,15 +18,25 @@ def filter_mesh_components_of_type_in_selection(**kwargs):
     component_enum: 1 for vertices, 2 for edges, 3 for faces
     :param callable get_component_enum_method:
     :rtype dict:
-    :return: {"component_enum": 0, "children": []}
+    :return: {"component_enum": 0, "children": [], "mesh": None}
     """
+    component_enum_dict = {1: "Vertex", 2: "Edge", 3: "Face"}
+
     get_component_enum_method = kwargs.get("get_component_enum_method")
-    ret = {"component_enum": 0, "children": []}
+    ret = {"component_enum": 0, "children": [], "mesh": None}
     
     if callable(get_component_enum_method):
         ret["component_enum"] = get_component_enum_method()
 
-    logger.debug("Using component enum: {}".format(ret["component_enum"]))
+    logger.debug("Using component enum: {} ({})".format(
+        ret["component_enum"],
+        component_enum_dict.get(ret["component_enum"], "")
+    ))
+
+    def get_mesh_node_from_first_component(components):
+        component = components[0] if components else None
+        if component and hasattr(component, "node"):
+            return component.node()
 
     try:
         import pymel.core as pmc
@@ -34,19 +44,23 @@ def filter_mesh_components_of_type_in_selection(**kwargs):
         return ret
     else:
         if ret["component_enum"] == 1:  # vertices
-            logger.info("Filtering components of polygonal mesh vertex type")
             ret["children"] = [node for node in pmc.selected() \
                 if isinstance(node, pmc.MeshVertex)]
         elif ret["component_enum"] == 2:  # edges
-            logger.info("Filtering components of polygonal mesh edge type")
             ret["children"] = [node for node in pmc.selected() \
                 if isinstance(node, pmc.MeshEdge)]
         elif ret["component_enum"] == 3:  # faces
-            logger.info("Filtering components of polygonal mesh face type")
             ret["children"] = [node for node in pmc.selected() \
                 if isinstance(node, pmc.MeshFace)]
         
+        ret["mesh"] = get_mesh_node_from_first_component(ret["children"])
         return ret
+
+
+def filter_mesh_components_of_type_in_selection_as_IDs(**kwargs):
+    ret = filter_mesh_components_of_type_in_selection(**kwargs)
+    ret["children"] = ls_ID_from_components(ret["children"])
+    return ret
 
 
 def ls_ID_from_components(nodes):
@@ -87,3 +101,53 @@ def expand_mesh_with_component_IDs(mesh, component_IDs, component_enum=1):
                 logger.exception(e)
             
     return ret
+
+
+def get_bounding_box_center(mesh):
+    if hasattr(mesh, "boundingBox"):
+        return mesh.boundingBox().center()  # returned in object-space
+
+
+def get_bounding_box_dimensions(mesh):
+    if hasattr(mesh, "boundingBox"):
+        bbox = mesh.boundingBox()
+        return bbox.width(), bbox.height(), bbox.depth()
+    else:
+        return 1, 1, 1
+
+
+def explode_and_group_by_poly_count(meshes, make_groups=True, grp_prefix="grouped_by_polyCount"):
+    num_grouped = {}
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        return num_grouped
+    else:
+        all_exploded = []
+        for mesh in meshes:
+            try:
+                exploded = pmc.polySeparate(mesh, constructionHistory=False)
+            except:
+                all_exploded.append(exploded)
+            else:
+                all_exploded.extend(exploded)
+                
+        for mesh in all_exploded:
+            polycount = mesh.numFaces()
+            if polycount not in num_grouped:
+                num_grouped[polycount] = [mesh]
+            else:
+                num_grouped[polycount].append(mesh)
+                
+        pmc.select(cl=True)
+        
+        if not make_groups:
+            return num_grouped
+        else:
+            null_grouped = {}
+            for k, v in num_grouped.items():
+                empty_grp = pmc.group(em=True, n="_".join([grp_prefix, str(k)]))
+                pmc.parent(v, empty_grp)
+                null_grouped[empty_grp] = v
+            pmc.select(cl=True)
+            return null_grouped

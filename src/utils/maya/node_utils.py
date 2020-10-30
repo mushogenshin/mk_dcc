@@ -13,7 +13,10 @@ def get_node_name(node):
     """
     :rtype str:
     """
-    return node.nodeName() if hasattr(node, "nodeName") else str(node)
+    if node is not None:
+        return node.nodeName() if hasattr(node, "nodeName") else str(node)
+    else:
+        return ""
 
 
 def ls_component_IDs(nodes):
@@ -61,44 +64,68 @@ def get_PyNode(a_str):
             return a_str
 
 
-def node_exists(a_str):
+def node_exists(node, as_string=False):
     try:
         import maya.cmds as cmds
     except ImportError:
         return False
     else:
-        return cmds.objExists(a_str)
+        if not node:
+            return False
+        if as_string:
+            return cmds.objExists(node)
+        else:
+            import pymel.core as pmc
+            return pmc.objExists(node)
 
 
-def delete(node):
+def delete_one(node, is_mesh=False):
     logger.info('Deleting "{}"'.format(node))
     try:
         import pymel.core as pmc
     except ImportError:
         pass
     else:
-        try:
-            pmc.delete(node)
-        except Exception as e:
-            logger.exception("Unable to delete node {} due to {}".format(node, e))
+        if is_mesh and hasattr(node, "getParent"):
+            node = node.getParent()
+        if node_exists(node):
+            node_name = get_node_name(node)
+            try:
+                pmc.delete(node)
+            except Exception as e:
+                logger.exception("Unable to delete node {} due to {}".format(node, e))
+            else:
+                logger.info("Successfully deleted node {}".format(node_name))
         else:
-            logger.info("Successfully deleted node {}".format(node))
+            logger.warning("{} doesn't exist in scene. Skipped deleting.".format(node))
 
 
-def duplicate(node, name=""):
+def delete_many(nodes):
+    for node in nodes:
+        delete_one(node)
+
+
+def duplicate(node, as_instance=False, name=""):
+    """
+    :rtype list:
+    :return: list of pmc.nt.Transform even if node is of pmc.nt.Mesh type
+    """
     logger.info('Duplicating "{}"'.format(node))
     try:
         import pymel.core as pmc
     except ImportError:
-        return
+        return []
     else:
+        if not node:
+            return []
+        cmd = getattr(pmc, "duplicate") if not as_instance else getattr(pmc, "instance")
         if name:
-            return pmc.duplicate(node, n=name)
+            return cmd(node, n=name)
         else:
-            return pmc.duplicate(node)  # auto naming
+            return cmd(node)  # auto naming
 
 
-def parent_A_to_B(node_A, node_B):
+def parent_A_to_B(node_A, node_B, zero_child_transforms=False):
     logger.info("Parenting {} to {}".format(node_A, node_B))
     try:
         import pymel.core as pmc
@@ -106,3 +133,24 @@ def parent_A_to_B(node_A, node_B):
         pass
     else:
         pmc.parent(node_A, node_B)
+        if zero_child_transforms:
+            node_A.setTranslation((0, 0, 0))
+
+
+def parent_to_world(node, former_parent_to_delete=None):
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        pmc.parent(node, world=True)
+        if former_parent_to_delete is not None:
+            pmc.delete(former_parent_to_delete)
+
+
+def set_visibility(nodes, on=True, is_mesh=False):
+    for node in nodes:
+        if is_mesh and hasattr(node, "getParent"):
+            node = node.getParent()
+        if hasattr(node, "visibility"):
+            node.visibility.set(True if on else False)

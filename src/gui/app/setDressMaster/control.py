@@ -1,6 +1,6 @@
 import sys
-from copy import deepcopy
 import logging
+from collections import namedtuple
 
 from src.utils.maya import (
     plugin_utils, 
@@ -33,18 +33,23 @@ def load_mash_api():
         return MASH.api
 
 
+AxisCfg = namedtuple("AxisCfg", ["JO_aim_axis", "JO_up_axis", "aim_vec", "up_vec"])
+
+
 class Control(object):
     def __init__(self):
         super(Control, self).__init__()
         self.SCENE_ENV = scene_utils.get_scene_env()
 
+    def print_model_data(self):
+        from pprint import pprint
+        print("\n***UPDATED APP MODEL DATA:")
+        pprint(self._model._data)
+
     ############################# PHYSX PAINTER #############################
 
     def get_PP_init_data(self, app_model_data_key):
         return self._model._data["PP_init"][app_model_data_key]
-
-    # def set_init_data(self, app_model_data_key, value):
-    #     self._model._data["PP_init"][app_model_data_key] = value
 
     def get_PP_mash_data(self, app_model_data_key):
         return self._model._data["PP_mash"][app_model_data_key]
@@ -55,11 +60,14 @@ class Control(object):
     def get_PP_baked_data(self):
         return self._model._data["PP_baked"]
 
-    def set_PP_baked_data(self, frame, mesh):
+    def set_PP_baked_data(self, frame, meshes):
+        """
+        :param list meshes:
+        """
         if frame in self._model._data["PP_baked"]:
-            self._model._data["PP_baked"][frame].append(mesh)
+            self._model._data["PP_baked"][frame].extend(meshes)
         else:
-            self._model._data["PP_baked"][frame] = [mesh]
+            self._model._data["PP_baked"][frame] = meshes
 
 
     def create_mash_network(self, mapi):
@@ -79,7 +87,7 @@ class Control(object):
             self.set_PP_mash_data("mash_network", network)  # MASH.api.Network instance, not PyNode
 
             if hasattr(network, "createNetwork") and \
-                not node_utils.node_exists(MASH_NETWORK_NAME):  # force Singleton
+                not node_utils.node_exists(MASH_NETWORK_NAME, as_string=True):  # force Singleton
                 network.createNetwork(name=MASH_NETWORK_NAME)
 
         if hasattr(network, "__dict__"):
@@ -186,9 +194,6 @@ class Control(object):
         # TODO: show below message as UI prompt
         logger.info('Start "Interactive Playback" then click "Add" to start painting.')
 
-    def print_model_data(self):
-        logger.info("Updated Model Data: {}".format(self._model._data))
-
     def setup_physx_painter(self, dynamics_parameters={}):
         logger.info("Setting up PhysX Painter")
         mash_plugin_loaded = plugin_utils.safe_load_plugin(MASH_PLUGIN_NAME)
@@ -229,7 +234,7 @@ class Control(object):
         logger.info("Deleting all setup related to {}".format(MASH_NETWORK_NAME))
         for data_key, node in self._model._data["PP_mash"].items():
             if data_key != "mash_network":
-                node_utils.delete(node)
+                node_utils.delete_one(node)
             else:
                 scene_utils.delete(MASH_NETWORK_NAME)
                 scene_utils.delete(MASH_NETWORK_NAME)  # delete twice due to Maya|MASH bug
@@ -241,10 +246,18 @@ class Control(object):
         scene_utils.delete("{}_Distribute".format(MASH_NETWORK_NAME))
         scene_utils.delete("{}_ID".format(MASH_NETWORK_NAME))
 
+        # Turn on visibility, which was turned off automatically by MASH, for scatter_meshes
+        node_utils.set_visibility(
+            self.get_PP_init_data("scatter_meshes"),
+            is_mesh=True
+        )
+
         self.print_model_data()
 
     def PP_bake_current(self):
         was_playback_running = scene_utils.is_playback_running()
+        logger.info("Playback was running: {}".format(was_playback_running))
+
         scene_utils.toggle_interactive_playback(force_pause=True)  # pause the playback
         
         current_frame = scene_utils.get_current_frame(self.SCENE_ENV)
@@ -285,112 +298,381 @@ class Control(object):
 
     ############################# SWAP MASTER #############################
 
-    def get_SM_component_data(self, app_model_data_key):
-        return self._model._data["SM_component"][app_model_data_key]
+    def explode_and_group_by_poly_count(self):
+        mesh_utils.explode_and_group_by_poly_count(
+            selection_utils.filter_meshes_in_selection()
+        )
 
-    def get_swap_job_ID_data(self, app_model_data_key):
-        # retain the "component_enum" value
-        component_data = deepcopy(self.get_SM_component_data(app_model_data_key))
-        # convert "children" from components to IDs
-        component_data["children"] = mesh_utils.ls_ID_from_components(component_data["children"])
-        return component_data
+    def get_SM_candidate_component_data(self, app_model_data_key):
+        return self._model._data["SM_candidate_component"][app_model_data_key]
     
-    def batch_process_swap_jobs(self, meshes):
+    def get_SM_substitute_root_data(self):
+        SM_substitute_root = self._model._data["SM_substitute_root"]
+        if SM_substitute_root is not None and node_utils.node_exists(SM_substitute_root):
+            return SM_substitute_root
+        else:
+            return None
+
+    def clear_SM_jobs_data(self):
+        self._model._data["SM_jobs"] = []
+
+    def register_swap_job(self, swap_job):
+        self._model._data["SM_jobs"].append(swap_job)
+
+    def clear_SM_last_swapped_data(self):
+        self._model._data["SM_last_swapped"] = []
+
+    def register_last_swapped(self, swapped):
+        if swapped is not None:
+            self._model._data["SM_last_swapped"].append(swapped)
+    
+    def init_swap_jobs(self, meshes):
         """
         """
         # Modify class variable of SwapMasterJob first
-        SwapMasterJob._North_component_IDs = self.get_swap_job_ID_data("north")
-        SwapMasterJob._South_component_IDs = self.get_swap_job_ID_data("south")
-        SwapMasterJob._Yaw_component_IDs = self.get_swap_job_ID_data("yaw")
+        SwapMasterJob.North_component_IDs = self.get_SM_candidate_component_data("north")
+        SwapMasterJob.South_component_IDs = self.get_SM_candidate_component_data("south")
+        SwapMasterJob._Yaw_component_IDs = self.get_SM_candidate_component_data("yaw")
         
+        SwapMasterJob.get_statusquo_repr_bbox_dimensions()
+        SwapMasterJob.get_statusquo_repr_hub_jnt_start_to_rotate_pivot_vec()
+        SwapMasterJob.get_hub_joint_axis_cfg()
+        
+        self.clear_SM_jobs_data()
+
         for mesh in meshes:
             swap_job = SwapMasterJob(mesh)
-            swap_job.prepare_hub_joint_elements()
-            swap_job.make_hub_joint()
-            swap_job.make_nucleus_locator_from_hub_joint()
+            swap_job.xform_reconstruction()
+            self.register_swap_job(swap_job)
 
-    def run_swap_master(self):
-        self.batch_process_swap_jobs(selection_utils.filter_meshes_in_selection())
-   
+    def preview_SM_nuclei(self):
+        self.init_swap_jobs(selection_utils.filter_meshes_in_selection())
+        self.print_model_data()
+
+    def abort_SM_nuclei(self, verbose=True):
+        logger.info("Removing Nucleus Locator and Hub Joint for all SwapJobs")
+        for swap_job in  self._model._data["SM_jobs"]:
+            swap_job.delete_hub_joint()
+            swap_job.delete_nucleus_locator()
+        self.clear_SM_jobs_data()
+        if verbose:
+            self.print_model_data()
+
+    def group_last_swapped(self):
+        if self._model._data["SM_last_swapped"]:
+            transform_utils.make_null(
+                name="SM_last_swapped", 
+                children=self._model._data["SM_last_swapped"])
+
+    def do_swap(self, get_use_instancing_mode_method, get_remove_proxies_mode_method, post_cleanup=False):
+        """
+        :param callable get_use_instancing_mode_method:
+        """
+        self.clear_SM_last_swapped_data()
+
+        if callable(get_use_instancing_mode_method):
+            use_instancing = get_use_instancing_mode_method()
+        else:
+            use_instancing = True
+        if callable(get_remove_proxies_mode_method):
+            remove_proxies = get_remove_proxies_mode_method()
+        else:
+            remove_proxies = True
+        logger.info("Use Instancing Mode: {}; Remove Proxies Mode: {}".format(use_instancing, remove_proxies))
+
+        statusquo_repr_mesh = SwapMasterJob.get_statusquo_repr_mesh()
+        substitute_template_root = self.get_SM_substitute_root_data()
+        for swap_job in  self._model._data["SM_jobs"]:
+            swapped = swap_job.swap(
+                statusquo_repr_mesh, 
+                substitute_template_root, 
+                use_instancing, 
+                remove_proxies
+            )
+            self.register_last_swapped(swapped)
+
+        # Group all swapped
+        self.group_last_swapped()
+
+        if post_cleanup:
+            self.abort_SM_nuclei(verbose=False)
+
+        self.print_model_data()
+
+    def fast_forward_swap(self, get_use_instancing_mode_method, get_remove_proxies_mode_method):
+        self.preview_SM_nuclei()
+        self.do_swap(get_use_instancing_mode_method, get_remove_proxies_mode_method, post_cleanup=True)
+
+    def show_swapped(self):
+        selection_utils.replace_selection(self._model._data["SM_last_swapped"])
+
 
 class SwapMasterJob(object):
 
-    _North_component_IDs = {"component_enum": 0, "children": []}
-    _South_component_IDs = {"component_enum": 0, "children": []}
-    _Yaw_component_IDs = {"component_enum": 0, "children": []}
+    North_component_IDs = {"component_enum": 0, "children": [], "mesh": None}
+    South_component_IDs = {"component_enum": 0, "children": [], "mesh": None}
+    Yaw_component_IDs = {"component_enum": 0, "children": [], "mesh": None}
+    
+    axis_cfg = None
+    statusquo_repr_bbox_dimensions = (1, 1, 1)
+    statusquo_repr_hub_jnt_start_to_rotate_pivot_vec = None
 
-    def __init__(self, mesh):
+    def __init__(self, status_quo_mesh, app_model_data=None):
         """
         Operate on a given mesh
         """
-        self.mesh = mesh
-        logger.info('Initializing new SwapMasterJob for mesh {}'.format(node_utils.get_node_name(self.mesh)))
+        self.status_quo_mesh = status_quo_mesh
+        self.status_quo_mesh_name = self.get_status_quo_mesh_name()
+        logger.info('Initializing new SwapMasterJob for mesh {}'.format(self.status_quo_mesh_name))
         
         self.North_components = mesh_utils.expand_mesh_with_component_IDs(
-            self.mesh,
-            SwapMasterJob._North_component_IDs["children"],
-            SwapMasterJob._North_component_IDs["component_enum"],
+            self.status_quo_mesh,
+            SwapMasterJob.North_component_IDs["children"],
+            SwapMasterJob.North_component_IDs["component_enum"],
         )
         self.South_components = mesh_utils.expand_mesh_with_component_IDs(
-            self.mesh,
-            SwapMasterJob._South_component_IDs["children"],
-            SwapMasterJob._South_component_IDs["component_enum"],
+            self.status_quo_mesh,
+            SwapMasterJob.South_component_IDs["children"],
+            SwapMasterJob.South_component_IDs["component_enum"],
         )
         self.Yaw_components = mesh_utils.expand_mesh_with_component_IDs(
-            self.mesh,
+            self.status_quo_mesh,
             SwapMasterJob._Yaw_component_IDs["children"],
             SwapMasterJob._Yaw_component_IDs["component_enum"],
         )
         
         self.hub_joint_start = None
         self.hub_joint_end = None
-        self.hub_joint_aim = None
+        self.hub_joint_yaw = None
         
         self.nucleus_locator = None
+        self.swapped = None
+
+    def get_status_quo_mesh_name(self):
+        return node_utils.get_node_name(self.status_quo_mesh)
+
+    @classmethod
+    def get_statusquo_repr_mesh(cls):
+        return cls.South_component_IDs["mesh"]
+
+    @staticmethod
+    def get_statusquo_repr_hub_jnt_start_point():
+        return transform_utils.get_center_position(
+            mesh_utils.expand_mesh_with_component_IDs(
+                SwapMasterJob.South_component_IDs["mesh"],
+                SwapMasterJob.South_component_IDs["children"],
+                SwapMasterJob.South_component_IDs["component_enum"]
+            ),
+            as_point=True
+        )
+
+    @staticmethod
+    def get_statusquo_repr_rotate_pivot_point():
+        return transform_utils.get_rotate_pivot(
+            SwapMasterJob.get_statusquo_repr_mesh(),
+            is_mesh=True
+        )
+
+    @classmethod
+    def get_statusquo_repr_hub_jnt_start_to_rotate_pivot_vec(cls):
+        # zero out any rotation on statusquo_repr mesh first
+        with transform_utils.zero_but_restore_transforms_afterwards(
+            cls.get_statusquo_repr_mesh(),
+            is_mesh=True
+        ):
+            cls.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec = transform_utils.get_translation_between_two_points(
+                cls.get_statusquo_repr_hub_jnt_start_point(),
+                cls.get_statusquo_repr_rotate_pivot_point()
+            )
+
+        logger.info("Translation from start of Hub Joint to RotatePivot: {}".format(
+            cls.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec
+        ))
+
+    @classmethod
+    def get_hub_joint_axis_cfg(cls):
+        """
+        :rtype AxisCfg:
+        """
+        scene_up_axis = scene_utils.get_scene_up_axis()
+        if scene_up_axis:
+            logger.info("Current Maya scene up axis: {}".format(scene_up_axis))
+        
+        if scene_up_axis == "y":
+            JO_aim_axis = "yzx"  # Y-axis pointing down the bone
+            JO_up_axis = "zup"
+            aim_vec = (0, 1, 0)
+            up_vec = (0, 0, 1)
+        elif scene_up_axis == "z":
+            JO_aim_axis = "zxy"  # Z-axis pointing down the bone
+            JO_up_axis = "xup"
+            aim_vec = (0, 0, 1)
+            up_vec = (1, 0, 0)
+        else:
+            JO_aim_axis = "xyz"  # X-axis pointing down the bone
+            JO_up_axis = "yup"
+            aim_vec = (1, 0, 0)
+            up_vec = (0, 1, 0)
+        
+        logger.info('Using Joint Orient aim axis "{}"; Joint Orient up axis "{}"'.format(JO_aim_axis, JO_up_axis))
+        logger.info('Using Aim vector {}; Up vector {}'.format(aim_vec, up_vec))
+
+        cls.axis_cfg = AxisCfg(JO_aim_axis, JO_up_axis, aim_vec, up_vec)
+
+    @classmethod
+    def get_statusquo_repr_bbox_dimensions(cls):
+        cls.statusquo_repr_bbox_dimensions = mesh_utils.get_bounding_box_dimensions(
+            cls.get_statusquo_repr_mesh()
+        )
 
     def prepare_hub_joint_elements(self):
+
         if self.South_components:
             self.hub_joint_start = transform_utils.create_center_thingy_from(
                 self.South_components,
-                thingy="joint"
+                thingy="joint",
+                name="_".join(["SM_hubjoint_start", self.status_quo_mesh_name])
             )
         if self.North_components:
             self.hub_joint_end = transform_utils.create_center_thingy_from(
                 self.North_components,
-                thingy="joint"
+                thingy="joint",
+                name="_".join(["SM_hubjoint_end", self.status_quo_mesh_name])
             )
-            
-        # TODO: create self.hub_joint_aim from self.Yaw_components as well
-        selection_utils.clear_selection()
+        
+        if self.Yaw_components:
+            self.hub_joint_yaw = transform_utils.create_center_thingy_from(
+                self.Yaw_components,
+                thingy="joint",
+                name="_".join(["SM_hubjoint_yaw", self.status_quo_mesh_name])
+            )
+
 
     def has_hub_joint_elements(self):
         return self.hub_joint_start and self.hub_joint_end
 
-    def make_hub_joint(self):
+    def orient_hub_joint(self):
+        """
+        Connect hub joints and orient it
+        """
         if self.has_hub_joint_elements():
-            # parent joint
-            node_utils.parent_A_to_B(self.hub_joint_end, self.hub_joint_start)
-            # orient joint start to joint end
-            transform_utils.orient_joint(self.hub_joint_start, "xyz", "yup")
-            # TODO: aimConstraint HubJoint to self.hub_joint_aim
-            logger.info("Parented and oriented HubJoint for SwapMasterJob")
+            if not self.hub_joint_yaw:
+                # Use parent and joint orient
+                node_utils.parent_A_to_B(self.hub_joint_end, self.hub_joint_start)
+                transform_utils.orient_joint(
+                    self.hub_joint_start, 
+                    SwapMasterJob.axis_cfg.JO_aim_axis, 
+                    SwapMasterJob.axis_cfg.JO_up_axis, 
+                )
+                logger.info("Parented and oriented HubJoint for SwapMasterJob")
+            else:
+                # Use aimConstraint
+                transform_utils.aim_constrain_with_world_up_object(
+                    self.hub_joint_end,
+                    self.hub_joint_start,
+                    SwapMasterJob.axis_cfg.aim_vec,
+                    SwapMasterJob.axis_cfg.up_vec,
+                    self.hub_joint_yaw,  # world up object
+                )
+                logger.info("Aim constrained HubJoint for SwapMasterJob")
+            # Hide the hub joints
+            for jnt in (self.hub_joint_start, self.hub_joint_end, self.hub_joint_yaw):
+                if hasattr(jnt, "visibility"):
+                    jnt.visibility.set(False)
         else:
             logger.warning("Either HubJoint start or HubJoint end is missing")
 
-    def make_nucleus_locator_from_hub_joint(self):
-        bounding_objs = deepcopy(self.North_components)
-        bounding_objs.extend(self.South_components)
-        
-        # Create new locator virtually at the center of the HubJoint
-        self.nucleus_locator = transform_utils.create_center_thingy_from(
-            bounding_objs,
-            thingy="locator"
+    def make_nucleus_locator_from_hub_joint(self):       
+        # Create new locator at HubJoint start
+        self.nucleus_locator = transform_utils.make_space_locator(
+            name="_".join(["SM_nucleus_locator", self.status_quo_mesh_name])
         )
+        transform_utils.match_transforms(self.nucleus_locator, self.hub_joint_start, rotation=False)
+
+        if self.hub_joint_yaw:
+            transform_utils.bake_aim_constraint_to_joint_orient(self.hub_joint_start)
+
         # Copy orient from HubJoint
         transform_utils.set_rotation_from_joint_orient(
             self.nucleus_locator,
             self.hub_joint_start
         )
+
+        # Move nucleus locator to supposed rotatePivot of object
+        dummy_locator_parent = node_utils.duplicate(self.nucleus_locator)
+        if dummy_locator_parent:
+            dummy_locator_parent = dummy_locator_parent[0]
+        node_utils.parent_A_to_B(self.nucleus_locator, dummy_locator_parent, zero_child_transforms=True)
         
-        # TODO: set display Local Scale of locator relative 
-        # to the mesh's bounding box
+        transform_utils.set_translation(
+            self.nucleus_locator, 
+            SwapMasterJob.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec
+        )
+        node_utils.parent_to_world(
+            self.nucleus_locator,
+            former_parent_to_delete=dummy_locator_parent
+        )
+        
+        # set display Local Scale of locator relative to the mesh's bounding box
+        transform_utils.set_locator_local_scale(
+            self.nucleus_locator,
+            SwapMasterJob.statusquo_repr_bbox_dimensions
+        )
+
+    def xform_reconstruction(self):
+        """
+        Make Nucleus Locator from Hub Joint
+        """
+        self.prepare_hub_joint_elements()
+        self.orient_hub_joint()
+        self.make_nucleus_locator_from_hub_joint()
+
+    def delete_hub_joint(self):
+        joints = [jnt for jnt in (self.hub_joint_yaw, self.hub_joint_end, self.hub_joint_start) \
+            if jnt is not None]
+        node_utils.delete_many(joints)
+        for jnt in joints:
+            jnt = None
+    
+    def delete_nucleus_locator(self):
+        if self.nucleus_locator is not None:
+            node_utils.delete_one(self.nucleus_locator)
+            self.nucleus_locator = None
+
+    def remove_proxy(self):
+        node_utils.delete_one(self.status_quo_mesh)
+
+    def swap(self, statusquo_repr_mesh, substitute_template_root, use_instancing, remove_proxy):
+        """
+        :param pmc.nt.Mesh|None statusquo_repr_mesh:
+        :param pmc.nt.Mesh|None substitute_template_root:
+        :param bool use_instancing, remove_proxy:
+        """
+        # Duplicate|Instance
+        if substitute_template_root:
+            logger.info("Running SwapJob with given substitute template root: {}".format(substitute_template_root))
+            self.swapped = node_utils.duplicate(
+                substitute_template_root, 
+                as_instance=use_instancing
+            )  
+        else:
+            logger.info("Running SwapJob with given representative of status quo: {}".format(statusquo_repr_mesh))
+            self.swapped = node_utils.duplicate(
+                statusquo_repr_mesh,
+                as_instance=use_instancing
+            )
+            
+        self.swapped = self.swapped[0] if self.swapped else None
+
+        # Match transforms with Nucleus Locator
+        if self.swapped is None:
+            return
+        else:
+            transform_utils.match_transforms(self.swapped, self.nucleus_locator)
+
+        if remove_proxy:
+            logger.info("Removing original pre-swapped mesh")
+            node_utils.delete_one(self.status_quo_mesh, is_mesh=True)
+            self.status_quo_mesh = None
+
+        return self.swapped
