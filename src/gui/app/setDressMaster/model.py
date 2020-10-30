@@ -37,6 +37,7 @@ class Model(object):
                 "south": {"component_enum": 0, "children": [], "mesh": None},
                 "yaw": {"component_enum": 0, "children": [], "mesh": None},
             },
-            "SM_substitute_root": None
+            "SM_substitute_root": None,
+            "SM_last_swapped": [],
         }
         self._data.update(SM_data)

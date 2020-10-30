@@ -245,11 +245,7 @@ def create_connections(app):
 
     # Orientation Reconstruction
 
-    def preview_SM_nuclei():
-        app._control.preview_SM_nuclei()
-        print_model_data()
-
-    ui.SM_preview_nuclei_btn.clicked.connect(preview_SM_nuclei)
+    ui.SM_preview_nuclei_btn.clicked.connect(app._control.preview_SM_nuclei)
     ui.SM_abort_nuclei_btn.clicked.connect(app._control.abort_SM_nuclei)
 
     # Do Swap

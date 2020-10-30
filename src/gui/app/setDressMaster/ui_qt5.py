@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui',
 # licensing of 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui' applies.
 #
-# Created: Fri Oct 30 11:00:48 2020
+# Created: Fri Oct 30 13:35:19 2020
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -298,10 +298,12 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.setContentsMargins(11, 11, 11, 11)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.SM_swap_use_instancing_check_box = QtWidgets.QCheckBox(self.swap_master_main_group_box)
+        self.SM_swap_use_instancing_check_box.setStyleSheet("font-size: 10px;")
         self.SM_swap_use_instancing_check_box.setChecked(True)
         self.SM_swap_use_instancing_check_box.setObjectName("SM_swap_use_instancing_check_box")
         self.verticalLayout_4.addWidget(self.SM_swap_use_instancing_check_box)
         self.SM_remove_proxies_check_box = QtWidgets.QCheckBox(self.swap_master_main_group_box)
+        self.SM_remove_proxies_check_box.setStyleSheet("font-size: 10px;")
         self.SM_remove_proxies_check_box.setChecked(True)
         self.SM_remove_proxies_check_box.setObjectName("SM_remove_proxies_check_box")
         self.verticalLayout_4.addWidget(self.SM_remove_proxies_check_box)
@@ -366,10 +368,10 @@ class Ui_MainWindow(object):
         self.SM_orient_reconstruct_child_group_box.setTitle(QtWidgets.QApplication.translate("MainWindow", "2-step Swap", None, -1))
         self.SM_preview_nuclei_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Preview Reconstruction", None, -1))
         self.SM_abort_nuclei_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Abort", None, -1))
-        self.SM_proceed_swapping_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Proceed Swapping", None, -1))
+        self.SM_proceed_swapping_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Proceed w/ Swapping", None, -1))
         self.SM_swap_use_instancing_check_box.setText(QtWidgets.QApplication.translate("MainWindow", "Instancing", None, -1))
         self.SM_remove_proxies_check_box.setText(QtWidgets.QApplication.translate("MainWindow", "Remove Proxies", None, -1))
         self.SM_fast_forward_swap_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Fast-Forward Swap", None, -1))
-        self.SM_show_swapped_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Show Swapped", None, -1))
+        self.SM_show_swapped_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Show Last Swapped", None, -1))
 
 from src.gui.app.setDressMaster import resources_rc_qt5

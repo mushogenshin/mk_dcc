@@ -80,22 +80,24 @@ def node_exists(node, as_string=False):
 
 
 def delete_one(node, is_mesh=False):
-    logger.debug('Deleting "{}"'.format(node))
+    logger.info('Deleting "{}"'.format(node))
     try:
         import pymel.core as pmc
     except ImportError:
         pass
     else:
-        
         if is_mesh and hasattr(node, "getParent"):
             node = node.getParent()
-
-        try:
-            pmc.delete(node)
-        except Exception as e:
-            logger.exception("Unable to delete node {} due to {}".format(node, e))
+        if node_exists(node):
+            node_name = get_node_name(node)
+            try:
+                pmc.delete(node)
+            except Exception as e:
+                logger.exception("Unable to delete node {} due to {}".format(node, e))
+            else:
+                logger.info("Successfully deleted node {}".format(node_name))
         else:
-            logger.debug("Successfully deleted node {}".format(node))
+            logger.warning("{} doesn't exist in scene. Skipped deleting.".format(node))
 
 
 def delete_many(nodes):

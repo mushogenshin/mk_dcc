@@ -41,6 +41,11 @@ class Control(object):
         super(Control, self).__init__()
         self.SCENE_ENV = scene_utils.get_scene_env()
 
+    def print_model_data(self):
+        from pprint import pprint
+        print("\n***UPDATED APP MODEL DATA:")
+        pprint(self._model._data)
+
     ############################# PHYSX PAINTER #############################
 
     def get_PP_init_data(self, app_model_data_key):
@@ -189,9 +194,6 @@ class Control(object):
         # TODO: show below message as UI prompt
         logger.info('Start "Interactive Playback" then click "Add" to start painting.')
 
-    def print_model_data(self):
-        logger.info("Updated Model Data: {}".format(self._model._data))
-
     def setup_physx_painter(self, dynamics_parameters={}):
         logger.info("Setting up PhysX Painter")
         mash_plugin_loaded = plugin_utils.safe_load_plugin(MASH_PLUGIN_NAME)
@@ -313,6 +315,16 @@ class Control(object):
 
     def clear_SM_jobs_data(self):
         self._model._data["SM_jobs"] = []
+
+    def register_swap_job(self, swap_job):
+        self._model._data["SM_jobs"].append(swap_job)
+
+    def clear_SM_last_swapped_data(self):
+        self._model._data["SM_last_swapped"] = []
+
+    def register_last_swapped(self, swapped):
+        if swapped is not None:
+            self._model._data["SM_last_swapped"].append(swapped)
     
     def init_swap_jobs(self, meshes):
         """
@@ -321,7 +333,6 @@ class Control(object):
         SwapMasterJob.North_component_IDs = self.get_SM_candidate_component_data("north")
         SwapMasterJob.South_component_IDs = self.get_SM_candidate_component_data("south")
         SwapMasterJob._Yaw_component_IDs = self.get_SM_candidate_component_data("yaw")
-        # SwapMasterJob.substitute_template_root = self.get_SM_substitute_root_data()
         
         SwapMasterJob.get_statusquo_repr_bbox_dimensions()
         SwapMasterJob.get_statusquo_repr_hub_jnt_start_to_rotate_pivot_vec()
@@ -332,21 +343,33 @@ class Control(object):
         for mesh in meshes:
             swap_job = SwapMasterJob(mesh)
             swap_job.xform_reconstruction()
-            self._model._data["SM_jobs"].append(swap_job)
+            self.register_swap_job(swap_job)
 
     def preview_SM_nuclei(self):
         self.init_swap_jobs(selection_utils.filter_meshes_in_selection())
+        self.print_model_data()
 
-    def abort_SM_nuclei(self):
+    def abort_SM_nuclei(self, verbose=True):
+        logger.info("Removing Nucleus Locator and Hub Joint for all SwapJobs")
         for swap_job in  self._model._data["SM_jobs"]:
             swap_job.delete_hub_joint()
             swap_job.delete_nucleus_locator()
         self.clear_SM_jobs_data()
+        if verbose:
+            self.print_model_data()
+
+    def group_last_swapped(self):
+        if self._model._data["SM_last_swapped"]:
+            transform_utils.make_null(
+                name="SM_last_swapped", 
+                children=self._model._data["SM_last_swapped"])
 
     def do_swap(self, get_use_instancing_mode_method, get_remove_proxies_mode_method, post_cleanup=False):
         """
         :param callable get_use_instancing_mode_method:
         """
+        self.clear_SM_last_swapped_data()
+
         if callable(get_use_instancing_mode_method):
             use_instancing = get_use_instancing_mode_method()
         else:
@@ -360,24 +383,28 @@ class Control(object):
         statusquo_repr_mesh = SwapMasterJob.get_statusquo_repr_mesh()
         substitute_template_root = self.get_SM_substitute_root_data()
         for swap_job in  self._model._data["SM_jobs"]:
-            swap_job.swap(
+            swapped = swap_job.swap(
                 statusquo_repr_mesh, 
                 substitute_template_root, 
                 use_instancing, 
                 remove_proxies
             )
+            self.register_last_swapped(swapped)
+
+        # Group all swapped
+        self.group_last_swapped()
 
         if post_cleanup:
-            self.abort_SM_nuclei()
+            self.abort_SM_nuclei(verbose=False)
+
+        self.print_model_data()
 
     def fast_forward_swap(self, get_use_instancing_mode_method, get_remove_proxies_mode_method):
         self.preview_SM_nuclei()
         self.do_swap(get_use_instancing_mode_method, get_remove_proxies_mode_method, post_cleanup=True)
 
     def show_swapped(self):
-        swapped = [swap_job.swapped for swap_job in self._model._data["SM_jobs"] \
-            if swap_job.swapped is not None]
-        selection_utils.replace_selection(swapped)
+        selection_utils.replace_selection(self._model._data["SM_last_swapped"])
 
 
 class SwapMasterJob(object):
@@ -389,14 +416,14 @@ class SwapMasterJob(object):
     axis_cfg = None
     statusquo_repr_bbox_dimensions = (1, 1, 1)
     statusquo_repr_hub_jnt_start_to_rotate_pivot_vec = None
-    # substitute_template_root = None
 
     def __init__(self, status_quo_mesh, app_model_data=None):
         """
         Operate on a given mesh
         """
         self.status_quo_mesh = status_quo_mesh
-        logger.info('Initializing new SwapMasterJob for mesh {}'.format(node_utils.get_node_name(self.status_quo_mesh)))
+        self.status_quo_mesh_name = self.get_status_quo_mesh_name()
+        logger.info('Initializing new SwapMasterJob for mesh {}'.format(self.status_quo_mesh_name))
         
         self.North_components = mesh_utils.expand_mesh_with_component_IDs(
             self.status_quo_mesh,
@@ -421,6 +448,8 @@ class SwapMasterJob(object):
         self.nucleus_locator = None
         self.swapped = None
 
+    def get_status_quo_mesh_name(self):
+        return node_utils.get_node_name(self.status_quo_mesh)
 
     @classmethod
     def get_statusquo_repr_mesh(cls):
@@ -497,28 +526,32 @@ class SwapMasterJob(object):
         )
 
     def prepare_hub_joint_elements(self):
+
         if self.South_components:
             self.hub_joint_start = transform_utils.create_center_thingy_from(
                 self.South_components,
-                thingy="joint"
+                thingy="joint",
+                name="_".join(["SM_hubjoint_start", self.status_quo_mesh_name])
             )
         if self.North_components:
             self.hub_joint_end = transform_utils.create_center_thingy_from(
                 self.North_components,
-                thingy="joint"
+                thingy="joint",
+                name="_".join(["SM_hubjoint_end", self.status_quo_mesh_name])
             )
         
         if self.Yaw_components:
             self.hub_joint_yaw = transform_utils.create_center_thingy_from(
                 self.Yaw_components,
-                thingy="joint"
+                thingy="joint",
+                name="_".join(["SM_hubjoint_yaw", self.status_quo_mesh_name])
             )
 
 
     def has_hub_joint_elements(self):
         return self.hub_joint_start and self.hub_joint_end
 
-    def make_hub_joint(self):
+    def orient_hub_joint(self):
         """
         Connect hub joints and orient it
         """
@@ -551,7 +584,9 @@ class SwapMasterJob(object):
 
     def make_nucleus_locator_from_hub_joint(self):       
         # Create new locator at HubJoint start
-        self.nucleus_locator = transform_utils.make_space_locator()
+        self.nucleus_locator = transform_utils.make_space_locator(
+            name="_".join(["SM_nucleus_locator", self.status_quo_mesh_name])
+        )
         transform_utils.match_transforms(self.nucleus_locator, self.hub_joint_start, rotation=False)
 
         if self.hub_joint_yaw:
@@ -589,17 +624,20 @@ class SwapMasterJob(object):
         Make Nucleus Locator from Hub Joint
         """
         self.prepare_hub_joint_elements()
-        self.make_hub_joint()
+        self.orient_hub_joint()
         self.make_nucleus_locator_from_hub_joint()
 
     def delete_hub_joint(self):
         joints = [jnt for jnt in (self.hub_joint_yaw, self.hub_joint_end, self.hub_joint_start) \
             if jnt is not None]
         node_utils.delete_many(joints)
+        for jnt in joints:
+            jnt = None
     
     def delete_nucleus_locator(self):
         if self.nucleus_locator is not None:
             node_utils.delete_one(self.nucleus_locator)
+            self.nucleus_locator = None
 
     def remove_proxy(self):
         node_utils.delete_one(self.status_quo_mesh)
@@ -611,13 +649,14 @@ class SwapMasterJob(object):
         :param bool use_instancing, remove_proxy:
         """
         # Duplicate|Instance
-        logger.info()
         if substitute_template_root:
+            logger.info("Running SwapJob with given substitute template root: {}".format(substitute_template_root))
             self.swapped = node_utils.duplicate(
                 substitute_template_root, 
                 as_instance=use_instancing
             )  
         else:
+            logger.info("Running SwapJob with given representative of status quo: {}".format(statusquo_repr_mesh))
             self.swapped = node_utils.duplicate(
                 statusquo_repr_mesh,
                 as_instance=use_instancing
@@ -632,4 +671,8 @@ class SwapMasterJob(object):
             transform_utils.match_transforms(self.swapped, self.nucleus_locator)
 
         if remove_proxy:
+            logger.info("Removing original pre-swapped mesh")
             node_utils.delete_one(self.status_quo_mesh, is_mesh=True)
+            self.status_quo_mesh = None
+
+        return self.swapped

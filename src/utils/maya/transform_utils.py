@@ -29,7 +29,7 @@ def get_center_position(objects, as_point=False):
             return pmc.dt.Point(posX, posY, posZ)
 
 
-def create_center_thingy_from(objects=(), thingy="locator"):
+def create_center_thingy_from(objects=(), thingy="locator", name=""):
     """
     :rtype PyNode:
     """
@@ -45,15 +45,24 @@ def create_center_thingy_from(objects=(), thingy="locator"):
         pmc.select(cl=True)  # in case thingy is joint
 
         if thingy == "null":
-            centered_thingy = pmc.group(em=True)
+            if not name:
+                centered_thingy = pmc.group(em=True)
+            else:
+                centered_thingy = pmc.group(em=True, n=name)
             centered_thingy.translate.set(posX, posY, posZ)
 
         elif thingy == "locator":
-            centered_thingy = pmc.spaceLocator()
+            if not name:
+                centered_thingy = pmc.spaceLocator()
+            else:
+                centered_thingy = pmc.spaceLocator(n=name)
             centered_thingy.translate.set(posX, posY, posZ)
 
         elif thingy == "joint":
-            centered_thingy = pmc.joint(p=(posX, posY, posZ))
+            if not name:
+                centered_thingy = pmc.joint(p=(posX, posY, posZ))
+            else:
+                centered_thingy = pmc.joint(p=(posX, posY, posZ), n=name)
 
         pmc.select(cl=True)
 
@@ -134,6 +143,7 @@ def match_transforms(obj, target, translation=True, rotation=True):
     """
     :param PyNode obj, target:
     """
+    logger.info("Matching transforms of {} to those of {}".format(obj, target))
     try:
         import pymel.core as pmc
     except ImportError:
@@ -184,6 +194,23 @@ def make_space_locator(name=""):
             return pmc.spaceLocator()
         else:
             return pmc.spaceLocator(n=name)
+
+
+def make_null(name="", children=None):
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        if not name:
+            grp = pmc.group(em=True)
+        else:
+            grp = pmc.group(em=True, n=name)
+
+        if children is not None:
+            pmc.parent(children, grp)
+
+        return grp
 
 
 def set_locator_local_scale(loc, dimensions):
