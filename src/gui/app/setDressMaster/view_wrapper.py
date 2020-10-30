@@ -271,6 +271,9 @@ def create_connections(app):
         get_remove_proxies_mode_method=get_SM_remove_proxies_mode_from_UI
     ))
 
+    # Show Results
+    ui.SM_show_swapped_btn.clicked.connect(app._control.show_swapped)
+
 
 def init_gui(app):
     ui = app._view.ui

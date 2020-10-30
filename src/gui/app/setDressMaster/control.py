@@ -82,7 +82,7 @@ class Control(object):
             self.set_PP_mash_data("mash_network", network)  # MASH.api.Network instance, not PyNode
 
             if hasattr(network, "createNetwork") and \
-                not node_utils.node_exists(MASH_NETWORK_NAME):  # force Singleton
+                not node_utils.node_exists(MASH_NETWORK_NAME, as_string=True):  # force Singleton
                 network.createNetwork(name=MASH_NETWORK_NAME)
 
         if hasattr(network, "__dict__"):
@@ -296,7 +296,7 @@ class Control(object):
 
     ############################# SWAP MASTER #############################
 
-    def explode_and_group_by_poly_count():
+    def explode_and_group_by_poly_count(self):
         mesh_utils.explode_and_group_by_poly_count(
             selection_utils.filter_meshes_in_selection()
         )
@@ -305,7 +305,11 @@ class Control(object):
         return self._model._data["SM_candidate_component"][app_model_data_key]
     
     def get_SM_substitute_root_data(self):
-        return self._model._data["SM_substitute_root"]
+        SM_substitute_root = self._model._data["SM_substitute_root"]
+        if SM_substitute_root is not None and node_utils.node_exists(SM_substitute_root):
+            return SM_substitute_root
+        else:
+            return None
 
     def clear_SM_jobs_data(self):
         self._model._data["SM_jobs"] = []
@@ -317,6 +321,7 @@ class Control(object):
         SwapMasterJob.North_component_IDs = self.get_SM_candidate_component_data("north")
         SwapMasterJob.South_component_IDs = self.get_SM_candidate_component_data("south")
         SwapMasterJob._Yaw_component_IDs = self.get_SM_candidate_component_data("yaw")
+        # SwapMasterJob.substitute_template_root = self.get_SM_substitute_root_data()
         
         SwapMasterJob.get_statusquo_repr_bbox_dimensions()
         SwapMasterJob.get_statusquo_repr_hub_jnt_start_to_rotate_pivot_vec()
@@ -352,10 +357,15 @@ class Control(object):
             remove_proxies = True
         logger.info("Use Instancing Mode: {}; Remove Proxies Mode: {}".format(use_instancing, remove_proxies))
 
-        SwapMasterJob.substitute_template_root = self.get_SM_substitute_root_data()
-        if SwapMasterJob.substitute_template_root:  # TODO: remove this restriction
-            for swap_job in  self._model._data["SM_jobs"]:
-                swap_job.swap(use_instancing, remove_proxies)
+        statusquo_repr_mesh = SwapMasterJob.get_statusquo_repr_mesh()
+        substitute_template_root = self.get_SM_substitute_root_data()
+        for swap_job in  self._model._data["SM_jobs"]:
+            swap_job.swap(
+                statusquo_repr_mesh, 
+                substitute_template_root, 
+                use_instancing, 
+                remove_proxies
+            )
 
         if post_cleanup:
             self.abort_SM_nuclei()
@@ -363,6 +373,11 @@ class Control(object):
     def fast_forward_swap(self, get_use_instancing_mode_method, get_remove_proxies_mode_method):
         self.preview_SM_nuclei()
         self.do_swap(get_use_instancing_mode_method, get_remove_proxies_mode_method, post_cleanup=True)
+
+    def show_swapped(self):
+        swapped = [swap_job.swapped for swap_job in self._model._data["SM_jobs"] \
+            if swap_job.swapped is not None]
+        selection_utils.replace_selection(swapped)
 
 
 class SwapMasterJob(object):
@@ -374,7 +389,7 @@ class SwapMasterJob(object):
     axis_cfg = None
     statusquo_repr_bbox_dimensions = (1, 1, 1)
     statusquo_repr_hub_jnt_start_to_rotate_pivot_vec = None
-    substitute_template_root = None
+    # substitute_template_root = None
 
     def __init__(self, status_quo_mesh, app_model_data=None):
         """
@@ -406,6 +421,11 @@ class SwapMasterJob(object):
         self.nucleus_locator = None
         self.swapped = None
 
+
+    @classmethod
+    def get_statusquo_repr_mesh(cls):
+        return cls.South_component_IDs["mesh"]
+
     @staticmethod
     def get_statusquo_repr_hub_jnt_start_point():
         return transform_utils.get_center_position(
@@ -420,7 +440,7 @@ class SwapMasterJob(object):
     @staticmethod
     def get_statusquo_repr_rotate_pivot_point():
         return transform_utils.get_rotate_pivot(
-            SwapMasterJob.South_component_IDs["mesh"],
+            SwapMasterJob.get_statusquo_repr_mesh(),
             is_mesh=True
         )
 
@@ -428,7 +448,7 @@ class SwapMasterJob(object):
     def get_statusquo_repr_hub_jnt_start_to_rotate_pivot_vec(cls):
         # zero out any rotation on statusquo_repr mesh first
         with transform_utils.zero_but_restore_transforms_afterwards(
-            cls.South_component_IDs["mesh"],
+            cls.get_statusquo_repr_mesh(),
             is_mesh=True
         ):
             cls.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec = transform_utils.get_translation_between_two_points(
@@ -473,7 +493,7 @@ class SwapMasterJob(object):
     @classmethod
     def get_statusquo_repr_bbox_dimensions(cls):
         cls.statusquo_repr_bbox_dimensions = mesh_utils.get_bounding_box_dimensions(
-            cls.South_component_IDs["mesh"]
+            cls.get_statusquo_repr_mesh()
         )
 
     def prepare_hub_joint_elements(self):
@@ -584,22 +604,29 @@ class SwapMasterJob(object):
     def remove_proxy(self):
         node_utils.delete_one(self.status_quo_mesh)
 
-    def swap(self, use_instancing, remove_proxy):
+    def swap(self, statusquo_repr_mesh, substitute_template_root, use_instancing, remove_proxy):
         """
+        :param pmc.nt.Mesh|None statusquo_repr_mesh:
+        :param pmc.nt.Mesh|None substitute_template_root:
         :param bool use_instancing, remove_proxy:
         """
         # Duplicate|Instance
-        self.swapped = node_utils.duplicate(
-            SwapMasterJob.substitute_template_root, 
-            as_instance=use_instancing
-        )  
-        
-        # TODO: support when SwapMasterJob.substitute_template_root is None
-
-        # Match transforms with Nucleus Locator
+        logger.info()
+        if substitute_template_root:
+            self.swapped = node_utils.duplicate(
+                substitute_template_root, 
+                as_instance=use_instancing
+            )  
+        else:
+            self.swapped = node_utils.duplicate(
+                statusquo_repr_mesh,
+                as_instance=use_instancing
+            )
+            
         self.swapped = self.swapped[0] if self.swapped else None
 
-        if not self.swapped:
+        # Match transforms with Nucleus Locator
+        if self.swapped is None:
             return
         else:
             transform_utils.match_transforms(self.swapped, self.nucleus_locator)

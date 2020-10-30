@@ -64,17 +64,23 @@ def get_PyNode(a_str):
             return a_str
 
 
-def node_exists(a_str):
+def node_exists(node, as_string=False):
     try:
         import maya.cmds as cmds
     except ImportError:
         return False
     else:
-        return cmds.objExists(a_str)
+        if not node:
+            return False
+        if as_string:
+            return cmds.objExists(node)
+        else:
+            import pymel.core as pmc
+            return pmc.objExists(node)
 
 
 def delete_one(node, is_mesh=False):
-    logger.info('Deleting "{}"'.format(node))
+    logger.debug('Deleting "{}"'.format(node))
     try:
         import pymel.core as pmc
     except ImportError:
@@ -89,7 +95,7 @@ def delete_one(node, is_mesh=False):
         except Exception as e:
             logger.exception("Unable to delete node {} due to {}".format(node, e))
         else:
-            logger.info("Successfully deleted node {}".format(node))
+            logger.debug("Successfully deleted node {}".format(node))
 
 
 def delete_many(nodes):
@@ -100,6 +106,7 @@ def delete_many(nodes):
 def duplicate(node, as_instance=False, name=""):
     """
     :rtype list:
+    :return: list of pmc.nt.Transform even if node is of pmc.nt.Mesh type
     """
     logger.info('Duplicating "{}"'.format(node))
     try:
@@ -107,6 +114,8 @@ def duplicate(node, as_instance=False, name=""):
     except ImportError:
         return []
     else:
+        if not node:
+            return []
         cmd = getattr(pmc, "duplicate") if not as_instance else getattr(pmc, "instance")
         if name:
             return cmd(node, n=name)

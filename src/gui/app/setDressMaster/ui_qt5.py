@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui',
 # licensing of 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui' applies.
 #
-# Created: Fri Oct 30 06:14:32 2020
+# Created: Fri Oct 30 11:00:48 2020
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(373, 714)
+        MainWindow.resize(373, 732)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
@@ -45,6 +45,11 @@ class Ui_MainWindow(object):
         self.PP_dynamic_parameters_grid_layout = QtWidgets.QGridLayout(self.PP_dyn_parms_child_group_box)
         self.PP_dynamic_parameters_grid_layout.setObjectName("PP_dynamic_parameters_grid_layout")
         self.phys_painter_group_box_layout.addWidget(self.PP_dyn_parms_child_group_box)
+        self.line_4 = QtWidgets.QFrame(self.phys_painter_main_group_box)
+        self.line_4.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_4.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_4.setObjectName("line_4")
+        self.phys_painter_group_box_layout.addWidget(self.line_4)
         self.PP_setup_mash_network_btn = QtWidgets.QPushButton(self.phys_painter_main_group_box)
         self.PP_setup_mash_network_btn.setMinimumSize(QtCore.QSize(0, 40))
         self.PP_setup_mash_network_btn.setStyleSheet("font-size: 12px;")
@@ -179,6 +184,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.SM_explode_and_group_btn)
         self.verticalLayout_3.addLayout(self.horizontalLayout_2)
         self.swap_master_group_box_layout.addWidget(self.groupBox_3)
+        self.line_3 = QtWidgets.QFrame(self.swap_master_main_group_box)
+        self.line_3.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_3.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_3.setObjectName("line_3")
+        self.swap_master_group_box_layout.addWidget(self.line_3)
         self.groupBox = QtWidgets.QGroupBox(self.swap_master_main_group_box)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -314,7 +324,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.SM_show_swapped_btn = QtWidgets.QToolButton(self.swap_master_main_group_box)
-        self.SM_show_swapped_btn.setEnabled(False)
+        self.SM_show_swapped_btn.setEnabled(True)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
