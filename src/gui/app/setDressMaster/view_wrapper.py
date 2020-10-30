@@ -82,7 +82,7 @@ def add_widgets(ui):
 
     ui.PP_main_group_box = pattern_utils.CollapsibleGroupBox(
         ui.phys_painter_main_group_box,
-        expanded_height=460
+        expanded_height=470
     )
 
     ############################# SWAP MASTER #############################
