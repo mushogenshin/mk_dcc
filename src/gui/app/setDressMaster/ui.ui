@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>380</width>
-    <height>788</height>
+    <width>414</width>
+    <height>548</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,973 +37,1010 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QGroupBox" name="groupBox_6">
-      <property name="styleSheet">
-       <string notr="true">background-color: rgb(89, 22, 22);</string>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="widgetResizable">
+       <bool>true</bool>
       </property>
-      <property name="title">
-       <string/>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_6">
-       <property name="bottomMargin">
-        <number>5</number>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>395</width>
+         <height>788</height>
+        </rect>
        </property>
-       <item>
-        <widget class="QGroupBox" name="phys_painter_main_group_box">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="font">
-          <font>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(38, 47, 42);</string>
-         </property>
-         <property name="title">
-          <string>--  PHYSX PAINTER  --</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <layout class="QVBoxLayout" name="phys_painter_group_box_layout">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>20</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <layout class="QGridLayout" name="PP_load_selection_grid_layout">
-            <property name="leftMargin">
-             <number>9</number>
-            </property>
-            <property name="rightMargin">
-             <number>9</number>
-            </property>
-           </layout>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="PP_dyn_parms_child_group_box">
-            <property name="styleSheet">
-             <string notr="true">QLabel {font-size: 10px; color: rgb(146, 146, 146);} QGroupBox {color: rgb(105, 105, 105);}</string>
-            </property>
-            <property name="title">
-             <string> --  Dynamics Parameter Preset  -- </string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <layout class="QGridLayout" name="PP_dynamic_parameters_grid_layout">
-             <property name="leftMargin">
-              <number>18</number>
-             </property>
-             <property name="topMargin">
-              <number>20</number>
-             </property>
-             <property name="rightMargin">
-              <number>18</number>
-             </property>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_5">
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(26, 31, 34)</string>
-            </property>
-            <property name="title">
-             <string/>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_5">
-             <property name="leftMargin">
-              <number>9</number>
-             </property>
-             <property name="topMargin">
-              <number>6</number>
-             </property>
-             <property name="rightMargin">
-              <number>9</number>
-             </property>
-             <property name="bottomMargin">
-              <number>12</number>
-             </property>
-             <item>
-              <widget class="QPushButton" name="PP_setup_mash_network_btn">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>-1</pointsize>
-                 <weight>50</weight>
-                 <bold>false</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">font-size: 12px; background-color: rgb(32, 69, 78);</string>
-               </property>
-               <property name="text">
-                <string>Setup MASH Network</string>
-               </property>
-               <property name="icon">
-                <iconset resource="rc/resources.qrc">
-                 <normaloff>:/icons/baseline_wb_iridescent_white_48dp.png</normaloff>:/icons/baseline_wb_iridescent_white_48dp.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>24</width>
-                 <height>24</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QGridLayout" name="gridLayout">
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item row="0" column="2">
-                <widget class="QToolButton" name="PP_toggle_interactive_playback_btn">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true"/>
-                 </property>
-                 <property name="text">
-                  <string>Interactive Playback</string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="rc/resources.qrc">
-                   <normaloff>:/icons/baseline_play_circle_outline_white_48dp.png</normaloff>:/icons/baseline_play_circle_outline_white_48dp.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>32</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="toolButtonStyle">
-                  <enum>Qt::ToolButtonTextUnderIcon</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QToolButton" name="PP_show_paint_node_btn">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true"/>
-                 </property>
-                 <property name="text">
-                  <string>Show Paint Node</string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="rc/resources.qrc">
-                   <normaloff>:/icons/baseline_brush_white_48dp.png</normaloff>:/icons/baseline_brush_white_48dp.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>32</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="toolButtonStyle">
-                  <enum>Qt::ToolButtonTextUnderIcon</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QToolButton" name="PP_reset_playback_btn">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true"/>
-                 </property>
-                 <property name="text">
-                  <string>Go to Time Zero</string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="rc/resources.qrc">
-                   <normaloff>:/icons/baseline_exposure_zero_white_48dp.png</normaloff>:/icons/baseline_exposure_zero_white_48dp.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>32</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="toolButtonStyle">
-                  <enum>Qt::ToolButtonTextUnderIcon</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QToolButton" name="PP_bake_current_btn">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true"/>
-                 </property>
-                 <property name="text">
-                  <string>Bake Current</string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="rc/resources.qrc">
-                   <normaloff>:/icons/icon_bake_current.png</normaloff>:/icons/icon_bake_current.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>32</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="toolButtonStyle">
-                  <enum>Qt::ToolButtonTextUnderIcon</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="2">
-                <widget class="QToolButton" name="PP_show_all_baked_btn">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true"/>
-                 </property>
-                 <property name="text">
-                  <string>Show All Baked</string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="rc/resources.qrc">
-                   <normaloff>:/icons/icon_show_all_baked.png</normaloff>:/icons/icon_show_all_baked.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>32</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="toolButtonStyle">
-                  <enum>Qt::ToolButtonTextUnderIcon</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QToolButton" name="PP_show_instancer_node_btn">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true"/>
-                 </property>
-                 <property name="text">
-                  <string>Show Instancer Node</string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="rc/resources.qrc">
-                   <normaloff>:/icons/baseline_list_alt_white_48dp.png</normaloff>:/icons/baseline_list_alt_white_48dp.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>32</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="toolButtonStyle">
-                  <enum>Qt::ToolButtonTextUnderIcon</enum>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QPushButton" name="PP_delete_all_setup_btn">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background-color: black; color: rgb(158, 0, 0);</string>
-               </property>
-               <property name="text">
-                <string>Delete MASH Setup</string>
-               </property>
-               <property name="icon">
-                <iconset resource="rc/resources.qrc">
-                 <normaloff>:/icons/baseline_clear_white_48dp.png</normaloff>:/icons/baseline_clear_white_48dp.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>24</width>
-                 <height>24</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QGroupBox" name="groupBox_7">
-      <property name="styleSheet">
-       <string notr="true">background-color: rgb(89, 22, 22);</string>
-      </property>
-      <property name="title">
-       <string/>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_7">
-       <property name="topMargin">
-        <number>5</number>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(89, 22, 22);</string>
        </property>
-       <property name="rightMargin">
-        <number>9</number>
-       </property>
-       <property name="bottomMargin">
-        <number>2</number>
-       </property>
-       <item>
-        <widget class="QGroupBox" name="swap_master_main_group_box">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(37, 35, 41)</string>
-         </property>
-         <property name="title">
-          <string>--  SWAP MASTER  --</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <layout class="QVBoxLayout" name="swap_master_group_box_layout">
-          <property name="leftMargin">
-           <number>0</number>
+       <layout class="QVBoxLayout" name="verticalLayout_11">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="PhysXPainter_outer_container">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(89, 22, 22);</string>
           </property>
-          <property name="topMargin">
-           <number>20</number>
+          <property name="title">
+           <string/>
           </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QGroupBox" name="groupBox_3">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QGroupBox {color: rgb(140, 140, 140);} QRadioButton {color: rgb(140, 140, 140);}</string>
-            </property>
-            <property name="title">
-             <string>Prep</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_3">
-             <property name="spacing">
-              <number>3</number>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
+           <item>
+            <widget class="QGroupBox" name="phys_painter_main_group_box">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="leftMargin">
-              <number>18</number>
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
              </property>
-             <property name="topMargin">
-              <number>20</number>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(38, 47, 42);</string>
              </property>
-             <property name="rightMargin">
-              <number>18</number>
+             <property name="title">
+              <string>--  PHYSX PAINTER  --</string>
              </property>
-             <property name="bottomMargin">
-              <number>6</number>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_6">
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QRadioButton" name="SM_prep_mash_scene_radio_btn">
-                 <property name="styleSheet">
-                  <string notr="true"/>
-                 </property>
-                 <property name="text">
-                  <string>MASH scene</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QRadioButton" name="SM_prep_regular_scene_radio_btn">
-                 <property name="styleSheet">
-                  <string notr="true"/>
-                 </property>
-                 <property name="text">
-                  <string>Regular scene</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QPushButton" name="SM_explode_and_group_btn">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">font-size: 10px; background-color: rgb(36, 34, 39);</string>
-               </property>
-               <property name="text">
-                <string>Explode MASH Mesh and Group by PolyCount</string>
-               </property>
-               <property name="icon">
-                <iconset resource="rc/resources.qrc">
-                 <normaloff>:/icons/baseline_broken_image_white_48dp.png</normaloff>:/icons/baseline_broken_image_white_48dp.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>24</width>
-                 <height>24</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="SM_run_thru_scene_and_group_btn">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>32</height>
-                </size>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">font-size: 10px; background-color: rgb(36, 34, 39);</string>
-               </property>
-               <property name="text">
-                <string>Run Thru Scene and Group All by PolyCount</string>
-               </property>
-               <property name="icon">
-                <iconset resource="rc/resources.qrc">
-                 <normaloff>:/icons/baseline_language_white_48dp.png</normaloff>:/icons/baseline_language_white_48dp.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>20</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="Line" name="line_3">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QGroupBox {color: rgb(140, 140, 140);} QRadioButton {color: rgb(140, 140, 140);} QLabel {color: rgb(140, 140, 140);}</string>
-            </property>
-            <property name="title">
-             <string>Proxy Template Input</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout">
-             <property name="leftMargin">
-              <number>18</number>
+             <property name="checkable">
+              <bool>true</bool>
              </property>
-             <property name="topMargin">
-              <number>15</number>
-             </property>
-             <property name="rightMargin">
-              <number>18</number>
-             </property>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout">
-               <item>
-                <widget class="QLabel" name="label">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string>Trace Type:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QRadioButton" name="SM_trace_vertex_radio_btn">
-                 <property name="text">
-                  <string>Vertex</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QRadioButton" name="SM_trace_edge_radio_btn">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string>Edge</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QRadioButton" name="SM_trace_face_radio_btn">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string>Face</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QGridLayout" name="SM_load_trace_components_grid_layout"/>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_2">
-            <property name="styleSheet">
-             <string notr="true">QGroupBox {color: rgb(140, 140, 140);}</string>
-            </property>
-            <property name="title">
-             <string>Hi-Res Template Input</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_2">
-             <property name="leftMargin">
-              <number>18</number>
-             </property>
-             <property name="topMargin">
-              <number>20</number>
-             </property>
-             <property name="rightMargin">
-              <number>18</number>
-             </property>
-             <item>
-              <layout class="QGridLayout" name="SM_load_substitute_grid_layout"/>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="Line" name="line">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_4">
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(41, 23, 37)</string>
-            </property>
-            <property name="title">
-             <string/>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_4">
-             <property name="leftMargin">
-              <number>9</number>
-             </property>
-             <property name="topMargin">
-              <number>6</number>
-             </property>
-             <property name="rightMargin">
-              <number>9</number>
-             </property>
-             <property name="bottomMargin">
-              <number>9</number>
-             </property>
-             <item>
-              <widget class="QGroupBox" name="SM_orient_reconstruct_child_group_box">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QGroupBox {font-size: 10px; color: rgb(150, 150, 150);}</string>
-               </property>
-               <property name="title">
-                <string> --  2-step Swap  -- </string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="checkable">
-                <bool>true</bool>
-               </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <layout class="QVBoxLayout" name="phys_painter_group_box_layout">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>20</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <layout class="QGridLayout" name="PP_load_selection_grid_layout">
                 <property name="leftMargin">
-                 <number>18</number>
-                </property>
-                <property name="topMargin">
-                 <number>20</number>
+                 <number>9</number>
                 </property>
                 <property name="rightMargin">
-                 <number>18</number>
+                 <number>9</number>
                 </property>
-                <property name="bottomMargin">
-                 <number>3</number>
-                </property>
-                <item>
-                 <widget class="QToolButton" name="SM_preview_nuclei_btn">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true"/>
-                  </property>
-                  <property name="text">
-                   <string>Preview Reconstruction</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="rc/resources.qrc">
-                    <normaloff>:/icons/baseline_engineering_white_48dp.png</normaloff>:/icons/baseline_engineering_white_48dp.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>20</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="toolButtonStyle">
-                   <enum>Qt::ToolButtonTextUnderIcon</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QToolButton" name="SM_abort_nuclei_btn">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color: black; color: rgb(158, 0, 0);</string>
-                  </property>
-                  <property name="text">
-                   <string>Abort</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="rc/resources.qrc">
-                    <normaloff>:/icons/baseline_clear_white_48dp.png</normaloff>:/icons/baseline_clear_white_48dp.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>20</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="toolButtonStyle">
-                   <enum>Qt::ToolButtonTextUnderIcon</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QToolButton" name="SM_proceed_swapping_btn">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true"/>
-                  </property>
-                  <property name="text">
-                   <string>Proceed w/ Swapping</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="rc/resources.qrc">
-                    <normaloff>:/icons/baseline_scatter_plot_white_48dp.png</normaloff>:/icons/baseline_scatter_plot_white_48dp.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>20</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="toolButtonStyle">
-                   <enum>Qt::ToolButtonTextUnderIcon</enum>
-                  </property>
-                 </widget>
-                </item>
                </layout>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_2">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="leftMargin">
-                <number>18</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>18</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_9">
+              </item>
+              <item>
+               <widget class="QGroupBox" name="PP_dyn_parms_child_group_box">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {font-size: 10px; color: rgb(146, 146, 146);} QGroupBox {color: rgb(105, 105, 105);}</string>
+                </property>
+                <property name="title">
+                 <string> --  Dynamics Parameter Preset  -- </string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <layout class="QGridLayout" name="PP_dynamic_parameters_grid_layout">
+                 <property name="leftMargin">
+                  <number>18</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>20</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>18</number>
+                 </property>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox_5">
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(26, 31, 34)</string>
+                </property>
+                <property name="title">
+                 <string/>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_5">
+                 <property name="leftMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>6</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>12</number>
+                 </property>
                  <item>
-                  <widget class="QCheckBox" name="SM_remove_proxies_check_box">
+                  <widget class="QPushButton" name="PP_setup_mash_network_btn">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>-1</pointsize>
+                     <weight>50</weight>
+                     <bold>false</bold>
+                    </font>
+                   </property>
                    <property name="styleSheet">
-                    <string notr="true">font-size: 10px;</string>
+                    <string notr="true">font-size: 12px; background-color: rgb(32, 69, 78);</string>
                    </property>
                    <property name="text">
-                    <string>Remove Proxies</string>
+                    <string>Setup MASH Network</string>
                    </property>
-                   <property name="checked">
-                    <bool>true</bool>
+                   <property name="icon">
+                    <iconset resource="rc/resources.qrc">
+                     <normaloff>:/icons/baseline_wb_iridescent_white_48dp.png</normaloff>:/icons/baseline_wb_iridescent_white_48dp.png</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>24</width>
+                     <height>24</height>
+                    </size>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="SM_swap_use_instancing_check_box">
+                  <layout class="QGridLayout" name="gridLayout">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item row="0" column="2">
+                    <widget class="QToolButton" name="PP_toggle_interactive_playback_btn">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="text">
+                      <string>Interactive Playback</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rc/resources.qrc">
+                       <normaloff>:/icons/baseline_play_circle_outline_white_48dp.png</normaloff>:/icons/baseline_play_circle_outline_white_48dp.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>32</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QToolButton" name="PP_show_paint_node_btn">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="text">
+                      <string>Show Paint Node</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rc/resources.qrc">
+                       <normaloff>:/icons/baseline_brush_white_48dp.png</normaloff>:/icons/baseline_brush_white_48dp.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>32</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QToolButton" name="PP_reset_playback_btn">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="text">
+                      <string>Go to Time Zero</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rc/resources.qrc">
+                       <normaloff>:/icons/baseline_exposure_zero_white_48dp.png</normaloff>:/icons/baseline_exposure_zero_white_48dp.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>32</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QToolButton" name="PP_bake_current_btn">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="text">
+                      <string>Bake Current</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rc/resources.qrc">
+                       <normaloff>:/icons/icon_bake_current.png</normaloff>:/icons/icon_bake_current.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>32</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QToolButton" name="PP_show_all_baked_btn">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="text">
+                      <string>Show All Baked</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rc/resources.qrc">
+                       <normaloff>:/icons/icon_show_all_baked.png</normaloff>:/icons/icon_show_all_baked.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>32</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QToolButton" name="PP_show_instancer_node_btn">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="text">
+                      <string>Show Instancer Node</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rc/resources.qrc">
+                       <normaloff>:/icons/baseline_list_alt_white_48dp.png</normaloff>:/icons/baseline_list_alt_white_48dp.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>32</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="PP_delete_all_setup_btn">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
                    <property name="styleSheet">
-                    <string notr="true">font-size: 10px;</string>
+                    <string notr="true">background-color: black; color: rgb(158, 0, 0);</string>
                    </property>
                    <property name="text">
-                    <string>Instancing</string>
+                    <string>Delete MASH Setup</string>
                    </property>
-                   <property name="checked">
-                    <bool>true</bool>
+                   <property name="icon">
+                    <iconset resource="rc/resources.qrc">
+                     <normaloff>:/icons/baseline_clear_white_48dp.png</normaloff>:/icons/baseline_clear_white_48dp.png</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>24</width>
+                     <height>24</height>
+                    </size>
                    </property>
                   </widget>
                  </item>
                 </layout>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="SwapMaster_outer_container">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(89, 22, 22);</string>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>9</number>
+           </property>
+           <property name="bottomMargin">
+            <number>2</number>
+           </property>
+           <item>
+            <widget class="QGroupBox" name="swap_master_main_group_box">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(37, 35, 41)</string>
+             </property>
+             <property name="title">
+              <string>--  SWAP MASTER  --</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <layout class="QVBoxLayout" name="swap_master_group_box_layout">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>20</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QGroupBox" name="groupBox_3">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QGroupBox {color: rgb(140, 140, 140);} QRadioButton {color: rgb(140, 140, 140);}</string>
+                </property>
+                <property name="title">
+                 <string>Prep</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_3">
+                 <property name="spacing">
+                  <number>3</number>
                  </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
+                 <property name="leftMargin">
+                  <number>18</number>
                  </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QPushButton" name="SM_fast_forward_swap_btn">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>-1</pointsize>
-                 <weight>50</weight>
-                 <bold>false</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">font-size: 13px; font-size: 12px; background-color: rgb(114, 44, 55);</string>
-               </property>
-               <property name="text">
-                <string>Fast-Forward Snap</string>
-               </property>
-               <property name="icon">
-                <iconset resource="rc/resources.qrc">
-                 <normaloff>:/icons/baseline_fast_forward_white_48dp.png</normaloff>:/icons/baseline_fast_forward_white_48dp.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>36</width>
-                 <height>36</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="SM_show_swapped_btn">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>24</height>
-                </size>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">font-size: 10px; background-color: rgb(78, 46, 58)</string>
-               </property>
-               <property name="text">
-                <string>Show Last Swapped</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QGroupBox" name="groupBox_8">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: rgb(89, 22, 22);</string>
-      </property>
-      <property name="title">
-       <string/>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_10">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>2</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>8</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
+                 <property name="topMargin">
+                  <number>20</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>18</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>6</number>
+                 </property>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_6">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QRadioButton" name="SM_prep_mash_scene_radio_btn">
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="text">
+                      <string>MASH scene</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QRadioButton" name="SM_prep_regular_scene_radio_btn">
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="text">
+                      <string>Regular scene</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="SM_explode_and_group_btn">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font-size: 10px; background-color: rgb(36, 34, 39);</string>
+                   </property>
+                   <property name="text">
+                    <string>Explode MASH Mesh and Group by PolyCount</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="rc/resources.qrc">
+                     <normaloff>:/icons/baseline_broken_image_white_48dp.png</normaloff>:/icons/baseline_broken_image_white_48dp.png</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>24</width>
+                     <height>24</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="SM_run_thru_scene_and_group_btn">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>32</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font-size: 10px; background-color: rgb(36, 34, 39);</string>
+                   </property>
+                   <property name="text">
+                    <string>Run Thru Scene and Group All by PolyCount</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="rc/resources.qrc">
+                     <normaloff>:/icons/baseline_language_white_48dp.png</normaloff>:/icons/baseline_language_white_48dp.png</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>20</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="Line" name="line_3">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QGroupBox {color: rgb(140, 140, 140);} QRadioButton {color: rgb(140, 140, 140);} QLabel {color: rgb(140, 140, 140);}</string>
+                </property>
+                <property name="title">
+                 <string>Proxy Template Input</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout">
+                 <property name="leftMargin">
+                  <number>18</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>15</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>18</number>
+                 </property>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout">
+                   <item>
+                    <widget class="QLabel" name="label">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="text">
+                      <string>Trace Type:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QRadioButton" name="SM_trace_vertex_radio_btn">
+                     <property name="text">
+                      <string>Vertex</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QRadioButton" name="SM_trace_edge_radio_btn">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="text">
+                      <string>Edge</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QRadioButton" name="SM_trace_face_radio_btn">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="text">
+                      <string>Face</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QGridLayout" name="SM_load_trace_components_grid_layout"/>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox_2">
+                <property name="styleSheet">
+                 <string notr="true">QGroupBox {color: rgb(140, 140, 140);}</string>
+                </property>
+                <property name="title">
+                 <string>Hi-Res Template Input</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_2">
+                 <property name="leftMargin">
+                  <number>18</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>20</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>18</number>
+                 </property>
+                 <item>
+                  <layout class="QGridLayout" name="SM_load_substitute_grid_layout"/>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="Line" name="line">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox_4">
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(41, 23, 37)</string>
+                </property>
+                <property name="title">
+                 <string/>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_4">
+                 <property name="leftMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>6</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>9</number>
+                 </property>
+                 <item>
+                  <widget class="QGroupBox" name="SM_orient_reconstruct_child_group_box">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QGroupBox {font-size: 10px; color: rgb(150, 150, 150);}</string>
+                   </property>
+                   <property name="title">
+                    <string> --  2-step Swap  -- </string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_5">
+                    <property name="leftMargin">
+                     <number>18</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>20</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>18</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>3</number>
+                    </property>
+                    <item>
+                     <widget class="QToolButton" name="SM_preview_nuclei_btn">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true"/>
+                      </property>
+                      <property name="text">
+                       <string>Preview Reconstruction</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="rc/resources.qrc">
+                        <normaloff>:/icons/baseline_engineering_white_48dp.png</normaloff>:/icons/baseline_engineering_white_48dp.png</iconset>
+                      </property>
+                      <property name="iconSize">
+                       <size>
+                        <width>20</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextUnderIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="SM_abort_nuclei_btn">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background-color: black; color: rgb(158, 0, 0);</string>
+                      </property>
+                      <property name="text">
+                       <string>Abort</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="rc/resources.qrc">
+                        <normaloff>:/icons/baseline_clear_white_48dp.png</normaloff>:/icons/baseline_clear_white_48dp.png</iconset>
+                      </property>
+                      <property name="iconSize">
+                       <size>
+                        <width>20</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextUnderIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="SM_proceed_swapping_btn">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true"/>
+                      </property>
+                      <property name="text">
+                       <string>Proceed w/ Swapping</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="rc/resources.qrc">
+                        <normaloff>:/icons/baseline_scatter_plot_white_48dp.png</normaloff>:/icons/baseline_scatter_plot_white_48dp.png</iconset>
+                      </property>
+                      <property name="iconSize">
+                       <size>
+                        <width>20</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextUnderIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_2">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>18</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>18</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_9">
+                     <item>
+                      <widget class="QCheckBox" name="SM_remove_proxies_check_box">
+                       <property name="styleSheet">
+                        <string notr="true">font-size: 10px;</string>
+                       </property>
+                       <property name="text">
+                        <string>Remove Proxies</string>
+                       </property>
+                       <property name="checked">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QCheckBox" name="SM_swap_use_instancing_check_box">
+                       <property name="styleSheet">
+                        <string notr="true">font-size: 10px;</string>
+                       </property>
+                       <property name="text">
+                        <string>Instancing</string>
+                       </property>
+                       <property name="checked">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="SM_fast_forward_swap_btn">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>-1</pointsize>
+                     <weight>50</weight>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font-size: 13px; font-size: 12px; background-color: rgb(114, 44, 55);</string>
+                   </property>
+                   <property name="text">
+                    <string>Fast-Forward Snap</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="rc/resources.qrc">
+                     <normaloff>:/icons/baseline_fast_forward_white_48dp.png</normaloff>:/icons/baseline_fast_forward_white_48dp.png</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>36</width>
+                     <height>36</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="SM_show_swapped_btn">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>24</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font-size: 10px; background-color: rgb(78, 46, 58)</string>
+                   </property>
+                   <property name="text">
+                    <string>Show Last Swapped</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="bottom_buffer_outer_container">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(89, 22, 22);</string>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_10">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>2</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>8</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
