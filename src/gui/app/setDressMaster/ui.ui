@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>392</width>
-    <height>764</height>
+    <width>380</width>
+    <height>788</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -75,19 +75,35 @@
           <bool>true</bool>
          </property>
          <layout class="QVBoxLayout" name="phys_painter_group_box_layout">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
           <property name="topMargin">
            <number>20</number>
           </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
-           <layout class="QGridLayout" name="PP_load_selection_grid_layout"/>
+           <layout class="QGridLayout" name="PP_load_selection_grid_layout">
+            <property name="leftMargin">
+             <number>9</number>
+            </property>
+            <property name="rightMargin">
+             <number>9</number>
+            </property>
+           </layout>
           </item>
           <item>
            <widget class="QGroupBox" name="PP_dyn_parms_child_group_box">
             <property name="styleSheet">
-             <string notr="true">QLabel {font-size: 10px;}</string>
+             <string notr="true">QLabel {font-size: 10px; color: rgb(146, 146, 146);} QGroupBox {color: rgb(105, 105, 105);}</string>
             </property>
             <property name="title">
-             <string>Dynamics Parameter Preset</string>
+             <string> --  Dynamics Parameter Preset  -- </string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -99,8 +115,14 @@
              <bool>true</bool>
             </property>
             <layout class="QGridLayout" name="PP_dynamic_parameters_grid_layout">
+             <property name="leftMargin">
+              <number>18</number>
+             </property>
              <property name="topMargin">
               <number>20</number>
+             </property>
+             <property name="rightMargin">
+              <number>18</number>
              </property>
             </layout>
            </widget>
@@ -118,16 +140,16 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_5">
              <property name="leftMargin">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="topMargin">
               <number>6</number>
              </property>
              <property name="rightMargin">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="bottomMargin">
-              <number>6</number>
+              <number>12</number>
              </property>
              <item>
               <widget class="QPushButton" name="PP_setup_mash_network_btn">
@@ -148,7 +170,7 @@
                 <string notr="true">font-size: 12px; background-color: rgb(32, 69, 78);</string>
                </property>
                <property name="text">
-                <string>SETUP MASH NETWORK</string>
+                <string>Setup MASH Network</string>
                </property>
                <property name="icon">
                 <iconset resource="rc/resources.qrc">
@@ -396,6 +418,12 @@
        <property name="topMargin">
         <number>5</number>
        </property>
+       <property name="rightMargin">
+        <number>9</number>
+       </property>
+       <property name="bottomMargin">
+        <number>2</number>
+       </property>
        <item>
         <widget class="QGroupBox" name="swap_master_main_group_box">
          <property name="enabled">
@@ -408,7 +436,7 @@
           </sizepolicy>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(37, 35, 41);</string>
+          <string notr="true">background-color: rgb(37, 35, 41)</string>
          </property>
          <property name="title">
           <string>--  SWAP MASTER  --</string>
@@ -420,8 +448,17 @@
           <bool>true</bool>
          </property>
          <layout class="QVBoxLayout" name="swap_master_group_box_layout">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
           <property name="topMargin">
            <number>20</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
           </property>
           <item>
            <widget class="QGroupBox" name="groupBox_3">
@@ -432,7 +469,7 @@
              </sizepolicy>
             </property>
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">QGroupBox {color: rgb(140, 140, 140);} QRadioButton {color: rgb(140, 140, 140);}</string>
             </property>
             <property name="title">
              <string>Prep</string>
@@ -442,13 +479,13 @@
               <number>3</number>
              </property>
              <property name="leftMargin">
-              <number>12</number>
+              <number>18</number>
              </property>
              <property name="topMargin">
               <number>20</number>
              </property>
              <property name="rightMargin">
-              <number>12</number>
+              <number>18</number>
              </property>
              <property name="bottomMargin">
               <number>6</number>
@@ -469,6 +506,9 @@
                </property>
                <item>
                 <widget class="QRadioButton" name="SM_prep_mash_scene_radio_btn">
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string>MASH scene</string>
                  </property>
@@ -479,6 +519,9 @@
                </item>
                <item>
                 <widget class="QRadioButton" name="SM_prep_regular_scene_radio_btn">
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string>Regular scene</string>
                  </property>
@@ -553,12 +596,21 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="styleSheet">
+             <string notr="true">QGroupBox {color: rgb(140, 140, 140);} QRadioButton {color: rgb(140, 140, 140);} QLabel {color: rgb(140, 140, 140);}</string>
+            </property>
             <property name="title">
              <string>Proxy Template Input</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout">
+             <property name="leftMargin">
+              <number>18</number>
+             </property>
              <property name="topMargin">
               <number>15</number>
+             </property>
+             <property name="rightMargin">
+              <number>18</number>
              </property>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout">
@@ -612,12 +664,21 @@
           </item>
           <item>
            <widget class="QGroupBox" name="groupBox_2">
+            <property name="styleSheet">
+             <string notr="true">QGroupBox {color: rgb(140, 140, 140);}</string>
+            </property>
             <property name="title">
              <string>Hi-Res Template Input</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_2">
+             <property name="leftMargin">
+              <number>18</number>
+             </property>
              <property name="topMargin">
               <number>20</number>
+             </property>
+             <property name="rightMargin">
+              <number>18</number>
              </property>
              <item>
               <layout class="QGridLayout" name="SM_load_substitute_grid_layout"/>
@@ -645,16 +706,16 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_4">
              <property name="leftMargin">
-              <number>4</number>
+              <number>9</number>
              </property>
              <property name="topMargin">
               <number>6</number>
              </property>
              <property name="rightMargin">
-              <number>4</number>
+              <number>9</number>
              </property>
              <property name="bottomMargin">
-              <number>4</number>
+              <number>9</number>
              </property>
              <item>
               <widget class="QGroupBox" name="SM_orient_reconstruct_child_group_box">
@@ -665,10 +726,10 @@
                 </sizepolicy>
                </property>
                <property name="styleSheet">
-                <string notr="true">font-size: 10px; color: white;</string>
+                <string notr="true">QGroupBox {font-size: 10px; color: rgb(150, 150, 150);}</string>
                </property>
                <property name="title">
-                <string>2-step Swap</string>
+                <string> --  2-step Swap  -- </string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -678,13 +739,13 @@
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_5">
                 <property name="leftMargin">
-                 <number>12</number>
+                 <number>18</number>
                 </property>
                 <property name="topMargin">
                  <number>20</number>
                 </property>
                 <property name="rightMargin">
-                 <number>12</number>
+                 <number>18</number>
                 </property>
                 <property name="bottomMargin">
                  <number>3</number>
@@ -785,42 +846,59 @@
                 <number>0</number>
                </property>
                <property name="leftMargin">
-                <number>0</number>
+                <number>18</number>
                </property>
                <property name="topMargin">
                 <number>0</number>
                </property>
                <property name="rightMargin">
-                <number>0</number>
+                <number>18</number>
                </property>
                <property name="bottomMargin">
                 <number>0</number>
                </property>
                <item>
-                <widget class="QCheckBox" name="SM_remove_proxies_check_box">
-                 <property name="styleSheet">
-                  <string notr="true">font-size: 10px;</string>
-                 </property>
-                 <property name="text">
-                  <string>Remove Proxies</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
+                <layout class="QVBoxLayout" name="verticalLayout_9">
+                 <item>
+                  <widget class="QCheckBox" name="SM_remove_proxies_check_box">
+                   <property name="styleSheet">
+                    <string notr="true">font-size: 10px;</string>
+                   </property>
+                   <property name="text">
+                    <string>Remove Proxies</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="SM_swap_use_instancing_check_box">
+                   <property name="styleSheet">
+                    <string notr="true">font-size: 10px;</string>
+                   </property>
+                   <property name="text">
+                    <string>Instancing</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
                <item>
-                <widget class="QCheckBox" name="SM_swap_use_instancing_check_box">
-                 <property name="styleSheet">
-                  <string notr="true">font-size: 10px;</string>
+                <spacer name="horizontalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
                  </property>
-                 <property name="text">
-                  <string>Instancing</string>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
                  </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
+                </spacer>
                </item>
               </layout>
              </item>
@@ -843,7 +921,7 @@
                 <string notr="true">font-size: 13px; font-size: 12px; background-color: rgb(114, 44, 55);</string>
                </property>
                <property name="text">
-                <string>FAST-FORWARD SWAP</string>
+                <string>Fast-Forward Snap</string>
                </property>
                <property name="icon">
                 <iconset resource="rc/resources.qrc">
@@ -875,7 +953,7 @@
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">font-size: 10px;</string>
+                <string notr="true">font-size: 10px; background-color: rgb(78, 46, 58)</string>
                </property>
                <property name="text">
                 <string>Show Last Swapped</string>
@@ -890,6 +968,52 @@
           </item>
          </layout>
         </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="groupBox_8">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(89, 22, 22);</string>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_10">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>2</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>8</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

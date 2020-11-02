@@ -144,8 +144,33 @@ def get_PP_dynamics_parameters(ui):
     return params
 
 
+def set_stylesheet(ui):
+    # LoadAndDisplayToLineEdit
+    for line_edit_grp in (
+        ui.PP_load_cloud_ui_grp,
+        ui.PP_load_scatter_ui_grp,
+        ui.PP_load_ground_ui_grp):
+        
+        line_edit_grp.line_edit.setStyleSheet("background-color: rgb(12, 12, 12); color: rgb(85, 85, 85)")
+        line_edit_grp.label.setStyleSheet("color: rgb(146, 146, 146)")
+        line_edit_grp.load_btn.setStyleSheet("background-color: rgb(28, 28, 28); color: rgb(85, 85, 85)")
+        line_edit_grp.clear_btn.setStyleSheet("background-color: rgb(28, 28, 28); color: rgb(85, 85, 85)")
+
+    for line_edit_grp in (
+        ui.SM_load_north_compos_ui_grp,
+        ui.SM_load_south_compos_ui_grp,
+        ui.SM_load_yaw_compos_ui_grp,
+        ui.SM_load_substitute_ui_grp):
+    
+        line_edit_grp.line_edit.setStyleSheet("background-color: rgb(12, 12, 12); color: rgb(85, 85, 85)")
+        line_edit_grp.label.setStyleSheet("color: rgb(140, 140, 140)")
+        line_edit_grp.load_btn.setStyleSheet("background-color: rgb(24, 24, 24); color: rgb(85, 85, 85)")
+        line_edit_grp.clear_btn.setStyleSheet("background-color: rgb(24, 24, 24); color: rgb(85, 85, 85)")
+
+
 def modify_premade_view(app):
     add_widgets(app._view.ui)
+    set_stylesheet(app._view.ui)
 
 
 def create_connections(app):
