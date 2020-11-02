@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'F:\dev\git\mk_dcc/src/gui/app/setDressMaster/ui.ui'
 #
-# Created: Mon Nov  2 19:20:25 2020
+# Created: Mon Nov  2 19:30:14 2020
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -400,16 +400,9 @@ class Ui_MainWindow(object):
         self.SM_fast_forward_swap_btn.setIconSize(QtCore.QSize(36, 36))
         self.SM_fast_forward_swap_btn.setObjectName("SM_fast_forward_swap_btn")
         self.verticalLayout_4.addWidget(self.SM_fast_forward_swap_btn)
-        self.SM_show_swapped_btn = QtGui.QToolButton(self.groupBox_4)
-        self.SM_show_swapped_btn.setEnabled(True)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.SM_show_swapped_btn.sizePolicy().hasHeightForWidth())
-        self.SM_show_swapped_btn.setSizePolicy(sizePolicy)
+        self.SM_show_swapped_btn = QtGui.QPushButton(self.groupBox_4)
         self.SM_show_swapped_btn.setMinimumSize(QtCore.QSize(0, 24))
         self.SM_show_swapped_btn.setStyleSheet("font-size: 10px; background-color: rgb(78, 46, 58)")
-        self.SM_show_swapped_btn.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.SM_show_swapped_btn.setObjectName("SM_show_swapped_btn")
         self.verticalLayout_4.addWidget(self.SM_show_swapped_btn)
         self.swap_master_group_box_layout.addWidget(self.groupBox_4)
