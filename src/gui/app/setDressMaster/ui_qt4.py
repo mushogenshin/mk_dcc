@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'E:\projects\mk_dcc/src/gui/app/setDressMaster/ui.ui'
 #
-# Created: Mon Nov  2 20:39:45 2020
+# Created: Thu Nov  5 01:37:26 2020
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtGui.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 395, 788))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, -242, 395, 788))
         self.scrollAreaWidgetContents.setStyleSheet("background-color: rgb(89, 22, 22);")
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_11 = QtGui.QVBoxLayout(self.scrollAreaWidgetContents)
@@ -472,7 +472,7 @@ class Ui_MainWindow(object):
         self.SM_proceed_swapping_btn.setText(QtGui.QApplication.translate("MainWindow", "Proceed w/ Swapping", None, QtGui.QApplication.UnicodeUTF8))
         self.SM_remove_proxies_check_box.setText(QtGui.QApplication.translate("MainWindow", "Remove Proxies", None, QtGui.QApplication.UnicodeUTF8))
         self.SM_swap_use_instancing_check_box.setText(QtGui.QApplication.translate("MainWindow", "Instancing", None, QtGui.QApplication.UnicodeUTF8))
-        self.SM_fast_forward_swap_btn.setText(QtGui.QApplication.translate("MainWindow", "Fast-Forward Snap", None, QtGui.QApplication.UnicodeUTF8))
+        self.SM_fast_forward_swap_btn.setText(QtGui.QApplication.translate("MainWindow", "Fast-Forward Swap Selected", None, QtGui.QApplication.UnicodeUTF8))
         self.SM_show_swapped_btn.setText(QtGui.QApplication.translate("MainWindow", "Show Last Swapped", None, QtGui.QApplication.UnicodeUTF8))
 
 from src.gui.app.setDressMaster import resources_rc_qt4

@@ -149,10 +149,15 @@ def match_transforms(obj, target, translation=True, rotation=True):
     except ImportError:
         pass
     else:
-        if translation and hasattr(obj, "setTranslation") and hasattr(target, "getTranslation"):
-            obj.setTranslation(target.getTranslation(space=WORLD_SPACE), space=WORLD_SPACE)
-        if rotation and hasattr(obj, "setRotation") and hasattr(target, "getRotation"):
-            obj.setRotation(target.getRotation(space=WORLD_SPACE), space=WORLD_SPACE)
+        # if translation and hasattr(obj, "setTranslation") and hasattr(target, "getTranslation"):
+        #     obj.setTranslation(target.getTranslation(space=WORLD_SPACE), space=WORLD_SPACE)
+        # if rotation and hasattr(obj, "setRotation") and hasattr(target, "getRotation"):
+        #     obj.setRotation(target.getRotation(space=WORLD_SPACE), space=WORLD_SPACE)
+        pmc.select(obj, target, replace=True)
+        if translation:
+            pmc.mel.eval("MatchTranslation")
+        if rotation:
+            pmc.mel.eval("MatchRotation")
 
 
 def get_rotate_pivot(node, is_mesh=False):
@@ -180,7 +185,9 @@ def get_translation_between_two_points(src, dst):
     except ImportError:
         pass
     else:
-        if isinstance(src, pmc.dt.Point) and isinstance(dst, pmc.dt.Point):
+        def is_either_point_or_vector(node):
+            return isinstance(node, pmc.dt.Point) or isinstance(dst, pmc.dt.Vector)
+        if is_either_point_or_vector(src) and is_either_point_or_vector(dst):
             return dst - src
 
 

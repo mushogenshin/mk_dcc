@@ -32,6 +32,18 @@ def get_current_frame(SCENE_ENV=None):
         return 0
 
 
+def disable_cached_playback():
+    try:
+        import maya.cmds as cmds
+    except ImportError:
+        pass
+    else:
+        try:
+            cmds.evaluator(name="cache", enable=0)
+        except RuntimeError:
+            pass
+
+
 def set_playback_range(start, end, SCENE_ENV=None):
     logger.info('Updating Playback range from {} to {}'.format(start, end))
     SCENE_ENV = get_scene_env() if not SCENE_ENV else SCENE_ENV

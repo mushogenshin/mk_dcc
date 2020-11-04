@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'E:\projects\mk_dcc/src/gui/app/setDressMaster/ui.ui',
 # licensing of 'E:\projects\mk_dcc/src/gui/app/setDressMaster/ui.ui' applies.
 #
-# Created: Mon Nov  2 20:39:45 2020
+# Created: Thu Nov  5 01:37:25 2020
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 395, 788))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, -242, 395, 788))
         self.scrollAreaWidgetContents.setStyleSheet("background-color: rgb(89, 22, 22);")
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_11 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
@@ -473,7 +473,7 @@ class Ui_MainWindow(object):
         self.SM_proceed_swapping_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Proceed w/ Swapping", None, -1))
         self.SM_remove_proxies_check_box.setText(QtWidgets.QApplication.translate("MainWindow", "Remove Proxies", None, -1))
         self.SM_swap_use_instancing_check_box.setText(QtWidgets.QApplication.translate("MainWindow", "Instancing", None, -1))
-        self.SM_fast_forward_swap_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Fast-Forward Snap", None, -1))
+        self.SM_fast_forward_swap_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Fast-Forward Swap Selected", None, -1))
         self.SM_show_swapped_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Show Last Swapped", None, -1))
 
 from src.gui.app.setDressMaster import resources_rc_qt5

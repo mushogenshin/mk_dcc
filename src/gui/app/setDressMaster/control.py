@@ -75,6 +75,9 @@ class Control(object):
         Initialize a MASH Network
         """
         logger.info("Constructing MASH Network {}".format(MASH_NETWORK_NAME))
+        
+        scene_utils.disable_cached_playback()  # Maya 2019 onwards
+        
         waiter = distribute = repro = None
         scatter_meshes = self.get_PP_init_data("scatter_meshes")
 
@@ -167,6 +170,12 @@ class Control(object):
         self.set_PP_mash_data("mash_bullet", node_utils.get_PyNode(bullet_solver))
         logger.info("Using Bullet Solver: {}".format(self.get_PP_mash_data("mash_bullet")))
 
+    def remove_bullet_solver(self):
+        logger.info("Removing Bullet Solver of {}".format(MASH_NETWORK_NAME))
+        bullet_solver = self.get_PP_mash_data("mash_bullet")
+        node_utils.delete_one(bullet_solver)
+        self.set_PP_mash_data("mash_bullet", None)
+
     def add_ground_meshes(self):
         ground_meshes = self.get_PP_init_data("ground_meshes")
         bullet_solver = self.get_PP_mash_data("mash_bullet")
@@ -232,12 +241,15 @@ class Control(object):
 
     def delete_PP_setup(self):
         logger.info("Deleting all setup related to {}".format(MASH_NETWORK_NAME))
+        
+        self.remove_bullet_solver()
+
         for data_key, node in self._model._data["PP_mash"].items():
             if data_key != "mash_network":
                 node_utils.delete_one(node)
             else:
                 scene_utils.delete(MASH_NETWORK_NAME)
-                scene_utils.delete(MASH_NETWORK_NAME)  # delete twice due to Maya|MASH bug
+                # scene_utils.delete(MASH_NETWORK_NAME)  # delete twice due to Maya|MASH bug
 
         # Reset MASH model data
         self._model.init_PP_mash_data()
