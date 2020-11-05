@@ -21,7 +21,7 @@ image::images/app_overview.png[align=center]
 .  **Swap Master**, which allows for restoring scattered objects' transforms, and by doing so optionally reconstructing the instancing
 
 .Compatibility
-IMPORTANT: For Maya 2018 and above
+IMPORTANT: Maya 2017 and above
 
 ''''
 ===== 1. PhysX Painter
@@ -47,14 +47,45 @@ NOTE: See more in Details section below
 
 ===== 2. Swap Master
 
-This section of the UI allows for "swapping" scattered, combined, meshes, with desired geometry, preferably together with the ability to restoring their transforms, and/or reconstructing the instancing.
+This section of the UI allows for "swapping" scattered, combined, meshes, with desired geometry, preferably together with the ability to restoring their transforms, and optionally reconstructing the instancing.
 
-IMPORTANT: Currently the algorithm for restoring the transforms requires providing of a "North pole", a "South pole", and a "Yaw axis", that may not work well with all types of geometry. Future releases will include additional algorithms to compensate for this limitation.
+.Some terminologies:
+[NOTE]
+================================
+*  Proxy Template: one "canonical" of the scattered proxies that still has its original transforms, preferably one of the same meshes given as input prior to doing the PhysX Paint.
+
+*  Hi-Res Template: the optional, more detailed, mesh, from which to duplicate|instance and swap the scattered proxies with. If not given, Swap Master will use the Proxy Template above to do the swapping.
+================================
+
+.Proxy template should be the one that still retains its transforms
+image::images/swap_master_4_hiRes_template.png[align=center]
 
 
+WARNING: Currently the algorithm for restoring the transforms requires the user to provide a "North pole", a "South pole", and a "Yaw axis". This may not be feasible with every type of geometry. Future releases will include additional algorithms to compensate for this limitation.
 
+.Providing traces to restore transforms
+****
+.Providing North components
+image::images/swap_master_1_north_components.png[align=center]
 
+.Providing South components
+image::images/swap_master_2_south_components.png[align=center]
 
+.Providing Yaw components
+image::images/swap_master_3_yaw_components.png[align=center]
+
+****
+
+Then we're ready to perform the swap on selection.
+
+*  Select the scattered group you want to swap
+*  Press `Fast-Forward Swap Selected`
+
+.Remember to select either the objects or their group on which you want to run the swapping
+image::images/swap_master_5_swap_selected.png[align=center]
+
+.Result: the shown scattered mesh has its transforms restored, and is swapped by the given hi-res template -- optionally as an instance
+image::images/swap_master_6_swapped.png[align=center]
 
 
 NOTE: See more in Details section below
@@ -75,7 +106,20 @@ CAUTION: For safety purposes, remember to save your scene first, as the **MASH**
 
 ===== 2. Swap Master
 
+Since scattered meshes using **MASH** are all combined into one "ReproMesh", methods of preparing the scattered meshes for swapping are given.
+
+*  `Explode MASH Mesh and Group by PolyCount`: works on selection
+*  `Run Thru Scene and Group All by PolyCount`: works globally on current scene
+
+After perform the swap:
+
+*  Press `Show Last Swapped` in order to select the swapping results.
+
 === Installation
+
+*  Download the package
+*  Go to `install/maya`, then drag'n'drop the file `setDressMaster.py` there into Maya viewport
+*  Please allow PyMEL several seconds to load
 
 
 === Known Issues
