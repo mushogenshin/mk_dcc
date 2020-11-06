@@ -2,6 +2,15 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def is_scene_modified():
+    try:
+        import maya.cmds as cmds
+    except ImportError:
+        return True
+    else:
+        return cmds.file(q=True, modified=True)
+
+
 def get_scene_env():
     try:
         import pymel.core as pmc

@@ -4,7 +4,7 @@ Set Dress Master
 ================
 Utilities to efficiently perform set dressing in Autodesk Maya
 
-:Author: Truong CG Artist, Mushogenshin, rkaixg
+:Author: Truong CG Artist, Mushogenshin, Rkaixg
 :Revision: 0.1.0
 
 Author: {author}
@@ -66,13 +66,13 @@ WARNING: Currently the algorithm for restoring the transforms requires the user 
 .Providing traces to restore transforms
 ****
 .Providing North components
-image::images/swap_master_1_north_components.png[align=center]
+image::images/swap_master_1_north_components.png[align=center, width=500]
 
 .Providing South components
-image::images/swap_master_2_south_components.png[align=center]
+image::images/swap_master_2_south_components.png[align=center, width=500]
 
 .Providing Yaw components
-image::images/swap_master_3_yaw_components.png[align=center]
+image::images/swap_master_3_yaw_components.png[align=center, width=500]
 
 ****
 
@@ -82,10 +82,10 @@ Then we're ready to perform the swap on selection.
 *  Press `Fast-Forward Swap Selected`
 
 .Remember to select either the objects or their group on which you want to run the swapping
-image::images/swap_master_5_swap_selected.png[align=center]
+image::images/swap_master_5_swap_selected.png[align=center, width=800]
 
 .Result: the shown scattered mesh has its transforms restored, and is swapped by the given hi-res template -- optionally as an instance
-image::images/swap_master_6_swapped.png[align=center]
+image::images/swap_master_6_swapped.png[align=center, width=800]
 
 
 NOTE: See more in Details section below
@@ -118,8 +118,9 @@ After perform the swap:
 === Installation
 
 *  Download the package
-*  Go to `install/maya`, then drag'n'drop the file `setDressMaster.py` there into Maya viewport
+*  Go to `install/maya/setDressMaster`, then drag'n'drop the file `setDressMaster.pyc` there into Maya viewport
 *  Please allow PyMEL several seconds to load
+*  A button with `SDM` icon will be created in the current shelf
 
 
 === Known Issues

@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'E:\projects\mk_dcc/src/gui/app/setDressMaster/ui.ui',
 # licensing of 'E:\projects\mk_dcc/src/gui/app/setDressMaster/ui.ui' applies.
 #
-# Created: Thu Nov  5 01:37:25 2020
+# Created: Sat Nov  7 04:58:46 2020
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(414, 548)
+        MainWindow.resize(414, 557)
         MainWindow.setStyleSheet("QGroupBox {border: 0}")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setStyleSheet("color: white;")
@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, -242, 395, 788))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, -254, 395, 809))
         self.scrollAreaWidgetContents.setStyleSheet("background-color: rgb(89, 22, 22);")
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_11 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
@@ -431,8 +431,12 @@ class Ui_MainWindow(object):
         self.bottom_buffer_outer_container.setObjectName("bottom_buffer_outer_container")
         self.verticalLayout_10 = QtWidgets.QVBoxLayout(self.bottom_buffer_outer_container)
         self.verticalLayout_10.setSpacing(0)
-        self.verticalLayout_10.setContentsMargins(0, 2, 0, 0)
+        self.verticalLayout_10.setContentsMargins(9, 2, 9, 9)
         self.verticalLayout_10.setObjectName("verticalLayout_10")
+        self.SetDressMaster_about_btn = QtWidgets.QPushButton(self.bottom_buffer_outer_container)
+        self.SetDressMaster_about_btn.setStyleSheet("color: rgb(140, 140, 140);")
+        self.SetDressMaster_about_btn.setObjectName("SetDressMaster_about_btn")
+        self.verticalLayout_10.addWidget(self.SetDressMaster_about_btn)
         spacerItem1 = QtWidgets.QSpacerItem(20, 8, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_10.addItem(spacerItem1)
         self.verticalLayout_11.addWidget(self.bottom_buffer_outer_container)
@@ -475,5 +479,9 @@ class Ui_MainWindow(object):
         self.SM_swap_use_instancing_check_box.setText(QtWidgets.QApplication.translate("MainWindow", "Instancing", None, -1))
         self.SM_fast_forward_swap_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Fast-Forward Swap Selected", None, -1))
         self.SM_show_swapped_btn.setText(QtWidgets.QApplication.translate("MainWindow", "Show Last Swapped", None, -1))
+        self.SetDressMaster_about_btn.setText(QtWidgets.QApplication.translate("MainWindow", "About", None, -1))
+        self.SetDressMaster_about_btn.setProperty("about", QtWidgets.QApplication.translate("MainWindow", "Author: Truong CG Artist, Mushogenshin\n"
+"Designer: Rkaixg", None, -1))
+        self.SetDressMaster_about_btn.setProperty("version", QtWidgets.QApplication.translate("MainWindow", "0.1.0", None, -1))
 
 from src.gui.app.setDressMaster import resources_rc_qt5

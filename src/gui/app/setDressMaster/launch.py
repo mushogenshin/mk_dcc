@@ -32,7 +32,7 @@ if __name__ == '__main__':
         try:
             SDM_app._view.close()
             SDM_app._view.deleteLater()
-        except:
+        except Exception:
             pass
             
         SDM_app = src.gui.dcc.Maya('setDressMaster')

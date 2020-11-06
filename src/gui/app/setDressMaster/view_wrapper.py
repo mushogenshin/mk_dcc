@@ -12,6 +12,14 @@ from src.utils.maya import (
 )
 
 
+MASH_SCENE_SAVE_PROMPT = "There're bugs with MASH that may cause Maya to crash when \n\
+performing this action.\nPlease make sure you have your changes saved.\n\
+Do you want to proceed?"
+
+PRE_SWAP_SAVE_PROMPT = "Please make sure you have your changes saved.\n\
+Do you want to proceed?"
+
+
 def add_widgets(ui):
     # Load Selection
     load_btn_label = "Load"
@@ -168,7 +176,16 @@ def set_stylesheet(ui):
         line_edit_grp.clear_btn.setStyleSheet("background-color: rgb(24, 24, 24); color: rgb(85, 85, 85)")
 
 
+def insert_version_in_window_title(app):
+    version = app._view.ui.SetDressMaster_about_btn.property("version")
+    app._view.setWindowTitle("{} v{}".format(
+        app._view.windowTitle(),
+        version
+    ))
+
+
 def modify_premade_view(app):
+    insert_version_in_window_title(app)
     add_widgets(app._view.ui)
     set_stylesheet(app._view.ui)
 
@@ -215,9 +232,21 @@ def create_connections(app):
 
     # Destruct Setup
     def delete_PP_setup():
-        app._control.delete_PP_setup()
-        for input_grp in (ui.PP_load_cloud_ui_grp, ui.PP_load_scatter_ui_grp, ui.PP_load_ground_ui_grp):
-            input_grp.cleared()
+        proceed = True
+        is_scene_modified = scene_utils.is_scene_modified()
+
+        if is_scene_modified:
+            # Prompt Yes-No MessageBox
+            from src.utils.qt.prompt import show_warning_box
+            proceed = show_warning_box(
+                ui.centralwidget,
+                MASH_SCENE_SAVE_PROMPT
+            )
+            
+        if proceed:
+            app._control.delete_PP_setup()
+            for input_grp in (ui.PP_load_cloud_ui_grp, ui.PP_load_scatter_ui_grp, ui.PP_load_ground_ui_grp):
+                input_grp.cleared()
 
     ui.PP_delete_all_setup_btn.clicked.connect(delete_PP_setup)
 
@@ -286,26 +315,51 @@ def create_connections(app):
     def get_SM_remove_proxies_mode_from_UI():
         return ui.SM_remove_proxies_check_box.isChecked()
 
+    def fast_forward_swap():
+        proceed = True
+        is_scene_modified = scene_utils.is_scene_modified()
+        
+        if is_scene_modified:
+            # Prompt Yes-No MessageBox
+            from src.utils.qt.prompt import show_warning_box
+            proceed = show_warning_box(
+                ui.centralwidget,
+                PRE_SWAP_SAVE_PROMPT
+            )
+
+        if proceed:
+            app._control.fast_forward_swap(
+                get_use_instancing_mode_method=get_SM_use_instancing_mode_from_UI,
+                get_remove_proxies_mode_method=get_SM_remove_proxies_mode_from_UI
+            )
+
     ui.SM_proceed_swapping_btn.clicked.connect(partial(
         app._control.do_swap,
         get_use_instancing_mode_method=get_SM_use_instancing_mode_from_UI,
         get_remove_proxies_mode_method=get_SM_remove_proxies_mode_from_UI
     ))
-    ui.SM_fast_forward_swap_btn.clicked.connect(partial(
-        app._control.fast_forward_swap,
-        get_use_instancing_mode_method=get_SM_use_instancing_mode_from_UI,
-        get_remove_proxies_mode_method=get_SM_remove_proxies_mode_from_UI
-    ))
+    ui.SM_fast_forward_swap_btn.clicked.connect(fast_forward_swap)
 
     # Show Results
     ui.SM_show_swapped_btn.clicked.connect(app._control.show_swapped)
 
     scene_prep_strategy(ui.SM_prep_mash_scene_radio_btn.isChecked())
 
+    ############################# ABOUT #############################
+
+    def show_app_about():
+        from src.utils.qt.prompt import show_info_box
+        about_app = ui.SetDressMaster_about_btn.property("about")
+        show_info_box(
+            ui.centralwidget,
+            about_app
+        )
+
+    ui.SetDressMaster_about_btn.clicked.connect(show_app_about)
+
 
 def init_gui(app):
     ui = app._view.ui
-    # model_data = app._model._data
 
     # ui.PP_main_group_box.toggled()
     ui.PP_dyn_parms_group_box.toggled()

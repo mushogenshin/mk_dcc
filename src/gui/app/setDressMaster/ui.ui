@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>414</width>
-    <height>548</height>
+    <height>557</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -45,9 +45,9 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-242</y>
+         <y>-254</y>
          <width>395</width>
-         <height>788</height>
+         <height>809</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -1012,17 +1012,34 @@
             <number>0</number>
            </property>
            <property name="leftMargin">
-            <number>0</number>
+            <number>9</number>
            </property>
            <property name="topMargin">
             <number>2</number>
            </property>
            <property name="rightMargin">
-            <number>0</number>
+            <number>9</number>
            </property>
            <property name="bottomMargin">
-            <number>0</number>
+            <number>9</number>
            </property>
+           <item>
+            <widget class="QPushButton" name="SetDressMaster_about_btn">
+             <property name="styleSheet">
+              <string notr="true">color: rgb(140, 140, 140);</string>
+             </property>
+             <property name="text">
+              <string>About</string>
+             </property>
+             <property name="about" stdset="0">
+              <string>Author: Truong CG Artist, Mushogenshin
+Designer: Rkaixg</string>
+             </property>
+             <property name="version" stdset="0">
+              <string>0.1.0</string>
+             </property>
+            </widget>
+           </item>
            <item>
             <spacer name="verticalSpacer">
              <property name="orientation">
