@@ -1,0 +1,5 @@
+{
+	"env": [ 
+        {"MK_DCC_ROOT": "/Users/mushogenshin/dev/mk_dcc"}
+    ]
+}

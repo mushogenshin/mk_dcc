@@ -12,7 +12,6 @@ import os
 sys.path.append(os.environ['MK_DCC_ROOT'])
 
 import src.gui.dcc
-reload(src.gui.dcc)
 
 if __name__ == "hou.session":
     try:
