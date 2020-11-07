@@ -118,7 +118,7 @@ After perform the swap:
 === Installation
 
 *  Download the package
-*  Go to `install/maya/setDressMaster`, then drag'n'drop the file `setDressMaster.pyc` there into Maya viewport
+*  Go to `install/maya/setDressMaster`, then drag'n'drop the file `setDressMaster.py` there into Maya viewport
 *  Please allow PyMEL several seconds to load
 *  A button with `SDM` icon will be created in the current shelf
 
