@@ -19,6 +19,11 @@ def get_node_name(node):
         return ""
 
 
+def get_shape(node):
+    if hasattr(node, "getShape"):
+        return node.getShape()
+
+
 def ls_component_IDs(nodes):
     """
     :rtype str: e.g. '[3:9], [13:15], 39, 41, [53:54], [78:79], 84'

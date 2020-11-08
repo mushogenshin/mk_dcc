@@ -417,6 +417,10 @@ class Control(object):
         else:
             target = statusquo_repr_mesh
             logger.info("Running SwapJob with given representative of status quo: {}".format(statusquo_repr_mesh))
+            if use_instancing:  # work around some undesired instancing behavior
+                duplicated_statusquo_repr_mesh = node_utils.duplicate(statusquo_repr_mesh)
+                if duplicated_statusquo_repr_mesh:
+                    target = node_utils.get_shape(duplicated_statusquo_repr_mesh[0])    
 
         node_utils.delete_one(target, delete_construction_history_only=True)
 
