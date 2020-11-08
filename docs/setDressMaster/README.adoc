@@ -131,3 +131,6 @@ After perform the swap:
 
 *  [PhysX Painter] Allow for face selection as input for both paint and landing surfaces
 *  [PhysX Painter] Allow for scale variability during painting
+
+=== Recent Changes
+*  [Swap Master] Allow for compute scale during swapping since version `0.1.1`

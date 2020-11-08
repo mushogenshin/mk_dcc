@@ -176,19 +176,32 @@ def get_rotate_pivot(node, is_mesh=False):
             return node.getRotatePivot(space=WORLD_SPACE)
 
 
-def get_translation_between_two_points(src, dst):
+def is_either_point_or_vector(node):
+    try:
+        import pymel.core as pmc
+    except ImportError:
+        pass
+    else:
+        return isinstance(node, pmc.dt.Point) or isinstance(node, pmc.dt.Vector)
+
+
+def get_translation_between_two_points(src, dst, as_length=False):
     """
-    :param pmc.dt.Point src, dst:
+    :param pmc.dt.Point or pmc.dt.Vector src, dst:
+    :rtype pmc.dt.Vector:
     """
     try:
         import pymel.core as pmc
     except ImportError:
         pass
     else:
-        def is_either_point_or_vector(node):
-            return isinstance(node, pmc.dt.Point) or isinstance(dst, pmc.dt.Vector)
         if is_either_point_or_vector(src) and is_either_point_or_vector(dst):
-            return dst - src
+            if not as_length:
+                return dst - src
+            elif hasattr(dst - src, "length"):
+                return (dst - src).length()
+            else:
+                return 0
 
 
 def make_space_locator(name=""):
@@ -243,6 +256,13 @@ def set_locator_local_scale(loc, dimensions):
 def set_translation(node, vector):
     if hasattr(node, "setTranslation"):
         node.setTranslation(vector)
+
+
+def set_scale(node, scale):
+    if hasattr(node, "setScale"):
+        if type(scale) not in (list, tuple) and not is_either_point_or_vector(scale):
+            scale = (scale, scale, scale)
+        node.setScale(scale)
 
 
 class zero_but_restore_transforms_afterwards(object):

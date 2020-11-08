@@ -876,7 +876,7 @@
                  <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_2">
                    <property name="spacing">
-                    <number>0</number>
+                    <number>12</number>
                    </property>
                    <property name="leftMargin">
                     <number>18</number>
@@ -917,6 +917,51 @@
                         <bool>true</bool>
                        </property>
                       </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_12">
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QCheckBox" name="SM_compute_scale_check_box">
+                       <property name="styleSheet">
+                        <string notr="true">font-size: 10px;</string>
+                       </property>
+                       <property name="text">
+                        <string>Compute Scale</string>
+                       </property>
+                       <property name="checked">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <spacer name="verticalSpacer_2">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::MinimumExpanding</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>5</height>
+                        </size>
+                       </property>
+                      </spacer>
                      </item>
                     </layout>
                    </item>
@@ -1033,10 +1078,10 @@
              </property>
              <property name="about" stdset="0">
               <string>Author: Truong CG Artist, Mushogenshin
-Designer: Rkaixg</string>
+Designer: Rkxg</string>
              </property>
              <property name="version" stdset="0">
-              <string>0.1.0</string>
+              <string>0.1.1</string>
              </property>
             </widget>
            </item>

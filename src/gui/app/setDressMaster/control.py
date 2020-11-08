@@ -338,7 +338,7 @@ class Control(object):
         if swapped is not None:
             self._model._data["SM_last_swapped"].append(swapped)
     
-    def init_swap_jobs(self, meshes):
+    def init_swap_jobs(self, meshes, compute_scale):
         """
         """
         # Modify class variable of SwapMasterJob first
@@ -346,6 +346,7 @@ class Control(object):
         SwapMasterJob.South_component_IDs = self.get_SM_candidate_component_data("south")
         SwapMasterJob._Yaw_component_IDs = self.get_SM_candidate_component_data("yaw")
         
+        SwapMasterJob.get_statusquo_repr_hub_jnt_pole_dimension()
         SwapMasterJob.get_statusquo_repr_bbox_dimensions()
         SwapMasterJob.get_statusquo_repr_hub_jnt_start_to_rotate_pivot_vec()
         SwapMasterJob.get_hub_joint_axis_cfg()
@@ -354,11 +355,15 @@ class Control(object):
 
         for mesh in meshes:
             swap_job = SwapMasterJob(mesh)
-            swap_job.xform_reconstruction()
+            swap_job.xform_reconstruction(compute_scale)
             self.register_swap_job(swap_job)
 
-    def preview_SM_nuclei(self):
-        self.init_swap_jobs(selection_utils.filter_meshes_in_selection())
+    def preview_SM_nuclei(self, get_compute_scale_mode_method):
+        if callable(get_compute_scale_mode_method):
+            compute_scale = get_compute_scale_mode_method()
+        else:
+            compute_scale = True
+        self.init_swap_jobs(selection_utils.filter_meshes_in_selection(), compute_scale)
         self.print_model_data()
 
     def abort_SM_nuclei(self, verbose=True):
@@ -376,9 +381,9 @@ class Control(object):
                 name="SM_last_swapped", 
                 children=self._model._data["SM_last_swapped"])
 
-    def do_swap(self, get_use_instancing_mode_method, get_remove_proxies_mode_method, post_cleanup=False):
+    def do_swap(self, get_use_instancing_mode_method, get_remove_proxies_mode_method, get_compute_scale_mode_method, post_cleanup=False):
         """
-        :param callable get_use_instancing_mode_method:
+        :param callable get_use_instancing_mode_method, get_remove_proxies_mode_method, get_compute_scale_mode_method:
         """
         self.clear_SM_last_swapped_data()
 
@@ -390,7 +395,15 @@ class Control(object):
             remove_proxies = get_remove_proxies_mode_method()
         else:
             remove_proxies = True
-        logger.info("Use Instancing Mode: {}; Remove Proxies Mode: {}".format(use_instancing, remove_proxies))
+        if callable(get_compute_scale_mode_method):
+            compute_scale = get_compute_scale_mode_method()
+        else:
+            compute_scale = True
+        logger.info("Use Instancing Mode: {}; Remove Proxies Mode: {}; Compute Scale Mode: {}".format(
+            use_instancing, 
+            remove_proxies,
+            compute_scale)
+        )
 
         statusquo_repr_mesh = SwapMasterJob.get_statusquo_repr_mesh()
         substitute_template_root = self.get_SM_substitute_root_data()
@@ -399,7 +412,8 @@ class Control(object):
                 statusquo_repr_mesh, 
                 substitute_template_root, 
                 use_instancing, 
-                remove_proxies
+                remove_proxies,
+                compute_scale,
             )
             self.register_last_swapped(swapped)
 
@@ -411,9 +425,9 @@ class Control(object):
 
         self.print_model_data()
 
-    def fast_forward_swap(self, get_use_instancing_mode_method, get_remove_proxies_mode_method):
-        self.preview_SM_nuclei()
-        self.do_swap(get_use_instancing_mode_method, get_remove_proxies_mode_method, post_cleanup=True)
+    def fast_forward_swap(self, get_use_instancing_mode_method, get_remove_proxies_mode_method, get_compute_scale_mode_method):
+        self.preview_SM_nuclei(get_compute_scale_mode_method)
+        self.do_swap(get_use_instancing_mode_method, get_remove_proxies_mode_method, get_compute_scale_mode_method, post_cleanup=True)
 
     def show_swapped(self):
         selection_utils.replace_selection(self._model._data["SM_last_swapped"])
@@ -426,6 +440,7 @@ class SwapMasterJob(object):
     Yaw_component_IDs = {"component_enum": 0, "children": [], "mesh": None}
     
     axis_cfg = None
+    statusquo_repr_hub_jnt_pole_dimension = 0
     statusquo_repr_bbox_dimensions = (1, 1, 1)
     statusquo_repr_hub_jnt_start_to_rotate_pivot_vec = None
 
@@ -456,6 +471,8 @@ class SwapMasterJob(object):
         self.hub_joint_start = None
         self.hub_joint_end = None
         self.hub_joint_yaw = None
+        self.hub_joint_pole_dimension = 0
+        self.scale_factor = 1
         
         self.nucleus_locator = None
         self.swapped = None
@@ -466,6 +483,17 @@ class SwapMasterJob(object):
     @classmethod
     def get_statusquo_repr_mesh(cls):
         return cls.South_component_IDs["mesh"]
+
+    @staticmethod
+    def get_statusquo_repr_hub_jnt_end_point():
+        return transform_utils.get_center_position(
+            mesh_utils.expand_mesh_with_component_IDs(
+                SwapMasterJob.North_component_IDs["mesh"],
+                SwapMasterJob.North_component_IDs["children"],
+                SwapMasterJob.North_component_IDs["component_enum"]
+            ),
+            as_point=True
+        )
 
     @staticmethod
     def get_statusquo_repr_hub_jnt_start_point():
@@ -532,6 +560,14 @@ class SwapMasterJob(object):
         cls.axis_cfg = AxisCfg(JO_aim_axis, JO_up_axis, aim_vec, up_vec)
 
     @classmethod
+    def get_statusquo_repr_hub_jnt_pole_dimension(cls):
+        cls.statusquo_repr_hub_jnt_pole_dimension = transform_utils.get_translation_between_two_points(
+            cls.get_statusquo_repr_hub_jnt_start_point(),
+            cls.get_statusquo_repr_hub_jnt_end_point(),
+            as_length=True
+        )
+
+    @classmethod
     def get_statusquo_repr_bbox_dimensions(cls):
         cls.statusquo_repr_bbox_dimensions = mesh_utils.get_bounding_box_dimensions(
             cls.get_statusquo_repr_mesh()
@@ -594,7 +630,17 @@ class SwapMasterJob(object):
         else:
             logger.warning("Either HubJoint start or HubJoint end is missing")
 
-    def make_nucleus_locator_from_hub_joint(self):       
+    def make_nucleus_locator_from_hub_joint(self, compute_scale):
+        if compute_scale and SwapMasterJob.statusquo_repr_hub_jnt_pole_dimension:
+            self.hub_joint_pole_dimension = transform_utils.get_translation_between_two_points(
+                transform_utils.get_rotate_pivot(self.hub_joint_start),
+                transform_utils.get_rotate_pivot(self.hub_joint_end),
+                as_length=True
+            )
+            self.scale_factor = self.hub_joint_pole_dimension / SwapMasterJob.statusquo_repr_hub_jnt_pole_dimension
+        self.scale_factor = self.scale_factor if self.scale_factor else 1
+        logger.info("Scale factor: {}".format(self.scale_factor))
+
         # Create new locator at HubJoint start
         self.nucleus_locator = transform_utils.make_space_locator(
             name="_".join(["SM_nucleus_locator", self.status_quo_mesh_name])
@@ -618,7 +664,7 @@ class SwapMasterJob(object):
         
             transform_utils.set_translation(
                 self.nucleus_locator, 
-                SwapMasterJob.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec
+                SwapMasterJob.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec * self.scale_factor
             )
             node_utils.parent_to_world(
                 self.nucleus_locator,
@@ -631,13 +677,13 @@ class SwapMasterJob(object):
             SwapMasterJob.statusquo_repr_bbox_dimensions
         )
 
-    def xform_reconstruction(self):
+    def xform_reconstruction(self, compute_scale):
         """
         Make Nucleus Locator from Hub Joint
         """
         self.prepare_hub_joint_elements()
         self.orient_hub_joint()
-        self.make_nucleus_locator_from_hub_joint()
+        self.make_nucleus_locator_from_hub_joint(compute_scale)
 
     def delete_hub_joint(self):
         joints = [jnt for jnt in (self.hub_joint_yaw, self.hub_joint_end, self.hub_joint_start) \
@@ -654,7 +700,7 @@ class SwapMasterJob(object):
     def remove_proxy(self):
         node_utils.delete_one(self.status_quo_mesh)
 
-    def swap(self, statusquo_repr_mesh, substitute_template_root, use_instancing, remove_proxy):
+    def swap(self, statusquo_repr_mesh, substitute_template_root, use_instancing, remove_proxy, compute_scale):
         """
         :param pmc.nt.Mesh|None statusquo_repr_mesh:
         :param pmc.nt.Mesh|None substitute_template_root:
@@ -681,6 +727,8 @@ class SwapMasterJob(object):
             return
         else:
             transform_utils.match_transforms(self.swapped, self.nucleus_locator)
+            if compute_scale:
+                transform_utils.set_scale(self.swapped, self.scale_factor)
 
         if remove_proxy:
             logger.info("Removing original pre-swapped mesh")

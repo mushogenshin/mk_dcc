@@ -302,11 +302,6 @@ def create_connections(app):
 
     ui.SM_load_substitute_ui_grp.connect_app_model_update(model_data, "SM_substitute_root")
 
-    # Orientation Reconstruction
-
-    ui.SM_preview_nuclei_btn.clicked.connect(app._control.preview_SM_nuclei)
-    ui.SM_abort_nuclei_btn.clicked.connect(app._control.abort_SM_nuclei)
-
     # Do Swap
 
     def get_SM_use_instancing_mode_from_UI():
@@ -314,6 +309,17 @@ def create_connections(app):
 
     def get_SM_remove_proxies_mode_from_UI():
         return ui.SM_remove_proxies_check_box.isChecked()
+    
+    def get_SM_compute_scale_mode_from_UI():
+        return ui.SM_compute_scale_check_box.isChecked()
+
+    # Orientation Reconstruction
+
+    ui.SM_preview_nuclei_btn.clicked.connect(partial(
+        app._control.preview_SM_nuclei,
+        get_compute_scale_mode_method=get_SM_compute_scale_mode_from_UI
+    ))
+    ui.SM_abort_nuclei_btn.clicked.connect(app._control.abort_SM_nuclei)
 
     def fast_forward_swap():
         proceed = True
@@ -330,13 +336,15 @@ def create_connections(app):
         if proceed:
             app._control.fast_forward_swap(
                 get_use_instancing_mode_method=get_SM_use_instancing_mode_from_UI,
-                get_remove_proxies_mode_method=get_SM_remove_proxies_mode_from_UI
+                get_remove_proxies_mode_method=get_SM_remove_proxies_mode_from_UI,
+                get_compute_scale_mode_method=get_SM_compute_scale_mode_from_UI
             )
 
     ui.SM_proceed_swapping_btn.clicked.connect(partial(
         app._control.do_swap,
         get_use_instancing_mode_method=get_SM_use_instancing_mode_from_UI,
-        get_remove_proxies_mode_method=get_SM_remove_proxies_mode_from_UI
+        get_remove_proxies_mode_method=get_SM_remove_proxies_mode_from_UI,
+        get_compute_scale_mode_method=get_SM_compute_scale_mode_from_UI
     ))
     ui.SM_fast_forward_swap_btn.clicked.connect(fast_forward_swap)
 

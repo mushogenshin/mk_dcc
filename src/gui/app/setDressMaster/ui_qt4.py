@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'E:\projects\mk_dcc/src/gui/app/setDressMaster/ui.ui'
 #
-# Created: Sat Nov  7 04:58:46 2020
+# Created: Sun Nov  8 11:19:35 2020
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -374,7 +374,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.addWidget(self.SM_proceed_swapping_btn)
         self.verticalLayout_4.addWidget(self.SM_orient_reconstruct_child_group_box)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
-        self.horizontalLayout_2.setSpacing(0)
+        self.horizontalLayout_2.setSpacing(12)
         self.horizontalLayout_2.setContentsMargins(18, 0, 18, 0)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.verticalLayout_9 = QtGui.QVBoxLayout()
@@ -390,8 +390,19 @@ class Ui_MainWindow(object):
         self.SM_swap_use_instancing_check_box.setObjectName("SM_swap_use_instancing_check_box")
         self.verticalLayout_9.addWidget(self.SM_swap_use_instancing_check_box)
         self.horizontalLayout_2.addLayout(self.verticalLayout_9)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem)
+        self.verticalLayout_12 = QtGui.QVBoxLayout()
+        self.verticalLayout_12.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_12.setObjectName("verticalLayout_12")
+        self.SM_compute_scale_check_box = QtGui.QCheckBox(self.groupBox_4)
+        self.SM_compute_scale_check_box.setStyleSheet("font-size: 10px;")
+        self.SM_compute_scale_check_box.setChecked(True)
+        self.SM_compute_scale_check_box.setObjectName("SM_compute_scale_check_box")
+        self.verticalLayout_12.addWidget(self.SM_compute_scale_check_box)
+        spacerItem = QtGui.QSpacerItem(20, 5, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.MinimumExpanding)
+        self.verticalLayout_12.addItem(spacerItem)
+        self.horizontalLayout_2.addLayout(self.verticalLayout_12)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem1)
         self.verticalLayout_4.addLayout(self.horizontalLayout_2)
         self.SM_fast_forward_swap_btn = QtGui.QPushButton(self.groupBox_4)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
@@ -436,8 +447,8 @@ class Ui_MainWindow(object):
         self.SetDressMaster_about_btn.setStyleSheet("color: rgb(140, 140, 140);")
         self.SetDressMaster_about_btn.setObjectName("SetDressMaster_about_btn")
         self.verticalLayout_10.addWidget(self.SetDressMaster_about_btn)
-        spacerItem1 = QtGui.QSpacerItem(20, 8, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.verticalLayout_10.addItem(spacerItem1)
+        spacerItem2 = QtGui.QSpacerItem(20, 8, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.verticalLayout_10.addItem(spacerItem2)
         self.verticalLayout_11.addWidget(self.bottom_buffer_outer_container)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.verticalLayout_8.addWidget(self.scrollArea)
@@ -476,11 +487,12 @@ class Ui_MainWindow(object):
         self.SM_proceed_swapping_btn.setText(QtGui.QApplication.translate("MainWindow", "Proceed w/ Swapping", None, QtGui.QApplication.UnicodeUTF8))
         self.SM_remove_proxies_check_box.setText(QtGui.QApplication.translate("MainWindow", "Remove Proxies", None, QtGui.QApplication.UnicodeUTF8))
         self.SM_swap_use_instancing_check_box.setText(QtGui.QApplication.translate("MainWindow", "Instancing", None, QtGui.QApplication.UnicodeUTF8))
+        self.SM_compute_scale_check_box.setText(QtGui.QApplication.translate("MainWindow", "Compute Scale", None, QtGui.QApplication.UnicodeUTF8))
         self.SM_fast_forward_swap_btn.setText(QtGui.QApplication.translate("MainWindow", "Fast-Forward Swap Selected", None, QtGui.QApplication.UnicodeUTF8))
         self.SM_show_swapped_btn.setText(QtGui.QApplication.translate("MainWindow", "Show Last Swapped", None, QtGui.QApplication.UnicodeUTF8))
         self.SetDressMaster_about_btn.setText(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
         self.SetDressMaster_about_btn.setProperty("about", QtGui.QApplication.translate("MainWindow", "Author: Truong CG Artist, Mushogenshin\n"
-"Designer: Rkaixg", None, QtGui.QApplication.UnicodeUTF8))
-        self.SetDressMaster_about_btn.setProperty("version", QtGui.QApplication.translate("MainWindow", "0.1.0", None, QtGui.QApplication.UnicodeUTF8))
+"Designer: Rkxg", None, QtGui.QApplication.UnicodeUTF8))
+        self.SetDressMaster_about_btn.setProperty("version", QtGui.QApplication.translate("MainWindow", "0.1.1", None, QtGui.QApplication.UnicodeUTF8))
 
 from src.gui.app.setDressMaster import resources_rc_qt4
