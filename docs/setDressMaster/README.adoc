@@ -1,10 +1,10 @@
-// :imagesdir: E:/projects/mk_dcc/docs/setDressMaster
+:imagesdir: E:/projects/mk_dcc/docs/setDressMaster
 
 Set Dress Master
 ================
 Utilities to efficiently perform set dressing in Autodesk Maya
 
-:Author: Truong CG Artist, Mushogenshin, Rkaixg
+:Author: Truong CG Artist, Mushogenshin, Rkxg
 :Revision: 0.1.0
 
 Author: {author}
