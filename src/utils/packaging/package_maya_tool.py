@@ -72,9 +72,12 @@ for i in (target_dir / "docs").glob("*"):
         remove_item(i)
 
 # delete docs/{app_name}/images
-for i in (target_dir / "docs/{}".format(app_name)).glob("*"):
-    if i.name == "images":
-        remove_item(i)
+for i in (target_dir / "docs/{}".format(app_name)).glob("images"):
+    remove_item(i)
+
+# delete src/gui/app/{app_name}/rc
+for i in (target_dir / "src/gui/app/{}".format(app_name)).glob("rc"):
+    remove_item(i)
 
 # delete all .ui files
 for i in target_dir.rglob("*.ui"):
