@@ -3,6 +3,7 @@ logger = logging.getLogger(__name__)
 
 
 WORLD_SPACE = "world"
+PRETRANSFORM = "preTransform"
 
 
 def get_center_position(objects, as_point=False):
@@ -139,7 +140,7 @@ def bake_aim_constraint_to_joint_orient(joint):
         pmc.makeIdentity(joint, apply=True, translate=False, scale=False, rotate=True)
 
 
-def match_transforms(obj, target, translation=True, rotation=True):
+def match_transforms(obj, target, translation=True, rotation=True, ensure_local_pivot_values=False):
     """
     :param PyNode obj, target:
     """
@@ -149,10 +150,12 @@ def match_transforms(obj, target, translation=True, rotation=True):
     except ImportError:
         pass
     else:
-        # if translation and hasattr(obj, "setTranslation") and hasattr(target, "getTranslation"):
-        #     obj.setTranslation(target.getTranslation(space=WORLD_SPACE), space=WORLD_SPACE)
-        # if rotation and hasattr(obj, "setRotation") and hasattr(target, "getRotation"):
-        #     obj.setRotation(target.getRotation(space=WORLD_SPACE), space=WORLD_SPACE)
+        if ensure_local_pivot_values:
+            if hasattr(obj, "setRotatePivot") and hasattr(target, "getRotatePivot"):
+                obj.setRotatePivot(target.getRotatePivot(space=PRETRANSFORM), space=PRETRANSFORM)
+            if hasattr(obj, "setScalePivot") and hasattr(target, "getScalePivot"):
+                obj.setScalePivot(target.getScalePivot(space=PRETRANSFORM), space=PRETRANSFORM)
+
         pmc.select(obj, target, replace=True)
         if translation:
             pmc.mel.eval("MatchTranslation")
@@ -272,6 +275,7 @@ class zero_but_restore_transforms_afterwards(object):
         self.node = node
         self.xform_node = None
         self.parent = None
+        self.translation = None
         self.rotation = None
 
         try:
@@ -290,7 +294,9 @@ class zero_but_restore_transforms_afterwards(object):
             logger.info("Storing transforms for {}".format(self.xform_node))
     
     def __enter__(self):
+        self.is_translation_zero = True
         self.is_rotation_zero = True
+
         try:
             import pymel.core as pmc
         except ImportError:
@@ -299,12 +305,22 @@ class zero_but_restore_transforms_afterwards(object):
             if self.parent is not None:  # parent to world first
                 pmc.parent(self.xform_node, world=True)
 
+            if hasattr(self.xform_node, "getTranslation"):
+                self.translation = self.xform_node.getTranslation()
+
+            if hasattr(self.translation, "isZero"):
+                self.is_translation_zero = self.translation.isZero()
+
             if hasattr(self.xform_node, "getRotation"):
                 self.rotation = self.xform_node.getRotation()
             
             if hasattr(self.rotation, "isZero"):
                 self.is_rotation_zero = self.rotation.isZero()
                 
+            if not self.is_translation_zero and hasattr(self.xform_node, "setTranslation"):
+                logger.info("Resetting transforms from translation {}".format(self.rotation))
+                self.xform_node.setTranslation((0, 0, 0))
+
             if not self.is_rotation_zero and hasattr(self.xform_node, "setRotation"):
                 logger.info("Resetting transforms from rotation {}".format(self.rotation))
                 self.xform_node.setRotation((0, 0, 0))
@@ -315,10 +331,17 @@ class zero_but_restore_transforms_afterwards(object):
         except ImportError:
             pass
         else:
+            if hasattr(self.xform_node, "getTranslation"):
+                logger.info("Translation before exiting: {}".format(self.xform_node.getTranslation()))
+            if not self.is_translation_zero and hasattr(self.xform_node, "setTranslation"):
+                logger.info("Restoring translation for {}".format(self.xform_node))
+                self.xform_node.setTranslation(self.translation)
+
             if hasattr(self.xform_node, "getRotation"):
-                logger.info("Transforms before exiting: rotation {}".format(self.xform_node.getRotation()))
+                logger.info("Rotation before exiting: {}".format(self.xform_node.getRotation()))
             if not self.is_rotation_zero and hasattr(self.xform_node, "setRotation"):
-                logger.info("Restoring transforms for {}".format(self.xform_node))
+                logger.info("Restoring rotation for {}".format(self.xform_node))
                 self.xform_node.setRotation(self.rotation)
+
             if self.parent is not None:
                 pmc.parent(self.xform_node, self.parent)
