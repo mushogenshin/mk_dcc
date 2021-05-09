@@ -56,6 +56,10 @@ if __name__ == "__main__":
     for i in (target_dir / "src/utils").glob("blender"):
         remove_item(i)
 
+    # delete src/utils/packaging
+    for i in (target_dir / "src/utils").glob("packaging"):
+        remove_item(i)
+
     # delete src/gui/stylesheets
     for i in (target_dir / "src/gui").glob("stylesheets"):
         remove_item(i)

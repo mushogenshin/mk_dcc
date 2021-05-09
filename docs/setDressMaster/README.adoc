@@ -5,7 +5,7 @@ Set Dress Master
 Utilities to efficiently perform set dressing in Autodesk Maya
 
 :Author: Truong CG Artist, Mushogenshin, Rkxg
-:Revision: 0.1.0
+:Revision: 0.1.2
 
 Author: {author}
 
@@ -134,4 +134,5 @@ After perform the swap:
 *  [PhysX Painter] Allow for scale variability during painting
 
 === Recent Changes
+*  Fixed obsolete `long` in Python 3 for Maya 2022
 *  [Swap Master] Added support for computing scale during swapping since version `0.1.1`
