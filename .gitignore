@@ -3,25 +3,32 @@
 /.venv2/*
 
 !/.venv2/Lib
-!/.venv2/lib
 /.venv2/Lib/*
-/.venv2/lib/*
 !/.venv2/Lib/site-packages
-!/.venv2/lib/python2.7
 /.venv2/Lib/site-packages/*
-/.venv2/lib/python2.7/*
 !/.venv2/Lib/site-packages/pathlib2
 !/.venv2/Lib/site-packages/scandir.py
+# !/.venv2/Lib/site-packages/yaml
 
+!/.venv2/lib
+/.venv2/lib/*
+!/.venv2/lib/python2.7
+/.venv2/lib/python2.7/*
 !/.venv2/lib/python2.7/site-packages
 /.venv2/lib/python2.7/site-packages/*
 !/.venv2/lib/python2.7/site-packages/pathlib2
 !/.venv2/lib/python2.7/site-packages/scandir.py
+# !/.venv2/lib/python2.7/site-packages/yaml
 
-# !/.venv2/Lib/site-packages/scandir.py
-# !/.venv2/Lib/site-packages/pathlib2
 
-.venv3/**
+.venv3/*
+
+# !/.venv3/Lib
+# /.venv3/Lib/*
+# !/.venv3/Lib/site-packages
+# /.venv3/Lib/site-packages/*
+# !/.venv3/Lib/site-packages/yaml
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -126,6 +126,7 @@ After perform the swap:
 === Known Issues
 
 *  Undo is not supported
+*  [Version `0.1.1`] `Compute Scale` may not work well with `Instancing` option, causing the meshes to jump. If you want both `Compute Scale` and `Instancing` options, we recommend providing a hi-Res template as well.
 
 === Road Map
 
