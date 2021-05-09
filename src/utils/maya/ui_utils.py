@@ -1,6 +1,9 @@
+import sys
 import os
 import logging
 
+
+_IS_PY2 = True if sys.version_info.major < 3 else False
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +15,10 @@ def maya_main_window(wrapInstance, QWidget):
     '''
     import maya.OpenMayaUI as omui
     main_window_ptr = omui.MQtUtil.mainWindow()
-    return wrapInstance(long(main_window_ptr), QWidget)
+    if _IS_PY2:
+        return wrapInstance(long(main_window_ptr), QWidget)
+    else:
+        return wrapInstance(int(main_window_ptr), QWidget)
 
 
 def raise_attribute_editor(node=None):
@@ -195,3 +201,7 @@ def raise_mash_outliner():
 #     remove_unneeded_maya_content_path()
 
 #     return True
+
+
+if __name__ == "__main__":
+    print(_IS_PY2)
