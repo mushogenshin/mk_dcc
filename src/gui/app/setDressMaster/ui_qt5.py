@@ -494,6 +494,6 @@ class Ui_MainWindow(object):
         self.SetDressMaster_about_btn.setText(QtWidgets.QApplication.translate("MainWindow", "About", None, -1))
         self.SetDressMaster_about_btn.setProperty("about", QtWidgets.QApplication.translate("MainWindow", "Author: Truong CG Artist, Mushogenshin\n"
 "Designer: Rkxg", None, -1))
-        self.SetDressMaster_about_btn.setProperty("version", QtWidgets.QApplication.translate("MainWindow", "0.1.1", None, -1))
+        self.SetDressMaster_about_btn.setProperty("version", QtWidgets.QApplication.translate("MainWindow", "0.1.2", None, -1))
 
 from src.gui.app.setDressMaster import resources_rc_qt5

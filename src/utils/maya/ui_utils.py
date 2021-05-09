@@ -3,22 +3,35 @@ import os
 import logging
 
 
-_IS_PY2 = True if sys.version_info.major < 3 else False
-
 logger = logging.getLogger(__name__)
 
 
 def maya_main_window(wrapInstance, QWidget):
     '''
+    Python 2 only
     :param function wrapInstance: of shiboken module
     :param module QWidget:
     '''
     import maya.OpenMayaUI as omui
     main_window_ptr = omui.MQtUtil.mainWindow()
-    if _IS_PY2:
-        return wrapInstance(long(main_window_ptr), QWidget)
-    else:
-        return wrapInstance(int(main_window_ptr), QWidget)
+    return wrapInstance(long(main_window_ptr), QWidget)
+
+
+def maya_main_window_qt(QApplication):
+    '''
+    For Python 3, as `long` is obsolete and `int` doesn't work properly with `wrapInstance`
+    :param module QApplication:
+    '''
+    app = QApplication.instance()  # get the qApp instance if it exists.
+
+    if not app:
+        app = QApplication(sys.argv)
+
+    def get_maya_main_window():
+        maya_win = next(w for w in app.topLevelWidgets() if w.objectName() == 'MayaWindow')
+        return maya_win
+
+    return get_maya_main_window()
 
 
 def raise_attribute_editor(node=None):

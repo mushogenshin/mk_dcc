@@ -42,7 +42,7 @@ class Maya(object):
 
         # Check Maya's Qt version
         from src.utils.maya.introspection_utils import get_maya_qt_version
-        from src.utils.maya.ui_utils import maya_main_window
+        from src.utils.maya.ui_utils import maya_main_window, maya_main_window_qt
 
         maya_qt_version = get_maya_qt_version()
         uic_gen_mod = src.utils.load_app_uic_gen_mod(app_name, is_py2, maya_qt_version)
@@ -57,7 +57,12 @@ class Maya(object):
         self._control._model = self._model
 
         self._view = AbstractMainWindow(uic_gen_mod.Ui_MainWindow, self._control)
-        self._view.setParent(maya_main_window(wrapInstance, QWidget), Qt.Window)
+
+        if is_py2:
+            self._view.setParent(maya_main_window(wrapInstance, QWidget), Qt.Window)
+        else:
+            self._view.setParent(maya_main_window_qt(QApplication), Qt.Window)
+
 
 
 class Houdini(object):
