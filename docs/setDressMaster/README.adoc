@@ -1,4 +1,4 @@
-:imagesdir: E:/projects/mk_dcc/docs/setDressMaster
+// :imagesdir: E:/projects/mk_dcc/docs/setDressMaster
 
 Set Dress Master
 ================
@@ -133,4 +133,4 @@ After perform the swap:
 *  [PhysX Painter] Allow for scale variability during painting
 
 === Recent Changes
-*  [Swap Master] Allow for compute scale during swapping since version `0.1.1`
+*  [Swap Master] Added support for computing scale during swapping since version `0.1.1`

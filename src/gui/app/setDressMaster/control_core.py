@@ -21,6 +21,7 @@ MASH_NETWORK_NAME = "SDM_MASH_Network"
 MASH_PLACER = "MASH_Placer"
 MASH_DYNAMICS = "MASH_Dynamics"
 TIME_RANGE = 3000
+TOLERANCE = 0.000001
 
 
 def load_mash_api():
@@ -409,10 +410,23 @@ class Control(object):
 
         statusquo_repr_mesh = SwapMasterJob.get_statusquo_repr_mesh()
         substitute_template_root = self.get_SM_substitute_root_data()
+
+        if substitute_template_root:
+            target = substitute_template_root
+            logger.info("Running SwapJob with given substitute template root: {}".format(substitute_template_root))
+        else:
+            target = statusquo_repr_mesh
+            logger.info("Running SwapJob with given representative of status quo: {}".format(statusquo_repr_mesh))
+            if use_instancing:  # work around some undesired instancing behavior
+                duplicated_statusquo_repr_mesh = node_utils.duplicate(statusquo_repr_mesh)
+                if duplicated_statusquo_repr_mesh:
+                    target = node_utils.get_shape(duplicated_statusquo_repr_mesh[0])    
+
+        node_utils.delete_one(target, delete_construction_history_only=True)
+
         for swap_job in  self._model._data["SM_jobs"]:
             swapped = swap_job.swap(
-                statusquo_repr_mesh, 
-                substitute_template_root, 
+                target,
                 use_instancing, 
                 remove_proxies,
                 compute_scale,
@@ -640,7 +654,7 @@ class SwapMasterJob(object):
                 as_length=True
             )
             self.scale_factor = self.hub_joint_pole_dimension / SwapMasterJob.statusquo_repr_hub_jnt_pole_dimension
-        self.scale_factor = self.scale_factor if self.scale_factor else 1
+        self.scale_factor = abs(self.scale_factor) if self.scale_factor else 1
         logger.info("Scale factor: {}".format(self.scale_factor))
 
         # Create new locator at HubJoint start
@@ -702,25 +716,17 @@ class SwapMasterJob(object):
     def remove_proxy(self):
         node_utils.delete_one(self.status_quo_mesh)
 
-    def swap(self, statusquo_repr_mesh, substitute_template_root, use_instancing, remove_proxy, compute_scale):
+    def swap(self, target, use_instancing, remove_proxy, compute_scale):
         """
         :param pmc.nt.Mesh|None statusquo_repr_mesh:
         :param pmc.nt.Mesh|None substitute_template_root:
         :param bool use_instancing, remove_proxy:
         """
         # Duplicate|Instance
-        if substitute_template_root:
-            logger.info("Running SwapJob with given substitute template root: {}".format(substitute_template_root))
-            self.swapped = node_utils.duplicate(
-                substitute_template_root, 
-                as_instance=use_instancing
-            )  
-        else:
-            logger.info("Running SwapJob with given representative of status quo: {}".format(statusquo_repr_mesh))
-            self.swapped = node_utils.duplicate(
-                statusquo_repr_mesh,
-                as_instance=use_instancing
-            )
+        self.swapped = node_utils.duplicate(
+            target,
+            as_instance=use_instancing
+        )
             
         self.swapped = self.swapped[0] if self.swapped else None
 
@@ -729,7 +735,7 @@ class SwapMasterJob(object):
             return
         else:
             transform_utils.match_transforms(self.swapped, self.nucleus_locator)
-            if compute_scale:
+            if compute_scale and abs(self.scale_factor - 1) >= TOLERANCE:
                 transform_utils.set_scale(self.swapped, self.scale_factor)
 
         if remove_proxy:

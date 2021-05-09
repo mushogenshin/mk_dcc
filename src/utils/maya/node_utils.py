@@ -19,6 +19,11 @@ def get_node_name(node):
         return ""
 
 
+def get_shape(node):
+    if hasattr(node, "getShape"):
+        return node.getShape()
+
+
 def ls_component_IDs(nodes):
     """
     :rtype str: e.g. '[3:9], [13:15], 39, 41, [53:54], [78:79], 84'
@@ -79,8 +84,9 @@ def node_exists(node, as_string=False):
             return pmc.objExists(node)
 
 
-def delete_one(node, is_mesh=False):
-    logger.info('Deleting "{}"'.format(node))
+def delete_one(node, is_mesh=False, delete_construction_history_only=False):
+    log_item = "node" if not delete_construction_history_only else "construction history of node"
+    logger.info('Deleting {} "{}"'.format(log_item, node))
     try:
         import pymel.core as pmc
     except ImportError:
@@ -91,11 +97,14 @@ def delete_one(node, is_mesh=False):
         if node_exists(node):
             node_name = get_node_name(node)
             try:
-                pmc.delete(node)
+                if not delete_construction_history_only:
+                    pmc.delete(node)
+                else:
+                    pmc.delete(node, constructionHistory=True)
             except Exception as e:
-                logger.exception("Unable to delete node {} due to {}".format(node, e))
+                logger.exception("Unable to delete {} {} due to {}".format(log_item, node, e))
             else:
-                logger.info("Successfully deleted node {}".format(node_name))
+                logger.info("Successfully deleted {} {}".format(log_item, node_name))
         else:
             logger.warning("{} doesn't exist in scene. Skipped deleting.".format(node))
 
