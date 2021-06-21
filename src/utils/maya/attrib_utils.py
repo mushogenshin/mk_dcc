@@ -1,34 +1,31 @@
 import logging
+from src.utils.maya import maya_common
+
+
 logger = logging.getLogger(__name__)
 
 
-def get_attrib(node, attrib):
+@maya_common.libs
+def get_attrib(node, attrib, **kwargs):
     """
     :param str attrib:
     """
+    pmc = kwargs[maya_common._PMC]
     try:
-        import pymel.core as pmc
-    except ImportError:
-        pass
-    else:
-        try:
-            return pmc.getAttr("{}.{}".format(node.nodeName(), attrib))
-        except Exception as e:
-            logger.exception('Unable to get "{}" attribute of {} due to {}'.format(attrib, node, e))
+        return pmc.getAttr("{}.{}".format(node.nodeName(), attrib))
+    except Exception as e:
+        logger.exception('Unable to get "{}" attribute of {} due to {}'.format(attrib, node, e))
     
 
-def set_attrib(node, attrib, value):
+@maya_common.libs
+def set_attrib(node, attrib, value, **kwargs):
     """
     :param str attrib:
     """
+    pmc = kwargs[maya_common._PMC]
     try:
-        import pymel.core as pmc
-    except ImportError:
-        pass
+        pmc.setAttr("{}.{}".format(node.nodeName(), attrib), value)
+    except Exception as e:
+        logger.exception('Unable to set "{}" attribute of {} due to {}'.format(attrib, node, e))
     else:
-        try:
-            pmc.setAttr("{}.{}".format(node.nodeName(), attrib), value)
-        except Exception as e:
-            logger.exception('Unable to set "{}" attribute of {} due to {}'.format(attrib, node, e))
-        else:
-            logger.info('Successfully set "{}" attribute of {} to {}'.format(attrib, node, value))
+        logger.info('Successfully set "{}" attribute of {} to {}'.format(attrib, node, value))

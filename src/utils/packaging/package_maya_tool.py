@@ -7,7 +7,8 @@ from pathlib import Path
 from distutils import dir_util
 
 app_name = "setDressMaster"
-target_dir = Path("E:/projects/mk_dcc_dist")
+# target_dir = Path("E:/projects/mk_dcc_dist")
+target_dir = Path("/Users/mushogenshin/projects/Python_fun/mk_dcc_dist")
 failed_to_remove = []
 
 
@@ -94,17 +95,17 @@ if __name__ == "__main__":
     for i in target_dir.rglob("batch"):
         remove_item(i)
 
-    # delete all .py files except the install script
-    for i in target_dir.rglob("*.py"):
-        if ".venv2" in i.as_posix():
-            continue
-        if "install/maya/{}".format(app_name) in i.as_posix():
-            continue
-        if "ui_qt" in i.stem:
-            continue
-        if i.stem in ("control", "model"):
-            continue
-        remove_item(i)
+    # # delete all .py files except the install script
+    # for i in target_dir.rglob("*.py"):
+    #     if ".venv2" in i.as_posix():
+    #         continue
+    #     if "install/maya/{}".format(app_name) in i.as_posix():
+    #         continue
+    #     if "ui_qt" in i.stem:
+    #         continue
+    #     if i.stem in ("control", "model"):
+    #         continue
+    #     remove_item(i)
 
     # delete all .md, .adoc, and .mod, files
     for i in target_dir.rglob("*.adoc"):

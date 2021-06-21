@@ -1,18 +1,19 @@
 import sys
-import os
 import logging
+from src.utils.maya import maya_common
 
 
 logger = logging.getLogger(__name__)
 
 
-def maya_main_window(wrapInstance, QWidget):
+@maya_common.libs
+def maya_main_window(wrapInstance, QWidget, **kwargs):
     '''
     Python 2 only
     :param function wrapInstance: of shiboken module
     :param module QWidget:
     '''
-    import maya.OpenMayaUI as omui
+    omui = kwargs[maya_common._OMUI] 
     main_window_ptr = omui.MQtUtil.mainWindow()
     return wrapInstance(long(main_window_ptr), QWidget)
 
@@ -34,17 +35,14 @@ def maya_main_window_qt(QApplication):
     return get_maya_main_window()
 
 
-def raise_attribute_editor(node=None):
+@maya_common.libs
+def raise_attribute_editor(node=None, **kwargs):
+    pmc = kwargs[maya_common._PMC]
     logger.info("Raising Attribute Editor on specified node")
-    try:
-        import pymel.core as pmc
-    except ImportError:
-        pass
-    else:
-        if node:
-            pmc.select(node, r=True)
-            pmc.mel.AttributeEditor()  # raise the Attribute Editor
-            pmc.mel.updateAE(node)  # update it
+    if node:
+        pmc.select(node, r=True)
+        pmc.mel.AttributeEditor()  # raise the Attribute Editor
+        pmc.mel.updateAE(node)  # update it
 
 
 class ShelfBuilder(object):
@@ -64,79 +62,66 @@ class ShelfBuilder(object):
         # self.clean_old_shelf()
         # self.build_shelf()
 
+    @maya_common.libs
     @staticmethod
-    def get_current_shelf():
+    def get_current_shelf(*args, **kwargs):
+        cmds = kwargs[maya_common._CMDS]
+        mel = kwargs[maya_common._MEL]
         try:
-            import maya.mel as mel
-            import maya.cmds as cmds
-        except ImportError:
+            shelf_top_level = mel.eval("string $_shelf_top_level = $gShelfTopLevel")
+            current_shelf = cmds.tabLayout(shelf_top_level, q=True, selectTab=True)
+        except Exception:
             return ""
         else:
-            try:
-                shelf_top_level = mel.eval("string $_shelf_top_level = $gShelfTopLevel")
-                current_shelf = cmds.tabLayout(shelf_top_level, q=True, selectTab=True)
-            except Exception:
-                return ""
-            else:
-                return current_shelf
+            return current_shelf
 
-    def get_existing_buttons_in_shelf(self):
+    @maya_common.libs
+    def get_existing_buttons_in_shelf(self, **kwargs):
+        cmds = kwargs[maya_common._CMDS]
         ret = []
         try:
-            import maya.cmds as cmds
-        except ImportError:
-            return ret
-        else:
-            try:
-                ret = cmds.shelfLayout(self.shelf_name, q=True, childArray=True) if self.shelf_name else ret
-                ret = [button for button in ret if cmds.shelfButton(button, q=True, exists=True)]
-            except Exception:
-                pass
-            finally:
-                return ret
-
-    def button_with_label_exists_in_shelf(self, button_label):
-        try:
-            import maya.cmds as cmds
-        except ImportError:
-            return True
-        else:
-            for button in self.get_existing_buttons_in_shelf():
-                if cmds.shelfButton(button, q=True, label=True) == button_label:
-                    return True
-            else:
-                return False
-
-    def add_button(self, button_label, command="pass", icon="commandButton.png", overlay_icon_with_label=False):
-        '''Add a shelf button with the specified label, command, and icon'''
-        ret = None
-        try:
-            import maya.cmds as cmds
-        except ImportError:
+            ret = cmds.shelfLayout(self.shelf_name, q=True, childArray=True) if self.shelf_name else ret
+            ret = [button for button in ret if cmds.shelfButton(button, q=True, exists=True)]
+        except Exception:
             pass
-        else:
-            if not self.button_with_label_exists_in_shelf(button_label):
-                from os.path import join
-                try:
-                    if self.shelf_name:
-                        cmds.setParent(self.shelf_name)
-                    ret = cmds.shelfButton(
-                        label=button_label, 
-                        command=command, 
-                        sourceType="python",
-                        image=join(self.icon_path_prefix, icon), 
-                        imageOverlayLabel=button_label if overlay_icon_with_label else "", 
-                        width=ShelfBuilder.button_size, 
-                        height=ShelfBuilder.button_size, 
-                        overlayLabelBackColor=ShelfBuilder.label_background, 
-                        overlayLabelColor=ShelfBuilder.label_color
-                    )
-                except Exception:
-                    pass
-            else:
-                logger.warning('Button with label "{}" already exists in shelf "{}". Skipped.'.format(button_label, self.shelf_name))
         finally:
             return ret
+
+    @maya_common.libs
+    def button_with_label_exists_in_shelf(self, button_label, **kwargs):
+        cmds = kwargs[maya_common._CMDS]
+        for button in self.get_existing_buttons_in_shelf():
+            if cmds.shelfButton(button, q=True, label=True) == button_label:
+                return True
+        else:
+            return False
+
+    @maya_common.libs
+    def add_button(self, button_label, command="pass", icon="commandButton.png", overlay_icon_with_label=False, **kwargs):
+        '''Add a shelf button with the specified label, command, and icon'''
+        cmds = kwargs[maya_common._CMDS]
+        ret = None
+        if not self.button_with_label_exists_in_shelf(button_label):
+            from os.path import join
+            try:
+                if self.shelf_name:
+                    cmds.setParent(self.shelf_name)
+                ret = cmds.shelfButton(
+                    label=button_label, 
+                    command=command, 
+                    sourceType="python",
+                    image=join(self.icon_path_prefix, icon), 
+                    imageOverlayLabel=button_label if overlay_icon_with_label else "", 
+                    width=ShelfBuilder.button_size, 
+                    height=ShelfBuilder.button_size, 
+                    overlayLabelBackColor=ShelfBuilder.label_background, 
+                    overlayLabelColor=ShelfBuilder.label_color
+                )
+            except Exception:
+                pass
+        else:
+            logger.warning('Button with label "{}" already exists in shelf "{}". Skipped.'.format(button_label, self.shelf_name))
+        return ret
 
     # def add_menu_item(self, parent, label, command="pass", icon=""):
     #     '''Add a shelf button with the specified label, command, double click command and image.'''
@@ -164,14 +149,11 @@ class ShelfBuilder(object):
     #     pass
 
 
-def raise_mash_outliner():
+@maya_common.libs
+def raise_mash_outliner(**kwargs):
+    pmc = kwargs[maya_common._PMC]
     logger.info("Raising MASH Outliner")
-    try:
-        import pymel.core as pmc
-    except ImportError:
-        pass
-    else:
-        pmc.mel.MASHOutliner()
+    pmc.mel.MASHOutliner()
             
 
 # def open_content_browser(main_content_path="", landing_subfolder_name=""):
@@ -217,4 +199,5 @@ def raise_mash_outliner():
 
 
 if __name__ == "__main__":
-    print(_IS_PY2)
+    # print(_IS_PY2)
+    pass
