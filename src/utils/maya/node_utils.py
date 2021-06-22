@@ -55,39 +55,35 @@ def ls_component_IDs(nodes):
     return ret_str[2:]
 
 
-def get_PyNode(a_str):
+@maya_common.libs
+def get_PyNode(a_str, **kwargs):
+    pmc = kwargs[maya_common._PMC]
     logger.info('Getting PyNode of "{}"'.format(a_str))
     try:
-        import pymel.core as pmc
-    except ImportError:
-        return a_str
-    else:
-        try:
-            if a_str is not None:
-                return pmc.PyNode(a_str)
-            else:
-                return a_str
-        except Exception as e:
-            logger.exception('Unable to return PyNode for "{}" due to {}'.format(a_str, e))
-            return a_str
-
-
-def node_exists(node, as_string=False):
-    try:
-        import maya.cmds as cmds
-    except ImportError:
-        return False
-    else:
-        if not node:
-            return False
-        if as_string:
-            return cmds.objExists(node)
+        if a_str is not None:
+            return pmc.PyNode(a_str)
         else:
-            import pymel.core as pmc
-            return pmc.objExists(node)
+            return a_str
+    except Exception as e:
+        logger.exception('Unable to return PyNode for "{}" due to {}'.format(a_str, e))
+        return a_str
 
 
-def delete_one(node, is_mesh=False, delete_construction_history_only=False):
+@maya_common.libs
+def node_exists(node, as_string=False, **kwargs):
+    if not node:
+        return False
+    if as_string:
+        cmds = kwargs[maya_common._CMDS]
+        return cmds.objExists(node)
+    else:
+        pmc = kwargs[maya_common._PMC]
+        return pmc.objExists(node)
+
+
+@maya_common.libs
+def delete_one(node, is_mesh=False, delete_construction_history_only=False, **kwargs):
+    pmc = kwargs[maya_common._PMC]
     log_item = "node" if not delete_construction_history_only else "construction history of node"
     logger.info('Deleting {} "{}"'.format(log_item, node))
     try:
@@ -117,47 +113,38 @@ def delete_many(nodes):
         delete_one(node)
 
 
-def duplicate(node, as_instance=False, name=""):
+@maya_common.libs
+def duplicate(node, as_instance=False, name="", **kwargs):
     """
     :rtype list:
     :return: list of pmc.nt.Transform even if node is of pmc.nt.Mesh type
     """
+    pmc = kwargs[maya_common._PMC]
     logger.info('Duplicating "{}"'.format(node))
-    try:
-        import pymel.core as pmc
-    except ImportError:
+    if not node:
         return []
+    cmd = getattr(pmc, "duplicate") if not as_instance else getattr(pmc, "instance")
+    if name:
+        return cmd(node, n=name)
     else:
-        if not node:
-            return []
-        cmd = getattr(pmc, "duplicate") if not as_instance else getattr(pmc, "instance")
-        if name:
-            return cmd(node, n=name)
-        else:
-            return cmd(node)  # auto naming
+        return cmd(node)  # auto naming
 
 
-def parent_A_to_B(node_A, node_B, zero_child_transforms=False):
+@maya_common.libs
+def parent_A_to_B(node_A, node_B, zero_child_transforms=False, **kwargs):
+    pmc = kwargs[maya_common._PMC]
     logger.info("Parenting {} to {}".format(node_A, node_B))
-    try:
-        import pymel.core as pmc
-    except ImportError:
-        pass
-    else:
-        pmc.parent(node_A, node_B)
-        if zero_child_transforms:
-            node_A.setTranslation((0, 0, 0))
+    pmc.parent(node_A, node_B)
+    if zero_child_transforms:
+        node_A.setTranslation((0, 0, 0))
 
 
-def parent_to_world(node, former_parent_to_delete=None):
-    try:
-        import pymel.core as pmc
-    except ImportError:
-        pass
-    else:
-        pmc.parent(node, world=True)
-        if former_parent_to_delete is not None:
-            pmc.delete(former_parent_to_delete)
+@maya_common.libs
+def parent_to_world(node, former_parent_to_delete=None, **kwargs):
+    pmc = kwargs[maya_common._PMC]
+    pmc.parent(node, world=True)
+    if former_parent_to_delete is not None:
+        pmc.delete(former_parent_to_delete)
 
 
 def set_visibility(nodes, on=True):

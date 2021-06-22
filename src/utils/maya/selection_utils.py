@@ -1,5 +1,4 @@
 import logging
-from pymel.core.general import MayaAttributeEnumError
 from src.utils.maya import maya_common
 
 

@@ -6,7 +6,7 @@ from src.utils.maya import maya_common
 logger = logging.getLogger(__name__)
 
 
-@maya_common.libs
+@maya_common.libs_extended
 def maya_main_window(wrapInstance, QWidget, **kwargs):
     '''
     Python 2 only
