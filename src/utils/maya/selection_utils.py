@@ -24,12 +24,14 @@ def get_first_xform_in_selection(*args, **kwargs):
     return xforms[0] if xforms else None
 
 
+@maya_common.libs
 def replace_selection(nodes, **kwargs):
     pmc = kwargs[maya_common._PMC]
     logger.info("Replacing selection with specified nodes")
     pmc.select(nodes, replace=True)
 
 
+@maya_common.libs
 def clear_selection(*args, **kwargs):
     pmc = kwargs[maya_common._PMC]
     pmc.select(cl=True)

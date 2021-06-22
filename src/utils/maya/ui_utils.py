@@ -62,8 +62,8 @@ class ShelfBuilder(object):
         # self.clean_old_shelf()
         # self.build_shelf()
 
-    @maya_common.libs
     @staticmethod
+    @maya_common.libs
     def get_current_shelf(*args, **kwargs):
         cmds = kwargs[maya_common._CMDS]
         mel = kwargs[maya_common._MEL]
@@ -80,7 +80,7 @@ class ShelfBuilder(object):
         cmds = kwargs[maya_common._CMDS]
         ret = []
         try:
-            ret = cmds.shelfLayout(self.shelf_name, q=True, childArray=True) if self.shelf_name else ret
+            ret = (cmds.shelfLayout(self.shelf_name, q=True, childArray=True) or []) if self.shelf_name else ret
             ret = [button for button in ret if cmds.shelfButton(button, q=True, exists=True)]
         except Exception:
             pass
