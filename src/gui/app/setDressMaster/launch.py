@@ -1,6 +1,3 @@
-# import sys
-# sys.path.append(r"F:\dev\git\mk_dcc")
-
 import logging
 logging.basicConfig(level=logging.INFO)
 

@@ -1,6 +1,3 @@
-import sys
-from os.path import dirname
-from functools import partial
 import logging
 
 try:

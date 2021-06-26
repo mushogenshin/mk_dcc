@@ -3,9 +3,9 @@ import logging
 from collections import namedtuple
 
 from src.utils.maya import (
-    plugin_utils, 
-    node_utils, 
-    ui_utils, 
+    plugin_utils,
+    node_utils,
+    ui_utils,
     scene_utils,
     selection_utils,
     attrib_utils,
@@ -34,7 +34,8 @@ def load_mash_api():
         return MASH.api
 
 
-AxisCfg = namedtuple("AxisCfg", ["JO_aim_axis", "JO_up_axis", "aim_vec", "up_vec"])
+AxisCfg = namedtuple(
+    "AxisCfg", ["JO_aim_axis", "JO_up_axis", "aim_vec", "up_vec"])
 
 
 class Control(object):
@@ -70,15 +71,14 @@ class Control(object):
         else:
             self._model._data["PP_baked"][frame] = meshes
 
-
     def create_mash_network(self, mapi):
         """
         Initialize a MASH Network
         """
         logger.info("Constructing MASH Network {}".format(MASH_NETWORK_NAME))
-        
+
         scene_utils.disable_cached_playback()  # Maya 2019 onwards
-        
+
         waiter = distribute = repro = None
         scatter_meshes = self.get_PP_init_data("scatter_meshes")
 
@@ -87,11 +87,12 @@ class Control(object):
             # Scatter Meshes must be being selected prior to MASH Network creation
             selection_utils.replace_selection(scatter_meshes)
 
-            network = mapi.Network()  
-            self.set_PP_mash_data("mash_network", network)  # MASH.api.Network instance, not PyNode
+            network = mapi.Network()
+            # MASH.api.Network instance, not PyNode
+            self.set_PP_mash_data("mash_network", network)
 
             if hasattr(network, "createNetwork") and \
-                not node_utils.node_exists(MASH_NETWORK_NAME, as_string=True):  # force Singleton
+                    not node_utils.node_exists(MASH_NETWORK_NAME, as_string=True):  # force Singleton
                 network.createNetwork(name=MASH_NETWORK_NAME)
 
         if hasattr(network, "__dict__"):
@@ -100,23 +101,28 @@ class Control(object):
             repro = network.__dict__.get("instancer")
 
         self.set_PP_mash_data("mash_waiter", node_utils.get_PyNode(waiter))
-        self.set_PP_mash_data("mash_distribute", node_utils.get_PyNode(distribute))
+        self.set_PP_mash_data(
+            "mash_distribute", node_utils.get_PyNode(distribute))
         self.set_PP_mash_data("mash_repro", node_utils.get_PyNode(repro))
 
     def disable_distribute_node(self):
-        logger.info("Disabling MASH Distribute of {}".format(MASH_NETWORK_NAME))
+        logger.info("Disabling MASH Distribute of {}".format(
+            MASH_NETWORK_NAME))
         distribute_node = self.get_PP_mash_data("mash_distribute")
         if hasattr(distribute_node, "pointCount"):
             distribute_node.pointCount.set(0)
 
     def add_generic_mash_node(self, node_type, app_model_data_key):
-        logger.info("Adding node {} to {}".format(node_type, MASH_NETWORK_NAME))
+        logger.info("Adding node {} to {}".format(
+            node_type, MASH_NETWORK_NAME))
         network = self.get_PP_mash_data("mash_network")
         if hasattr(network, "addNode"):
             node = network.addNode(node_type)  # not PyNode
-            self.set_PP_mash_data(app_model_data_key, node_utils.get_PyNode(node.name))
+            self.set_PP_mash_data(app_model_data_key,
+                                  node_utils.get_PyNode(node.name))
             logger.info("--Added to MASH network: {}".format(node))
-            logger.info("--Added to MASH data: {}".format(self.get_PP_mash_data(app_model_data_key)))
+            logger.info(
+                "--Added to MASH data: {}".format(self.get_PP_mash_data(app_model_data_key)))
 
     def config_placer_node(self):
         logger.info("Configuring MASH Placer of {}".format(MASH_NETWORK_NAME))
@@ -142,7 +148,8 @@ class Control(object):
                 "collisionJitter" = 0.005
             }
         """
-        logger.info("Configuring MASH Dynamics of {}".format(MASH_NETWORK_NAME))
+        logger.info("Configuring MASH Dynamics of {}".format(
+            MASH_NETWORK_NAME))
         dynamics = self.get_PP_mash_data("mash_dynamics")
 
         if hasattr(dynamics, "collisionShape"):
@@ -153,7 +160,8 @@ class Control(object):
                 attrib_utils.set_attrib(dynamics, attr, v)
 
     def add_paint_meshes(self):
-        logger.info("Connecting Paint Meshes to MASH Placer of {}".format(MASH_NETWORK_NAME))
+        logger.info("Connecting Paint Meshes to MASH Placer of {}".format(
+            MASH_NETWORK_NAME))
         cloud_meshes = self.get_PP_init_data("cloud_meshes")
         placer = self.get_PP_mash_data("mash_placer")
 
@@ -168,8 +176,10 @@ class Control(object):
         bullet_solver = None
         if hasattr(network, "getSolver"):
             bullet_solver = network.getSolver()  # not PyNode
-        self.set_PP_mash_data("mash_bullet", node_utils.get_PyNode(bullet_solver))
-        logger.info("Using Bullet Solver: {}".format(self.get_PP_mash_data("mash_bullet")))
+        self.set_PP_mash_data(
+            "mash_bullet", node_utils.get_PyNode(bullet_solver))
+        logger.info("Using Bullet Solver: {}".format(
+            self.get_PP_mash_data("mash_bullet")))
 
     def remove_bullet_solver(self):
         logger.info("Removing Bullet Solver of {}".format(MASH_NETWORK_NAME))
@@ -182,11 +192,14 @@ class Control(object):
         bullet_solver = self.get_PP_mash_data("mash_bullet")
         if not ground_meshes and hasattr(bullet_solver, "groundPlanePositionY"):
             logger.info("Configuring Ground Plane of Bullet Solver")
-            bullet_solver.groundPlanePositionY.set(0)  # override the default value of -20
+            bullet_solver.groundPlanePositionY.set(
+                0)  # override the default value of -20
         elif hasattr(bullet_solver, "groundPlane"):
-            logger.info("Connecting Ground Meshes as Colliders of {}".format(MASH_NETWORK_NAME))
-            bullet_solver.groundPlane.set(False)  # disable the Bullet Solver's built-in ground
-            
+            logger.info("Connecting Ground Meshes as Colliders of {}".format(
+                MASH_NETWORK_NAME))
+            # disable the Bullet Solver's built-in ground
+            bullet_solver.groundPlane.set(False)
+
             # Load the Ground Meshes to the Bullet Solver's colliders
             network = self.get_PP_mash_data("mash_network")
             if hasattr(network, "addCollider"):
@@ -202,13 +215,14 @@ class Control(object):
         placer = self.get_PP_mash_data("mash_placer")
         ui_utils.raise_attribute_editor(placer)
         # TODO: show below message as UI prompt
-        logger.info('Start "Interactive Playback" then click "Add" to start painting.')
+        logger.info(
+            'Start "Interactive Playback" then click "Add" to start painting.')
 
     def setup_physx_painter(self, dynamics_parameters={}):
         logger.info("Setting up PhysX Painter")
         mash_plugin_loaded = plugin_utils.safe_load_plugin(MASH_PLUGIN_NAME)
         mapi = load_mash_api()
-        
+
         # TODO: Check cloud_meshes
         # TODO: Check scatter_meshes
 
@@ -241,8 +255,9 @@ class Control(object):
         self.print_model_data()
 
     def delete_PP_setup(self):
-        logger.info("Deleting all setup related to {}".format(MASH_NETWORK_NAME))
-        
+        logger.info("Deleting all setup related to {}".format(
+            MASH_NETWORK_NAME))
+
         self.remove_bullet_solver()
 
         for data_key, node in self._model._data["PP_mash"].items():
@@ -268,8 +283,9 @@ class Control(object):
         was_playback_running = scene_utils.is_playback_running()
         logger.info("Playback was running: {}".format(was_playback_running))
 
-        scene_utils.toggle_interactive_playback(force_pause=True)  # pause the playback
-        
+        scene_utils.toggle_interactive_playback(
+            force_pause=True)  # pause the playback
+
         current_frame = scene_utils.get_current_frame(self.SCENE_ENV)
         logger.info("Baking from frame {}".format(current_frame))
         repro = self.get_PP_mash_data("mash_repro")
@@ -277,20 +293,22 @@ class Control(object):
         if repro and hasattr(repro, "outMesh"):
             repro_mesh = repro.outMesh.outputs()[0]   # get the Repro mesh
             duplicated = node_utils.duplicate(
-                repro_mesh, 
+                repro_mesh,
                 name="{}_baked_f{}".format(
                     node_utils.get_node_name(repro_mesh),
                     current_frame
-                )   
+                )
             )
             # Add to Model Data
             self.set_PP_baked_data(current_frame, duplicated)
 
         if was_playback_running:
-            scene_utils.toggle_interactive_playback(force_play=True)  # resume the playback
+            scene_utils.toggle_interactive_playback(
+                force_play=True)  # resume the playback
 
     def PP_show_all_baked(self):
-        logger.info("Showing all baked meshes from {}".format(MASH_NETWORK_NAME))
+        logger.info("Showing all baked meshes from {}".format(
+            MASH_NETWORK_NAME))
         baked_meshes = []
         baked_data = self.get_PP_baked_data()
         for frame, meshes in baked_data.items():
@@ -305,7 +323,6 @@ class Control(object):
             selection_utils.replace_selection(repro)
             ui_utils.raise_attribute_editor(repro)
 
-
     ############################# SWAP MASTER #############################
 
     def explode_mash_mesh_and_group_by_poly_count(self):
@@ -315,12 +332,13 @@ class Control(object):
         )
 
     def run_thru_scene_and_group_by_poly_count(self):
-        logger.info("Running through meshes in scene and group all by poly count")
+        logger.info(
+            "Running through meshes in scene and group all by poly count")
         mesh_utils.explode_and_group_by_poly_count()
 
     def get_SM_candidate_component_data(self, app_model_data_key):
         return self._model._data["SM_candidate_component"][app_model_data_key]
-    
+
     def get_SM_substitute_root_data(self):
         SM_substitute_root = self._model._data["SM_substitute_root"]
         if SM_substitute_root is not None and node_utils.node_exists(SM_substitute_root):
@@ -340,20 +358,23 @@ class Control(object):
     def register_last_swapped(self, swapped):
         if swapped is not None:
             self._model._data["SM_last_swapped"].append(swapped)
-    
+
     def init_swap_jobs(self, meshes, compute_scale):
         """
         """
         # Modify class variable of SwapMasterJob first
-        SwapMasterJob.North_component_IDs = self.get_SM_candidate_component_data("north")
-        SwapMasterJob.South_component_IDs = self.get_SM_candidate_component_data("south")
-        SwapMasterJob._Yaw_component_IDs = self.get_SM_candidate_component_data("yaw")
-        
+        SwapMasterJob.North_component_IDs = self.get_SM_candidate_component_data(
+            "north")
+        SwapMasterJob.South_component_IDs = self.get_SM_candidate_component_data(
+            "south")
+        SwapMasterJob._Yaw_component_IDs = self.get_SM_candidate_component_data(
+            "yaw")
+
         SwapMasterJob.get_statusquo_repr_hub_jnt_pole_dimension()
         SwapMasterJob.get_statusquo_repr_bbox_dimensions()
         SwapMasterJob.get_statusquo_repr_hub_jnt_start_to_rotate_pivot_vec()
         SwapMasterJob.get_hub_joint_axis_cfg()
-        
+
         self.clear_SM_jobs_data()
 
         for mesh in meshes:
@@ -366,12 +387,13 @@ class Control(object):
             compute_scale = get_compute_scale_mode_method()
         else:
             compute_scale = True
-        self.init_swap_jobs(selection_utils.filter_meshes_in_selection(), compute_scale)
+        self.init_swap_jobs(
+            selection_utils.filter_meshes_in_selection(), compute_scale)
         self.print_model_data()
 
     def abort_SM_nuclei(self, verbose=True):
         logger.info("Removing Nucleus Locator and Hub Joint for all SwapJobs")
-        for swap_job in  self._model._data["SM_jobs"]:
+        for swap_job in self._model._data["SM_jobs"]:
             swap_job.delete_hub_joint()
             swap_job.delete_nucleus_locator()
         self.clear_SM_jobs_data()
@@ -381,7 +403,7 @@ class Control(object):
     def group_last_swapped(self):
         if self._model._data["SM_last_swapped"]:
             transform_utils.make_null(
-                name="SM_last_swapped", 
+                name="SM_last_swapped",
                 children=self._model._data["SM_last_swapped"])
 
     def do_swap(self, get_use_instancing_mode_method, get_remove_proxies_mode_method, get_compute_scale_mode_method, post_cleanup=False):
@@ -394,16 +416,19 @@ class Control(object):
             use_instancing = get_use_instancing_mode_method()
         else:
             use_instancing = True
+
         if callable(get_remove_proxies_mode_method):
             remove_proxies = get_remove_proxies_mode_method()
         else:
             remove_proxies = True
+
         if callable(get_compute_scale_mode_method):
             compute_scale = get_compute_scale_mode_method()
         else:
             compute_scale = True
+            
         logger.info("Use Instancing Mode: {}; Remove Proxies Mode: {}; Compute Scale Mode: {}".format(
-            use_instancing, 
+            use_instancing,
             remove_proxies,
             compute_scale)
         )
@@ -413,21 +438,25 @@ class Control(object):
 
         if substitute_template_root:
             target = substitute_template_root
-            logger.info("Running SwapJob with given substitute template root: {}".format(substitute_template_root))
+            logger.info("Running SwapJob with given substitute template root: {}".format(
+                substitute_template_root))
         else:
             target = statusquo_repr_mesh
-            logger.info("Running SwapJob with given representative of status quo: {}".format(statusquo_repr_mesh))
+            logger.info("Running SwapJob with given representative of status quo: {}".format(
+                statusquo_repr_mesh))
             if use_instancing:  # work around some undesired instancing behavior
-                duplicated_statusquo_repr_mesh = node_utils.duplicate(statusquo_repr_mesh)
+                duplicated_statusquo_repr_mesh = node_utils.duplicate(
+                    statusquo_repr_mesh)
                 if duplicated_statusquo_repr_mesh:
-                    target = node_utils.get_shape(duplicated_statusquo_repr_mesh[0])    
+                    target = node_utils.get_shape(
+                        duplicated_statusquo_repr_mesh[0])
 
         node_utils.delete_one(target, delete_construction_history_only=True)
 
-        for swap_job in  self._model._data["SM_jobs"]:
+        for swap_job in self._model._data["SM_jobs"]:
             swapped = swap_job.swap(
                 target,
-                use_instancing, 
+                use_instancing,
                 remove_proxies,
                 compute_scale,
             )
@@ -443,7 +472,8 @@ class Control(object):
 
     def fast_forward_swap(self, get_use_instancing_mode_method, get_remove_proxies_mode_method, get_compute_scale_mode_method):
         self.preview_SM_nuclei(get_compute_scale_mode_method)
-        self.do_swap(get_use_instancing_mode_method, get_remove_proxies_mode_method, get_compute_scale_mode_method, post_cleanup=True)
+        self.do_swap(get_use_instancing_mode_method, get_remove_proxies_mode_method,
+                     get_compute_scale_mode_method, post_cleanup=True)
 
     def show_swapped(self):
         selection_utils.replace_selection(self._model._data["SM_last_swapped"])
@@ -454,7 +484,7 @@ class SwapMasterJob(object):
     North_component_IDs = {"component_enum": 0, "children": [], "mesh": None}
     South_component_IDs = {"component_enum": 0, "children": [], "mesh": None}
     Yaw_component_IDs = {"component_enum": 0, "children": [], "mesh": None}
-    
+
     axis_cfg = None
     statusquo_repr_hub_jnt_pole_dimension = 0
     statusquo_repr_bbox_dimensions = (1, 1, 1)
@@ -466,8 +496,9 @@ class SwapMasterJob(object):
         """
         self.status_quo_mesh = status_quo_mesh
         self.status_quo_mesh_name = self.get_status_quo_mesh_name()
-        logger.info('Initializing new SwapMasterJob for mesh {}'.format(self.status_quo_mesh_name))
-        
+        logger.info('Initializing new SwapMasterJob for mesh {}'.format(
+            self.status_quo_mesh_name))
+
         self.North_components = mesh_utils.expand_mesh_with_component_IDs(
             self.status_quo_mesh,
             SwapMasterJob.North_component_IDs["children"],
@@ -483,13 +514,13 @@ class SwapMasterJob(object):
             SwapMasterJob._Yaw_component_IDs["children"],
             SwapMasterJob._Yaw_component_IDs["component_enum"],
         )
-        
+
         self.hub_joint_start = None
         self.hub_joint_end = None
         self.hub_joint_yaw = None
         self.hub_joint_pole_dimension = 0
         self.scale_factor = 1
-        
+
         self.nucleus_locator = None
         self.swapped = None
 
@@ -553,7 +584,7 @@ class SwapMasterJob(object):
         scene_up_axis = scene_utils.get_scene_up_axis()
         if scene_up_axis:
             logger.info("Current Maya scene up axis: {}".format(scene_up_axis))
-        
+
         if scene_up_axis == "y":
             JO_aim_axis = "yzx"  # Y-axis pointing down the bone
             JO_up_axis = "zup"
@@ -569,8 +600,9 @@ class SwapMasterJob(object):
             JO_up_axis = "yup"
             aim_vec = (1, 0, 0)
             up_vec = (0, 1, 0)
-        
-        logger.info('Using Joint Orient aim axis "{}"; Joint Orient up axis "{}"'.format(JO_aim_axis, JO_up_axis))
+
+        logger.info('Using Joint Orient aim axis "{}"; Joint Orient up axis "{}"'.format(
+            JO_aim_axis, JO_up_axis))
         logger.info('Using Aim vector {}; Up vector {}'.format(aim_vec, up_vec))
 
         cls.axis_cfg = AxisCfg(JO_aim_axis, JO_up_axis, aim_vec, up_vec)
@@ -603,14 +635,13 @@ class SwapMasterJob(object):
                 thingy="joint",
                 name="_".join(["SM_hubjoint_end", self.status_quo_mesh_name])
             )
-        
+
         if self.Yaw_components:
             self.hub_joint_yaw = transform_utils.create_center_thingy_from(
                 self.Yaw_components,
                 thingy="joint",
                 name="_".join(["SM_hubjoint_yaw", self.status_quo_mesh_name])
             )
-
 
     def has_hub_joint_elements(self):
         return self.hub_joint_start and self.hub_joint_end
@@ -622,11 +653,12 @@ class SwapMasterJob(object):
         if self.has_hub_joint_elements():
             if not self.hub_joint_yaw:
                 # Use parent and joint orient
-                node_utils.parent_A_to_B(self.hub_joint_end, self.hub_joint_start)
+                node_utils.parent_A_to_B(
+                    self.hub_joint_end, self.hub_joint_start)
                 transform_utils.orient_joint(
-                    self.hub_joint_start, 
-                    SwapMasterJob.axis_cfg.JO_aim_axis, 
-                    SwapMasterJob.axis_cfg.JO_up_axis, 
+                    self.hub_joint_start,
+                    SwapMasterJob.axis_cfg.JO_aim_axis,
+                    SwapMasterJob.axis_cfg.JO_up_axis,
                 )
                 logger.info("Parented and oriented HubJoint for SwapMasterJob")
             else:
@@ -653,7 +685,8 @@ class SwapMasterJob(object):
                 transform_utils.get_rotate_pivot(self.hub_joint_end),
                 as_length=True
             )
-            self.scale_factor = self.hub_joint_pole_dimension / SwapMasterJob.statusquo_repr_hub_jnt_pole_dimension
+            self.scale_factor = self.hub_joint_pole_dimension / \
+                SwapMasterJob.statusquo_repr_hub_jnt_pole_dimension
         self.scale_factor = abs(self.scale_factor) if self.scale_factor else 1
         logger.info("Scale factor: {}".format(self.scale_factor))
 
@@ -661,10 +694,12 @@ class SwapMasterJob(object):
         self.nucleus_locator = transform_utils.make_space_locator(
             name="_".join(["SM_nucleus_locator", self.status_quo_mesh_name])
         )
-        transform_utils.match_transforms(self.nucleus_locator, self.hub_joint_start, rotation=False)
+        transform_utils.match_transforms(
+            self.nucleus_locator, self.hub_joint_start, rotation=False)
 
         if self.hub_joint_yaw:
-            transform_utils.bake_aim_constraint_to_joint_orient(self.hub_joint_start)
+            transform_utils.bake_aim_constraint_to_joint_orient(
+                self.hub_joint_start)
 
         # Copy orient from HubJoint
         transform_utils.set_rotation_from_joint_orient(
@@ -676,17 +711,18 @@ class SwapMasterJob(object):
         dummy_locator_parent = node_utils.duplicate(self.nucleus_locator)
         if dummy_locator_parent:
             dummy_locator_parent = dummy_locator_parent[0]
-            node_utils.parent_A_to_B(self.nucleus_locator, dummy_locator_parent, zero_child_transforms=True)
-        
+            node_utils.parent_A_to_B(
+                self.nucleus_locator, dummy_locator_parent, zero_child_transforms=True)
+
             transform_utils.set_translation(
-                self.nucleus_locator, 
+                self.nucleus_locator,
                 SwapMasterJob.statusquo_repr_hub_jnt_start_to_rotate_pivot_vec * self.scale_factor
             )
             node_utils.parent_to_world(
                 self.nucleus_locator,
                 former_parent_to_delete=dummy_locator_parent
             )
-        
+
         # set display Local Scale of locator relative to the mesh's bounding box
         transform_utils.set_locator_local_scale(
             self.nucleus_locator,
@@ -702,12 +738,12 @@ class SwapMasterJob(object):
         self.make_nucleus_locator_from_hub_joint(compute_scale)
 
     def delete_hub_joint(self):
-        joints = [jnt for jnt in (self.hub_joint_yaw, self.hub_joint_end, self.hub_joint_start) \
-            if jnt is not None]
+        joints = [jnt for jnt in (self.hub_joint_yaw, self.hub_joint_end, self.hub_joint_start)
+                  if jnt is not None]
         node_utils.delete_many(joints)
         for jnt in joints:
             jnt = None
-    
+
     def delete_nucleus_locator(self):
         if self.nucleus_locator is not None:
             node_utils.delete_one(self.nucleus_locator)
@@ -727,14 +763,15 @@ class SwapMasterJob(object):
             target,
             as_instance=use_instancing
         )
-            
+
         self.swapped = self.swapped[0] if self.swapped else None
 
         # Match transforms with Nucleus Locator
         if self.swapped is None:
             return
         else:
-            transform_utils.match_transforms(self.swapped, self.nucleus_locator)
+            transform_utils.match_transforms(
+                self.swapped, self.nucleus_locator)
             if compute_scale and abs(self.scale_factor - 1) >= TOLERANCE:
                 transform_utils.set_scale(self.swapped, self.scale_factor)
 
